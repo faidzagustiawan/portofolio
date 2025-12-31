@@ -1,0 +1,186 @@
+/* ---------------------------------------------------------
+   GOOGLE FONTS
+--------------------------------------------------------- */
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Space+Mono&display=swap");
+
+/* ---------------------------------------------------------
+   TAILWIND CORE
+--------------------------------------------------------- */
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* ---------------------------------------------------------
+   PRIMITIVE TOKENS (RAW COLORS)
+   ❗ JANGAN DIPAKAI LANGSUNG DI JSX
+--------------------------------------------------------- */
+:root {
+  /* Neutral */
+  --neutral-0: oklch(1 0 0);
+  --neutral-50: oklch(0.97 0 0);
+  --neutral-200: oklch(0.922 0 0);
+  --neutral-600: oklch(0.556 0 0);
+  --neutral-900: oklch(0.145 0 0);
+
+  /* Brand / Accent */
+  --blue-500: oklch(0.646 0.222 264.376);
+  --purple-500: oklch(0.627 0.265 303.9);
+  --red-500: oklch(0.577 0.245 27.325);
+
+  /* Radius base */
+  --radius-base: 0.625rem;
+}
+
+/* ---------------------------------------------------------
+   SEMANTIC TOKENS (UI LEVEL)
+--------------------------------------------------------- */
+:root {
+  /* Surfaces */
+  --background: var(--neutral-0);
+  --foreground: var(--neutral-900);
+
+  --surface: var(--neutral-0);
+  --surface-muted: var(--neutral-50);
+
+  /* Text */
+  --text-primary: var(--neutral-900);
+  --text-secondary: var(--neutral-600);
+
+  /* UI */
+  --border-default: var(--neutral-200);
+  --input-background: var(--neutral-50);
+  --ring-color: var(--neutral-600);
+
+  /* Accent */
+  --accent: var(--blue-500);
+  --accent-secondary: var(--purple-500);
+  --destructive: var(--red-500);
+
+  /* Radius */
+  --radius-sm: calc(var(--radius-base) - 4px);
+  --radius-md: calc(var(--radius-base) - 2px);
+  --radius-lg: var(--radius-base);
+  --radius-xl: calc(var(--radius-base) + 4px);
+
+  /* Fonts (DESIGN TOKENS) */
+  --font-sans: "Space Grotesk", system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  --font-serif: "Lora", ui-serif, Georgia, Cambria,
+    "Times New Roman", Times, serif;
+
+  --font-mono: "Space Mono", ui-monospace,
+    SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* ---------------------------------------------------------
+   DARK THEME (MAPPING ONLY)
+--------------------------------------------------------- */
+.dark {
+  --background: var(--neutral-900);
+  --foreground: var(--neutral-0);
+
+  --surface: oklch(0.205 0 0);
+  --surface-muted: oklch(0.269 0 0);
+
+  --text-primary: var(--neutral-0);
+  --text-secondary: oklch(0.708 0 0);
+
+  --border-default: oklch(1 0 0 / 10%);
+  --input-background: oklch(1 0 0 / 15%);
+  --ring-color: oklch(0.556 0 0);
+
+  --accent: var(--purple-500);
+  --accent-secondary: var(--blue-500);
+}
+
+/* ---------------------------------------------------------
+   TAILWIND ↔ CSS VARIABLE BRIDGE
+--------------------------------------------------------- */
+@theme inline {
+  --radius: var(--radius-lg);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+
+  --color-border: var(--border-default);
+  --color-input: var(--input-background);
+  --color-ring: var(--ring-color);
+
+  --color-accent: var(--accent);
+  --color-accent-secondary: var(--accent-secondary);
+  --color-destructive: var(--destructive);
+}
+
+/* ---------------------------------------------------------
+   BASE STYLES (GLOBAL ENVIRONMENT)
+--------------------------------------------------------- */
+@layer base {
+  html,
+  body {
+    background-color: hsl(var(--color-background));
+    color: hsl(var(--color-text-primary));
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+ 
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  * {
+    border-color: hsl(var(--color-border));
+  }
+
+  /* -----------------------------------------------------
+     TYPOGRAPHY SYSTEM (AUTO)
+  ----------------------------------------------------- */
+
+  /* Headings → Space Grotesk */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-sans);
+    font-weight: 600;
+  }
+
+  /* Body copy → Lora */
+  p {
+    font-family: var(--font-serif);
+  }
+
+  /* Caption / meta / technical */
+  small,
+  code,
+  pre,
+  .mono,
+  .caption {
+    font-family: var(--font-mono);
+  }
+
+  /* Quote / editorial */
+  blockquote p {
+    font-family: var(--font-serif);
+    font-style: italic;
+  }
+}
+
+/* ---------------------------------------------------------
+   ⚠️ IMPORTANT RULES (DO NOT BREAK)
+--------------------------------------------------------- */
+/*
+1. ❌ Jangan pakai bg-white / text-black di JSX
+2. ❌ Jangan pakai dark: variant di komponen
+3. ✅ Pakai semantic token (background, foreground, accent)
+4. ✅ Theme hanya berubah lewat class .dark di root
+*/
