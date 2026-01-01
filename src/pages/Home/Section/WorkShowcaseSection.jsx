@@ -1,10 +1,14 @@
 import LogoLoop from "@/components/Animation/LogoLoop"
 import Magnet from "@/components/Animation/Magnet"
 import { Link } from "react-router-dom"
-import { homeProjects } from "@/data/homeProjects"
+import { projects } from "@/data/projects"
 import VideoCard from "./VideoCard"
 
-const renderCard = (item) => <VideoCard key={item.id} item={item} />
+const featuredProjects = projects.filter(p => p.featured)
+
+const renderCard = (item) => (
+  <VideoCard key={item.id} item={item} />
+)
 
 const WorkShowcaseSection = () => {
   return (
@@ -18,7 +22,7 @@ const WorkShowcaseSection = () => {
 
         <Magnet padding={2000} magnetStrength={10}>
           <Link
-            to="/about"
+            to="/work"
             className="inline-flex items-center gap-3 text-base md:text-lg font-medium
               text-white border border-white/30 px-6 py-3 rounded-full
               hover:bg-white hover:text-black transition"
@@ -34,7 +38,7 @@ const WorkShowcaseSection = () => {
 
       <div className="space-y-8 relative z-10">
         <LogoLoop
-          logos={homeProjects}
+          logos={featuredProjects}
           speed={60}
           gap={40}
           pauseOnHover
@@ -43,7 +47,7 @@ const WorkShowcaseSection = () => {
         />
 
         <LogoLoop
-          logos={homeProjects}
+          logos={featuredProjects}
           speed={-60}
           gap={40}
           pauseOnHover
@@ -51,7 +55,6 @@ const WorkShowcaseSection = () => {
           renderItem={renderCard}
         />
       </div>
-
     </section>
   )
 }

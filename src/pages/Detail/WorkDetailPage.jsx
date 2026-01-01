@@ -6,7 +6,6 @@ import { ArrowLeft, ArrowUpRight, ExternalLink } from 'lucide-react'
 import { projects } from '@/data/projects'
 import { NoLiveUrlModal } from './NoLiveUrlModal'
 import { TeamSection } from './TeamSection'
-import { useInViewVideo } from "@/hooks/useInViewVideo"
 
 
 const FadeUp = ({ children, delay = 0 }) => (
@@ -32,7 +31,6 @@ const ScaleIn = ({ children, delay = 0 }) => (
 )
 
 export default function ProjectDetailPage() {
-    const videoRef = useInViewVideo()
     const { slug } = useParams()
     const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -61,6 +59,13 @@ export default function ProjectDetailPage() {
 
     const handleLiveProjectClick = (e) => {
         if (!project.liveUrl) {
+            e.preventDefault()
+            setIsModalOpen(true)
+        }
+    }
+
+    const handleGithubClick = (e) => {
+        if (!project.githubUrl) {
             e.preventDefault()
             setIsModalOpen(true)
         }
@@ -159,13 +164,12 @@ export default function ProjectDetailPage() {
                     <div className="aspect-video w-full bg-neutral-900 border border-neutral-800 rounded-xl overflow-hidden relative">
                         {project.image ? (
                             <video
-                                ref={videoRef}
-                                src={project.image}
-                                alt={project.name}
+                                src={project.video}
                                 muted
-                                loop
                                 playsInline
-                                preload="metadata"
+                                loop
+                                autoPlay
+                                preload="auto"
                                 className="w-full h-full object-cover"
                             />
                         ) : (
@@ -190,7 +194,7 @@ export default function ProjectDetailPage() {
                     </div>
                     <div className="lg:col-span-8">
                         <FadeUp delay={0.1}>
-                            <p className="text-lg md:text-xl text-neutral-400 leading-relaxed">
+                            <p className="text-lg md:text-xl text-neutral-400 leading-relaxed text-justify">
                                 {project.overview}
                             </p>
                         </FadeUp>
@@ -210,7 +214,7 @@ export default function ProjectDetailPage() {
                         </div>
                         <div className="lg:col-span-8">
                             <FadeUp delay={0.1}>
-                                <p className="text-lg md:text-xl text-neutral-400 leading-relaxed">
+                                <p className="text-lg md:text-xl text-neutral-400 leading-relaxed text-justify">
                                     {project.challenge}
                                 </p>
                             </FadeUp>
@@ -246,7 +250,7 @@ export default function ProjectDetailPage() {
                     </div>
                     <div className="lg:col-span-8">
                         <FadeUp delay={0.1}>
-                            <p className="text-lg md:text-xl text-neutral-400 leading-relaxed">
+                            <p className="text-lg md:text-xl text-neutral-400 leading-relaxed text-justify">
                                 {project.approach}
                             </p>
                         </FadeUp>
@@ -266,7 +270,7 @@ export default function ProjectDetailPage() {
                     </div>
                     <div className="lg:col-span-8">
                         <FadeUp delay={0.1}>
-                            <p className="text-lg md:text-xl text-neutral-400 leading-relaxed">
+                            <p className="text-lg md:text-xl text-neutral-400 leading-relaxed text-justify">
                                 {project.solution}
                             </p>
                         </FadeUp>
@@ -294,27 +298,36 @@ export default function ProjectDetailPage() {
                                 {project.outcome}
                             </p>
                         </FadeUp>
-                        <div className='flex justify-between'>
+                        <div className="flex justify-between">
+                            {/* LIVE PROJECT */}
                             <FadeUp delay={0.2}>
-                                <button
+                                <a
+                                    href={project.liveUrl || '#'}
                                     onClick={handleLiveProjectClick}
-                                    className="inline-flex items-center gap-2 text-base font-medium text-white border-b border-white pb-1 hover:text-neutral-400 hover:border-neutral-400 transition-all group cursor-pointer"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 text-base font-medium text-white border-b border-white pb-1 hover:text-neutral-400 hover:border-neutral-400 transition-all group"
                                 >
                                     View Live Project
                                     <ExternalLink className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                                </button>
+                                </a>
                             </FadeUp>
 
-                            <FadeUp delay={0.2}>
-                                <button
-                                    onClick={handleLiveProjectClick}
-                                    className="inline-flex items-center gap-2 text-base font-medium text-white border-b border-white pb-1 hover:text-neutral-400 hover:border-neutral-400 transition-all group cursor-pointer"
+                            {/* GITHUB */}
+                            <FadeUp delay={0.25}>
+                                <a
+                                    href={project.githubUrl || '#'}
+                                    onClick={handleGithubClick}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 text-base font-medium text-white border-b border-white pb-1 hover:text-neutral-400 hover:border-neutral-400 transition-all group"
                                 >
-                                    View Github
+                                    View GitHub
                                     <ExternalLink className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                                </button>
+                                </a>
                             </FadeUp>
                         </div>
+
                     </div>
                 </div>
             </section>
@@ -325,7 +338,7 @@ export default function ProjectDetailPage() {
             {nextProject && (
                 <section className="border-t border-neutral-800 bg-neutral-950">
                     <Link
-                        to={`/project/${nextProject.slug}`}
+                        to={`/work/${nextProject.slug}`}
                         className="group block relative overflow-hidden"
                     >
                         <div className={`absolute inset-0 bg-gradient-to-r ${nextProject.color || 'from-neutral-800 to-neutral-900'} opacity-0 group-hover:opacity-10 transition-opacity duration-700`} />

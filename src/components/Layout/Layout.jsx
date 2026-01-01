@@ -1,6 +1,7 @@
 import Navbar from '@/components/Layout/Navbar'
 import Footer from '@/components/Layout/Footer'
 import FloatingCV from '@/components/Layout/FloatingCV'
+import { Toaster } from 'react-hot-toast'
 
 export default function AppLayout({ children }) {
   return (
@@ -9,6 +10,9 @@ export default function AppLayout({ children }) {
       <main className="grow">{children}</main>
       <Footer />
       <FloatingCV />
+      <Toaster position="bottom-right" />
+
     </div>
   )
 }
+
