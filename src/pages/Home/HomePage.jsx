@@ -2,10 +2,10 @@ import { useEffect, useRef } from "react"
 import { usePageTransition } from "@/context/PageTransitionContext"
 import { preloaderWords } from "@/data/preLoaderWords"
 
-import HeroSection from "./section/HeroSection"
-import IntroSection from "./section/IntroSection"
-import WorkShowcaseSection from "./section/WorkShowcaseSection"
-import FinalCTASection from "./section/FinalCTASection"
+import HeroSection from "./Section/HeroSection"
+import IntroSection from "./Section/IntroSection"
+import WorkShowcaseSection from "./Section/WorkShowcaseSection"
+import FinalCTASection from "./Section/FinalCTASection"
 
 const HomePage = () => {
   const { show } = usePageTransition()
