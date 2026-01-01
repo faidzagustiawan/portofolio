@@ -45,14 +45,21 @@ export function FloatingPreview({ activeIndex, cursorX, cursorY, intent, project
                     }}
                 >
                     {projects.map((p, i) => (
-                        <img
+                        <div
                             key={i}
-                            src={p.image}
-                            alt={p.name}
-                            className="w-full h-[400px] object-cover"
-                            draggable={false}
-                        />
+                            style={{ height: PREVIEW_SIZE }}
+                            className="w-full overflow-hidden"
+                        >
+                            <div className="w-full aspect-square overflow-hidden">
+                                <img
+                                    src={p.image}
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
+
+                        </div>
                     ))}
+
                 </motion.div>
             </motion.div>
         </motion.div>,

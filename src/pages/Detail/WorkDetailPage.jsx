@@ -1,45 +1,47 @@
-import React, { useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ArrowLeft, ArrowUpRight, ExternalLink } from 'lucide-react';
-import { projects } from '@/data/projects'; // Import data
 
-// --- Internal Animation Components (Replaces ScrollReveal) ---
+import React, { useEffect, useState } from 'react'
+import { useParams, Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
+import { ArrowLeft, ArrowUpRight, ExternalLink } from 'lucide-react'
+import { projects } from '@/data/projects'
+import { NoLiveUrlModal } from './NoLiveUrlModal'
+import { TeamSection } from './TeamSection'
+import { useInViewVideo } from "@/hooks/useInViewVideo"
+
+
 const FadeUp = ({ children, delay = 0 }) => (
     <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-10%" }}
-        transition={{ duration: 0.6, delay: delay, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
     >
         {children}
     </motion.div>
-);
+)
 
 const ScaleIn = ({ children, delay = 0 }) => (
     <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true, margin: "-10%" }}
-        transition={{ duration: 0.8, delay: delay, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }}
     >
         {children}
     </motion.div>
-);
+)
 
 export default function ProjectDetailPage() {
-    const { slug } = useParams(); // Menggunakan Slug dari URL
-    const navigate = useNavigate();
+    const videoRef = useInViewVideo()
+    const { slug } = useParams()
+    const [isModalOpen, setIsModalOpen] = useState(false)
 
-    // 1. Cari project berdasarkan slug
-    const project = projects.find((p) => p.slug === slug);
+    const project = projects.find((p) => p.slug === slug)
 
-    // 2. Scroll to top setiap kali slug berubah
     useEffect(() => {
-        window.scrollTo(0, 0);
-    }, [slug]);
+        window.scrollTo(0, 0)
+    }, [slug])
 
-    // Handle Not Found
     if (!project) {
         return (
             <div className="min-h-screen bg-neutral-950 flex flex-col items-center justify-center text-white p-6 text-center">
@@ -52,21 +54,32 @@ export default function ProjectDetailPage() {
                     Back to Work
                 </Link>
             </div>
-        );
+        )
     }
 
-    // 3. Cari Next Project berdasarkan nextProjectSlug
-    const nextProject = projects.find((p) => p.slug === project.nextProjectSlug);
+    const nextProject = projects.find((p) => p.slug === project.nextProjectSlug)
+
+    const handleLiveProjectClick = (e) => {
+        if (!project.liveUrl) {
+            e.preventDefault()
+            setIsModalOpen(true)
+        }
+    }
 
     return (
-        // KEY={SLUG} sangat penting agar React me-reset komponen dan animasi saat pindah halaman
         <main
             key={slug}
             className="min-h-screen bg-neutral-950 text-white selection:bg-white selection:text-neutral-950"
         >
+            {/* Modal */}
+            <NoLiveUrlModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                projectName={project.name}
+            />
 
             {/* --- HERO SECTION --- */}
-            <section className=" flex flex-col justify-end relative pt-32 pb-12 px-6 md:px-12 lg:px-16 max-w-7xl mx-auto">
+            <section className="flex flex-col justify-end relative pt-32 pb-12 px-6 md:px-12 lg:px-16 max-w-7xl mx-auto">
                 <FadeUp>
                     <Link
                         to="/work"
@@ -78,7 +91,6 @@ export default function ProjectDetailPage() {
                 </FadeUp>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
-                    {/* Title & Tagline */}
                     <div className="lg:col-span-8">
                         <div className="overflow-hidden">
                             <motion.h1
@@ -98,7 +110,6 @@ export default function ProjectDetailPage() {
                         </FadeUp>
                     </div>
 
-                    {/* Project Metadata */}
                     <div className="lg:col-span-4 flex flex-col justify-end">
                         <FadeUp delay={0.4}>
                             <div className="grid grid-cols-2 gap-y-8 gap-x-4 border-t border-neutral-800 pt-8 lg:border-none lg:pt-0">
@@ -123,7 +134,7 @@ export default function ProjectDetailPage() {
 
             {/* --- TECH MARQUEE --- */}
             <section className="py-8 border-y border-neutral-900 bg-neutral-900/20 overflow-hidden">
-                <div className="flex whitespace-nowrap mask-linear-gradient">
+                <div className="flex whitespace-nowrap">
                     <motion.div
                         animate={{ x: "-50%" }}
                         transition={{ repeat: Infinity, ease: "linear", duration: 30 }}
@@ -147,9 +158,14 @@ export default function ProjectDetailPage() {
                 <ScaleIn>
                     <div className="aspect-video w-full bg-neutral-900 border border-neutral-800 rounded-xl overflow-hidden relative">
                         {project.image ? (
-                            <img
+                            <video
+                                ref={videoRef}
                                 src={project.image}
                                 alt={project.name}
+                                muted
+                                loop
+                                playsInline
+                                preload="metadata"
                                 className="w-full h-full object-cover"
                             />
                         ) : (
@@ -157,7 +173,7 @@ export default function ProjectDetailPage() {
                                 Hero Image Placeholder
                             </div>
                         )}
-                        {/* Overlay Gradient for vibes */}
+
                         <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/50 to-transparent" />
                     </div>
                 </ScaleIn>
@@ -182,7 +198,7 @@ export default function ProjectDetailPage() {
                 </div>
             </section>
 
-            {/* --- CHALLENGE (Darker Background) --- */}
+            {/* --- CHALLENGE --- */}
             <section className="py-24 bg-neutral-900/50 border-y border-neutral-900 my-12">
                 <div className="px-6 md:px-12 lg:px-16 max-w-7xl mx-auto">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
@@ -208,7 +224,6 @@ export default function ProjectDetailPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                     <FadeUp>
                         <div className="aspect-[4/3] bg-neutral-900 border border-neutral-800 rounded-lg flex items-center justify-center overflow-hidden">
-                            {/* Placeholder or secondary images */}
                             <div className="w-full h-full bg-neutral-800/50 flex items-center justify-center text-neutral-600">Visual Detail 1</div>
                         </div>
                     </FadeUp>
@@ -239,7 +254,8 @@ export default function ProjectDetailPage() {
                 </div>
             </section>
 
-            {/* --- SOLUTION & OUTCOME --- */}
+
+            {/* --- SOLUTION --- */}
             <section className="px-6 md:px-12 lg:px-16 max-w-7xl mx-auto py-24 pt-0">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 mb-24">
                     <div className="lg:col-span-4">
@@ -257,10 +273,18 @@ export default function ProjectDetailPage() {
                     </div>
                 </div>
 
+
+
+                {/* --- TEAM SECTION --- */}
+                <TeamSection team={project.team} />
+
+
+                {/* --- OUTCOME --- */}
+
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 p-8 md:p-12 bg-neutral-900 rounded-2xl border border-neutral-800">
                     <div className="lg:col-span-4">
                         <FadeUp>
-                            <h2 className="text-sm font-mono uppercase tracking-widest text-neutral-500 mb-4">05 — Outcome</h2>
+                            <h2 className="text-sm font-mono uppercase tracking-widest text-neutral-500 mb-4">06 — Outcome</h2>
                             <h3 className="text-3xl font-bold text-white">The Result</h3>
                         </FadeUp>
                     </div>
@@ -270,23 +294,32 @@ export default function ProjectDetailPage() {
                                 {project.outcome}
                             </p>
                         </FadeUp>
-
-                        {project.liveUrl && (
+                        <div className='flex justify-between'>
                             <FadeUp delay={0.2}>
-                                <a
-                                    href={project.liveUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-2 text-base font-medium text-white border-b border-white pb-1 hover:text-neutral-400 hover:border-neutral-400 transition-all group"
+                                <button
+                                    onClick={handleLiveProjectClick}
+                                    className="inline-flex items-center gap-2 text-base font-medium text-white border-b border-white pb-1 hover:text-neutral-400 hover:border-neutral-400 transition-all group cursor-pointer"
                                 >
                                     View Live Project
                                     <ExternalLink className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                                </a>
+                                </button>
                             </FadeUp>
-                        )}
+
+                            <FadeUp delay={0.2}>
+                                <button
+                                    onClick={handleLiveProjectClick}
+                                    className="inline-flex items-center gap-2 text-base font-medium text-white border-b border-white pb-1 hover:text-neutral-400 hover:border-neutral-400 transition-all group cursor-pointer"
+                                >
+                                    View Github
+                                    <ExternalLink className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                                </button>
+                            </FadeUp>
+                        </div>
                     </div>
                 </div>
             </section>
+
+
 
             {/* --- NEXT PROJECT FOOTER --- */}
             {nextProject && (
@@ -295,14 +328,10 @@ export default function ProjectDetailPage() {
                         to={`/project/${nextProject.slug}`}
                         className="group block relative overflow-hidden"
                     >
-                        {/* Hover Background Effect */}
                         <div className={`absolute inset-0 bg-gradient-to-r ${nextProject.color || 'from-neutral-800 to-neutral-900'} opacity-0 group-hover:opacity-10 transition-opacity duration-700`} />
 
                         <div className="px-6 md:px-12 lg:px-16 max-w-7xl mx-auto py-24 md:py-32 relative z-10">
-
-                            {/* PERBAIKAN DISINI: Ubah 'md:items-end' menjadi 'md:items-center' */}
                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
-
                                 <div>
                                     <span className="text-sm font-mono uppercase tracking-widest text-neutral-500 mb-4 block group-hover:text-neutral-400 transition-colors">
                                         Next Project
@@ -312,18 +341,16 @@ export default function ProjectDetailPage() {
                                     </h2>
                                 </div>
 
-                                {/* PERBAIKAN SNIPPET KAMU: Tambahkan 'flex' agar justify/items center bekerja */}
                                 <div className='flex justify-center items-center'>
                                     <div className="w-16 h-16 border border-neutral-700 rounded-full flex items-center justify-center transition-all duration-500 group-hover:bg-white group-hover:text-black group-hover:border-transparent shrink-0 group-hover:scale-110">
                                         <ArrowUpRight className="w-6 h-6 transition-transform duration-500 group-hover:rotate-45" />
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </Link>
                 </section>
             )}
         </main>
-    );
+    )
 }

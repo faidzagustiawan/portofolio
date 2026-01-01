@@ -1,7 +1,7 @@
 
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { ScrollReveal } from '@/components/animation/ScrollRevealLoveable'
-import { SplitText } from '@/components/animation/SplitText'
+import { ScrollReveal } from '@/components/Animation/ScrollRevealLoveable'
+import { SplitText } from '@/components/Animation/SplitText'
 import Lanyard from '@/components/Animation/Lanyard'
 
 export function AboutHero() {
@@ -12,7 +12,7 @@ export function AboutHero() {
 
   return (
     <div className="fixed top-0 left-0 w-full h-screen z-0 overflow-x-hidden flex items-center bg-neutral-950">
-      <div className="w-screen max-w-7xl mx-auto -mt-50 lg:-mt-0 md:mx-0 md:pl-32 px-6 md:px-12 relative h-full flex flex-col justify-center lg:flex-row lg:items-center">
+      <div className="w-screen max-w-7xl mx-auto -mt-50 lg:mt-0 md:mx-0 md:pl-32 px-6 md:px-12 relative h-full flex flex-col justify-center lg:flex-row lg:items-center">
         
         <motion.div 
           style={{ y: yText }} 
@@ -37,7 +37,7 @@ export function AboutHero() {
 
         <motion.div 
           style={{ y: yLanyard }}
-          className='absolute w-700 xl:-top-40 top-25 xl:z-0 z-20 -right-290  xl:-right-370 '
+          className='absolute w-700 xl:-top-40 top-25 xl:z-0 z-20 -right-300  xl:-right-370 '
         >
           <div className="xl:h-270 h-200   items-center justify-center ">
             <Lanyard cameraDistance={1} />

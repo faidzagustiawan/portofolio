@@ -1,6 +1,6 @@
 
-import { SiReact, SiNextdotjs, SiJavascript, SiTailwindcss, SiTypescript, SiVuedotjs, SiSvelte, SiFigma, SiGit, SiFramer } from 'react-icons/si'
-import { LogoLoop } from '@/components/animation/LogoLoop'
+import { SiReact, SiNextdotjs, SiJavascript, SiTailwindcss, SiTypescript, SiVite, SiFigma, SiGit, SiGithub, SiFramer } from 'react-icons/si'
+import { LogoLoop } from '@/components/Animation/LogoLoop'
 
 const techLogos = [
   { node: <SiReact />, title: 'React', href: 'https://react.dev' },
@@ -8,11 +8,11 @@ const techLogos = [
   { node: <SiTypescript />, title: 'TypeScript', href: 'https://www.typescriptlang.org' },
   { node: <SiJavascript />, title: 'JavaScript', href: 'https://developer.mozilla.org' },
   { node: <SiTailwindcss />, title: 'Tailwind CSS', href: 'https://tailwindcss.com' },
-  { node: <SiVuedotjs />, title: 'Vue.js', href: 'https://vuejs.org' },
-  { node: <SiSvelte />, title: 'Svelte', href: 'https://svelte.dev' },
+  { node: <SiVite />, title: 'Vue.js', href: 'https://vite.dev/' },
   { node: <SiFramer />, title: 'Framer Motion', href: 'https://www.framer.com/motion' },
   { node: <SiFigma />, title: 'Figma', href: 'https://figma.com' },
   { node: <SiGit />, title: 'Git', href: 'https://git-scm.com' },
+  { node: <SiGithub />, title: 'Github', href: 'https://github.com' },
 ]
 
 export function ExpertiseSection() {
