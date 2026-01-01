@@ -50,7 +50,7 @@ export function LogoLoop({
   }
 
   return (
-    <div className="relative w-full h-full overflow-hidden" aria-label={ariaLabel}>
+    <div className="relative w-screen h-full overflow-x-hidden" aria-label={ariaLabel}>
       {fadeOut && (
         <>
           <div

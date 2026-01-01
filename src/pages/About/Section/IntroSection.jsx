@@ -13,31 +13,26 @@ export function IntroSection() {
               Introduction
             </span>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight">
-              Hello, I'm a <br />
-              <span className="text-neutral-500">creative developer</span>
+              Interaction <br />
+              <span className="text-neutral-500">Motion & Performance</span>
             </h2>
           </div>
         </div>
 
         {/* Right - Content */}
         <div className="lg:col-span-7 space-y-8">
-          <div className="space-y-6">
+          <div className="space-y-6 text-justify">
             <p className="text-xl md:text-2xl leading-relaxed text-white font-light">
-              I'm a frontend developer with a passion for creating immersive digital experiences.
-              I specialize in building high-performance web applications that combine beautiful
-              design with seamless interactions.
+              I started with an interest in motion and interaction, which naturally led me to <span className='text-blue-300 font-bold'>frontend development.</span> 
             </p>
 
             <p className="text-lg md:text-xl leading-relaxed text-neutral-400">
-              My journey began with a fascination for motion and interaction.
-              Today, I work at the intersection of design and engineering, crafting experiences
-              that are both beautiful and functional.
+              Over time, I’ve focused on building web interfaces that balance visual clarity with solid engineering. 
+              I enjoy working on interaction details—transitions, feedback, and timing—because they directly affect how intuitive a product feels.
             </p>
 
             <p className="text-lg leading-relaxed text-neutral-500">
-              Outside of coding, I explore animation systems, architecture, and contemporary art.
-              I believe that great design comes from understanding multiple disciplines and
-              bringing those perspectives together.
+              Beyond coding, I explore animation, architecture, and contemporary design as references to refine how I approach interface problems.
             </p>
           </div>
 

@@ -4,6 +4,8 @@ import { IntroSection } from './Section/IntroSection'
 import { ExpertiseSection } from './Section/ExpertiseSection'
 import { QuoteSection } from './Section/QuoteSection'
 import { CTASection } from './Section/CTASection'
+import './about.css'
+
 
 export default function AboutPage() {
   return (

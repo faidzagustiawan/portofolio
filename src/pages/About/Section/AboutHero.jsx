@@ -11,20 +11,20 @@ export function AboutHero() {
   const yLanyard = useTransform(scrollY, [0, 1000], [0, 100])
 
   return (
-    <div className="fixed top-0 left-0 w-full h-screen z-0 overflow-hidden flex items-center bg-neutral-950">
-      <div className="w-full max-w-7xl mx-auto -mt-50 lg:-mt-0 md:mx-0 md:pl-32 px-6 md:px-12 relative h-full flex flex-col justify-center lg:flex-row lg:items-center">
+    <div className="fixed top-0 left-0 w-full h-screen z-0 overflow-x-hidden flex items-center bg-neutral-950">
+      <div className="w-screen max-w-7xl mx-auto -mt-50 lg:-mt-0 md:mx-0 md:pl-32 px-6 md:px-12 relative h-full flex flex-col justify-center lg:flex-row lg:items-center">
         
         <motion.div 
           style={{ y: yText }} 
-          className="max-w-4xl relative z-10 text-center lg:text-left"
+          className="max-w-4xl relative -top-40 xl:top-0 z-10 text-center lg:text-left"
         >
           <ScrollReveal animation="fade-up">
-            <p className="text-sm font-mono uppercase tracking-widest text-neutral-500 mb-6">
+            <p className="text-md font-mono uppercase tracking-widest text-neutral-500 mb-6">
               About Me
             </p>
           </ScrollReveal>
 
-          <h1 className="text-3xl md:text-7xl lg:text-9xl font-bold tracking-tight leading-none mb-12">
+          <h1 className="text-5xl md:text-7xl lg:text-9xl font-bold tracking-tight leading-none mb-12">
             <SplitText delay={200} stagger={40}>A frontend</SplitText>
             <br />
             <span className="text-neutral-500">
@@ -37,10 +37,10 @@ export function AboutHero() {
 
         <motion.div 
           style={{ y: yLanyard }}
-          className='absolute w-full h-[300px] mt-12 md:absolute top-70 md:right-0 lg:xl:right-150 lg:xl:-top-900 md:w-full md:h-full md:mt-0 md:pointer-events-none'
+          className='absolute w-700 xl:-top-40 top-25 xl:z-0 z-20 -right-290  xl:-right-370 '
         >
-          <div className="w-full h-full flex items-center justify-center lg:block lg:w-1000">
-            <Lanyard cameraDistance={18} />
+          <div className="xl:h-270 h-200   items-center justify-center ">
+            <Lanyard cameraDistance={1} />
           </div>
         </motion.div>
 

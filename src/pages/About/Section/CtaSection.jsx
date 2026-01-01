@@ -5,7 +5,7 @@ import React from 'react';
 
 export function CTASection() {
     return (
-        <section className="py-24 md:py-32 lg:py-40 bg-neutral-950">
+        <section className="pt-60 pb-40  lg:pb-60 lg:pt-80 bg-neutral-950">
             <div className="max-w-4xl mx-auto px-6 md:px-12 text-center">
 
                 <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight mb-8">
