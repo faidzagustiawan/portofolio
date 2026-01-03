@@ -1,6 +1,6 @@
 export function WorkHero() {
   return (
-    <section className="max-w-7xl mx-auto px-6 md:px-12 lg:px-16 mb-16 md:mb-24 pt-24"> {/* Added pt-24 for spacing if needed */}
+    <section className="max-w-7xl mx-auto px-6 md:px-12 lg:px-16 mb-16 md:mb-24 "> {/* Added pt-24 for spacing if needed */}
       <div className="max-w-4xl">
         <p className="text-sm font-mono uppercase tracking-widest text-neutral-400 mb-6">
           Selected Projects

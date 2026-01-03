@@ -5,6 +5,7 @@ export const useScrollReveal = (options = {}) => {
     threshold = 0.1,
     rootMargin = '0px',
     triggerOnce = true,
+    root = null, // 👈 TAMBAHAN PENTING
   } = options
 
   const ref = useRef(null)
@@ -14,6 +15,12 @@ export const useScrollReveal = (options = {}) => {
   useEffect(() => {
     const element = ref.current
     if (!element) return
+
+    // ⛑️ Guard: browser lama / SSR
+    if (typeof IntersectionObserver === 'undefined') {
+      setIsVisible(true)
+      return
+    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -28,13 +35,17 @@ export const useScrollReveal = (options = {}) => {
           setIsVisible(false)
         }
       },
-      { threshold, rootMargin }
+      {
+        threshold,
+        rootMargin,
+        root, // 👈 ROOT EKSPLISIT
+      }
     )
 
     observer.observe(element)
 
     return () => observer.disconnect()
-  }, [threshold, rootMargin, triggerOnce])
+  }, [threshold, rootMargin, triggerOnce, root])
 
   return {
     ref,

@@ -11,12 +11,12 @@ export function QuoteSection() {
   })
 
   // kiri
-  const leftX = useTransform(scrollYProgress, [-0.5, 0.7], [0, 1350])
-  const leftRotate = useTransform(scrollYProgress, [0, 1], [-100, 50])
+  const leftX = useTransform(scrollYProgress, [0, 0.5], [0, 1300])
+  const leftRotate = useTransform(scrollYProgress, [0, 0.5], [-100, 10])
 
   // kanan
-  const rightX = useTransform(scrollYProgress, [-0.5, 0.7], [1550, 0])
-  const rightRotate = useTransform(scrollYProgress, [0, 1], [-40, 60])
+  const rightX = useTransform(scrollYProgress, [0, 0.5], [1050, 0])
+  const rightRotate = useTransform(scrollYProgress, [0, 0.5], [-50, 30])
 
 
 
@@ -31,7 +31,7 @@ export function QuoteSection() {
         {/* SVG kiri */}
         <motion.img
           src="https://res.cloudinary.com/dwudbtejo/image/upload/v1767265159/Untitled_design_3_svzorj.svg"
-          className="absolute grayscale z-0 scale-130 -left-450  lg:-left-400  bottom-30 lg:bottom-0 pointer-events-none"
+          className="absolute grayscale z-0 scale-130 -left-440  lg:-left-400  bottom-30 lg:bottom-0 pointer-events-none"
           style={{
             x: leftX,
             rotate: leftRotate,
@@ -42,7 +42,7 @@ export function QuoteSection() {
         {/* SVG kanan */}
         <motion.img
           src="https://res.cloudinary.com/dwudbtejo/image/upload/v1767265261/Untitled_design_4_czlga1.svg"
-          className="absolute grayscale z-0 scale-130 -right-5 lg:right-40 -bottom-20 lg:-bottom-70 pointer-events-none"
+          className="absolute grayscale z-0 scale-130 -right-5 lg:right-20 -bottom-20 lg:-bottom-70 pointer-events-none"
           style={{
             x: rightX,
             rotate: rightRotate,

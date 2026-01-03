@@ -15,7 +15,8 @@ export default function AboutPage() {
       <AboutHero />
 
       {/* Scrolling Content */}
-      <div className="relative z-10 mt-[100vh] bg-neutral-950 shadow-[0_-50px_100px_rgba(0,0,0,0.5)]">
+      <div className="relative z-10 mt-[100vh] bg-neutral-950 ">
+        
         <IntroSection />
         <ExpertiseSection />
         <QuoteSection />

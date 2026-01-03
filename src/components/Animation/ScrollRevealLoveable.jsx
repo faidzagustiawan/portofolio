@@ -10,7 +10,12 @@ export function ScrollReveal({
   animation = 'fade-up',
   threshold = 0.1,
 }) {
-  const { ref, isVisible } = useScrollReveal({ threshold })
+
+
+  const { ref, isVisible } = useScrollReveal({
+    threshold,
+    root: typeof window !== 'undefined' ? document.documentElement : null,
+  })
 
   const hidden = {
     'fade-up': 'opacity-0 translate-y-16',
@@ -32,12 +37,17 @@ export function ScrollReveal({
     'clip': 'opacity-100',
   }
 
+  const animationClass =
+    isVisible && visible[animation]
+      ? visible[animation]
+      : hidden[animation]
+
   return (
     <div
       ref={ref}
       className={cn(
-        'transition-all',
-        isVisible ? visible[animation] : hidden[animation],
+        'transition-all will-change-transform',
+        animationClass,
         className
       )}
       style={{

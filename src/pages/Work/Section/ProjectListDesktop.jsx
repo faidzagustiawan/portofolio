@@ -19,7 +19,7 @@ export function ProjectListDesktop({ projects, activeIndex, setActiveIndex, mous
 
   // 2. Render normal jika ada data
   return (
-    <section className="hidden lg:block max-w-7xl mx-auto px-6 md:px-12 lg:px-16 pb-24 md:pb-40">
+    <section className="hidden lg:block  max-w-7xl mx-auto px-6 md:px-12 lg:px-16 pb-24 md:pb-40">
       {projects.map((project, i) => (
         <ProjectListItem
           key={project.id}

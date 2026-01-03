@@ -41,7 +41,8 @@ export function FloatingPreview({ activeIndex, cursorX, cursorY, intent, project
                     }}
                     transition={{
                         duration: 0.9 - intent * 0.5,
-                        ease: [0.22, 1, 0.36, 1],
+                        ease: 'anticipate'
+,
                     }}
                 >
                     {projects.map((p, i) => (
