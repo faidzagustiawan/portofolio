@@ -1,4 +1,3 @@
-// src/app/useAppLoader.js
 import { useEffect, useRef, useState } from 'react'
 import { preloadTasks } from './preloadTasks'
 import {
@@ -8,10 +7,12 @@ import {
 
 export function useAppLoader(location, displayedLocation, setDisplayedLocation) {
   const isFirstLoad = useRef(true)
-
   const alreadyPreloaded = hasPreloadedAssets()
 
-  // 🔥 Jika sudah preload → langsung lompat ke fase sapaan (1)
+  // STATE: Apakah sedang dalam proses transisi (tutup/buka tirai)?
+  const [isTransitioning, setIsTransitioning] = useState(false)
+
+  // 1. FASE LOADING AWAL
   const [loadingPhase, setLoadingPhase] = useState(
     alreadyPreloaded ? 1 : 0
   )
@@ -32,7 +33,7 @@ export function useAppLoader(location, displayedLocation, setDisplayedLocation) 
     const loadAssets = async () => {
       await Promise.all(preloadTasks.map(task => task()))
       finished = true
-      markAssetsPreloaded() // 🔥 SIMPAN KE STORAGE
+      markAssetsPreloaded()
     }
 
     loadAssets()
@@ -53,7 +54,7 @@ export function useAppLoader(location, displayedLocation, setDisplayedLocation) 
   }, [])
 
   // ============================
-  // FASE 1 — SAPAAN SELESAI
+  // FASE 1 — KLIK START / SELESAI
   // ============================
   const handlePreloaderComplete = () => {
     if (isFirstLoad.current) {
@@ -64,15 +65,31 @@ export function useAppLoader(location, displayedLocation, setDisplayedLocation) 
   }
 
   // ============================
-  // PAGE TRANSITION
+  // FASE TRANSISI HALAMAN (CRITICAL FIX)
   // ============================
   useEffect(() => {
     if (isFirstLoad.current) return
 
+    // Jika URL berubah (user klik menu)
     if (location.pathname !== displayedLocation.pathname) {
+      
+      // 1. Kunci preloader agar muncul
+      setIsTransitioning(true)
+
+      // 2. Tunggu animasi 'Enter' selesai (800ms sesuai durasi animasi blob)
       const t = setTimeout(() => {
+        
+        // 3. Swap halaman di balik layar (saat layar tertutup hitam)
         setDisplayedLocation(location)
         window.scrollTo(0, 0)
+
+        // 4. BERI JEDA SEDIKIT (BUFFER)
+        // Ini kuncinya: Beri waktu 100ms bagi React untuk me-render DOM baru 
+        // sebelum kita menyuruh preloader untuk 'Exit'.
+        setTimeout(() => {
+           setIsTransitioning(false) 
+        }, 150) // 150ms sangat aman untuk mencegah flash putih
+
       }, 800)
 
       return () => clearTimeout(t)
@@ -83,6 +100,7 @@ export function useAppLoader(location, displayedLocation, setDisplayedLocation) 
     isFirstLoad,
     loadingPhase,
     downloadProgress,
-    handlePreloaderComplete
+    handlePreloaderComplete,
+    isTransitioning // <--- Return state baru ini
   }
 }

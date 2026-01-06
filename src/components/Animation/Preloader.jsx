@@ -1,10 +1,8 @@
-
 import { useEffect, useState } from 'react'
-import { motion, useMotionValue, useTransform } from 'framer-motion'
+import { motion } from 'framer-motion' // Hapus useMotionValue, useTransform (tidak perlu lagi)
 import { Dot } from 'lucide-react'
 
-
-
+// 1. Variant untuk Background Hitam (Blob)
 const blobVariants = {
   initial: {
     y: "100%",
@@ -26,7 +24,7 @@ const blobVariants = {
   },
   exit: {
     y: "-100%",
-borderTopLeftRadius: "0%",
+    borderTopLeftRadius: "0%",
     borderTopRightRadius: "0%",
     borderBottomLeftRadius: "200%", 
     borderBottomRightRadius: "200%", 
@@ -38,6 +36,30 @@ borderTopLeftRadius: "0%",
   },
 }
 
+// 2. Variant Baru untuk Text (Agar sinkron dengan Blob tanpa error NaN)
+const textVariants = {
+  initial: {
+    y: "100%",
+    opacity: 0,
+  },
+  enter: {
+    y: "0%",
+    opacity: 1,
+    transition: {
+      duration: 0.8, // Durasi sama dengan blob
+      ease: [0.76, 0, 0.24, 1],
+    },
+  },
+  exit: {
+    y: "-100%",
+    opacity: 0,
+    transition: {
+      duration: 0.8,
+      ease: [0.76, 0, 0.24, 1],
+      delay: 0.2, // Delay sama dengan blob
+    },
+  }
+}
 
 export default function Preloader({
   words = [],
@@ -50,12 +72,10 @@ export default function Preloader({
   useEffect(() => {
     if (!words.length) return
 
-    // selesai di kata terakhir
     if (index === words.length - 1) {
       const endTimer = setTimeout(() => {
         if (onComplete) onComplete();
-      }, 200) // biar kata terakhir kebaca
-
+      }, 200) 
       return () => clearTimeout(endTimer)
     }
 
@@ -66,37 +86,29 @@ export default function Preloader({
     return () => clearTimeout(timer)
   }, [index, words, onComplete])
 
-
-
   const currentWord = words[index] ?? ""
 
-  const blobY = useMotionValue(0)
+  // Logic isFirstLoad: Jika first load, jangan animasi dari bawah (skip initial)
+  const initialVariant = isFirstLoad ? false : "initial"
 
-  const textY = useTransform(blobY, (v) => v)
-
-  const textOpacity = useTransform(blobY, ['100%', '60%', '0%'], [0, 0.6, 1])
   return (
-    <div className="fixed inset-0 z-9999 flex items-center justify-center overflow-hidden">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden pointer-events-none">
       {/* BLOB */}
       <motion.div
         variants={blobVariants}
-        initial={isFirstLoad ? false : "initial"}
+        initial={initialVariant}
         animate="enter"
         exit="exit"
-        onUpdate={(latest) => {
-          if (latest.y !== undefined) {
-            blobY.set(latest.y)
-          }
-        }}
-        className="absolute w-[140vw] h-[110vh] bg-gray-950"
+        className="absolute w-[140vw] h-[110vh] bg-gray-950 shadow-2xl"
       />
 
       {/* TEXT */}
+      {/* Kita tempel variant text disini agar geraknya bareng blob */}
       <motion.div
-        style={{
-          y: textY,
-          opacity: textOpacity,
-        }}
+        variants={textVariants}
+        initial={initialVariant}
+        animate="enter"
+        exit="exit"
         className="absolute inset-0 z-10 flex items-center justify-center text-5xl font-bold text-white"
       >
         {words.length > 1 && <Dot className="mr-2 text-blue-400" />}

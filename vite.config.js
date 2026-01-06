@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import path from "path";
+import { visualizer } from "rollup-plugin-visualizer";
 
 export default defineConfig({
   plugins: [
@@ -11,6 +12,11 @@ export default defineConfig({
       },
     }),
     tailwindcss(),
+    visualizer({
+      open: true,       // Otomatis buka browser setelah build selesai
+      filename: 'stats.html', // Nama file hasil analisanya
+      gzipSize: true,   // Menampilkan ukuran setelah dikompresi (lebih akurat)
+    }),
   ],
   resolve: {
     alias: {
@@ -23,4 +29,4 @@ export default defineConfig({
     allowedHosts: ['326104c33c7b.ngrok-free.app'],
     host: true
   }
-  })
+})
