@@ -1,11 +1,14 @@
 import { Link } from 'react-router-dom' // Import Link
 import { useInViewVideo } from "@/hooks/useInViewVideo"
+import { playHoverSound, playClickSound } from '@/utils/sound'
 
 export function ProjectGridItem({ project }) {
   const videoRef = useInViewVideo()
   return (
     <Link
       to={`/work/${project.slug}`} // Sesuaikan link di sini juga
+      onMouseEnter={playHoverSound}
+      onClick={playClickSound}
       className="group cursor-pointer block" // Tambahkan 'block' agar area klik penuh
     >
       {/* Image */}

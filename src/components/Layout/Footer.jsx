@@ -3,7 +3,7 @@ import { SiGithub, SiInstagram, SiLinkedin, SiGmail } from 'react-icons/si'
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 border-t border-gray-200 py-8 mt-auto">
+    <footer className="relative z-20 bg-gray-900 border-t border-gray-200 py-8 mt-auto">
       <div className="container mx-auto px-4 text-center">
         <div className="flex justify-center space-x-6 mb-4 text-gray-500">
 

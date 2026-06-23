@@ -1,16 +1,21 @@
 import { ArrowDownRight } from 'lucide-react'
 import { Link } from 'react-router-dom' // Import Link
+import { playHoverSound, playClickSound } from '@/utils/sound'
 
 export function ProjectListItem({ project, index, isActive, onMouseEnter, onMouseLeave }) {
   return (
     <div
       className="group relative border-t border-neutral-800"
-      onMouseEnter={onMouseEnter}
+      onMouseEnter={(e) => {
+        playHoverSound()
+        onMouseEnter(e)
+      }}
       onMouseLeave={onMouseLeave}
     >
       {/* Bungkus konten dengan Link */}
       <Link
         to={`/work/${project.slug}`} // Ganti sesuai struktur route kamu (misal: project.slug)
+        onClick={playClickSound}
         className="block overflow-hidden cursor-pointer"
       >
         {/* Hover background */}

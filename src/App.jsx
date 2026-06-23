@@ -1,74 +1,62 @@
-import { Suspense, useState } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 
 import AppLayout from '@/components/Layout/Layout'
 import AppRoutes from './Routes'
-import { useAppLoader } from '@/hooks/useAppLoader'
-
-import Preloader from '@/components/Animation/Preloader'
-import ProgressBar from '@/components/Animation/ProgressBar'
-import { preloaderWords } from '@/data/preLoaderWords'
+import PageTransition from '@/components/Animation/PageTransition'
+import InitialPreloader from '@/components/Animation/InitialPreloader'
+import { CustomCursor } from '@/components/UI/CustomCursor'
 
 export default function App() {
   const location = useLocation()
-  const [displayedLocation, setDisplayedLocation] = useState(location)
+  
+  // Initialize state based on localStorage timestamp
+  const [isFirstLoad, setIsFirstLoad] = useState(() => {
+    const lastShown = localStorage.getItem('preloaderLastShown')
+    if (lastShown) {
+      const timePassed = Date.now() - parseInt(lastShown, 10)
+      const tenMinutes = 10 * 60 * 1000
+      // If less than 10 minutes have passed, don't show the preloader
+      if (timePassed < tenMinutes) return false
+    }
+    return true
+  })
 
-  const {
-    isFirstLoad,
-    loadingPhase,
-    downloadProgress,
-    handlePreloaderComplete,
-    isTransitioning // <--- Ambil state baru dari hook
-  } = useAppLoader(location, displayedLocation, setDisplayedLocation)
-
-  // LOGIC FIX:
-  // Tampilkan preloader jika:
-  // 1. Sedang Loading awal (Phase 1)
-  // 2. ATAU sedang proses transisi (termasuk buffer time 150ms)
-  const showPreloader = loadingPhase === 1 || isTransitioning
-
-  // Helper function tetap sama
-  const getLastPathSegment = (path) => {
-    if (path === '/') return 'Home'
-    return path.split('/').filter(Boolean).pop()
+  const handlePreloaderComplete = () => {
+    localStorage.setItem('preloaderLastShown', Date.now().toString())
+    setIsFirstLoad(false)
   }
 
-  // Logic words tetap aman karena 'location' sudah berubah duluan saat buffer
-  const words =
-    loadingPhase === 1
-      ? preloaderWords
-      : [getLastPathSegment(location.pathname)] 
-
   return (
-    <div className="min-h-screen w-full bg-neutral-950">
-      
-      {/* KONTEN UTAMA */}
-      {/* Saat loading awal (Phase != 2), sembunyikan layout agar rapi */}
-      <div className={loadingPhase !== 2 ? 'opacity-0 h-0 overflow-hidden' : 'opacity-100 transition-opacity duration-500'}>
-        <AppLayout>
-          {/* Suspense fallback null karena preloader sudah menutupi layar */}
-          <Suspense fallback={null}>
-            <AppRoutes location={displayedLocation} />
-          </Suspense>
-        </AppLayout>
-      </div>
-
-      <AnimatePresence mode="wait">
-        {/* Progress Bar (Hanya saat First Load & Phase 0) */}
-        {loadingPhase === 0 && isFirstLoad.current && (
-          <ProgressBar progress={downloadProgress} />
-        )}
-
-        {/* Preloader Utama */}
-        {showPreloader && (
-          <Preloader
-            words={words}
-            isFirstLoad={isFirstLoad.current}
-            onComplete={handlePreloaderComplete}
-          />
+    <div className="min-h-screen w-full bg-neutral-950 text-white selection:bg-white selection:text-neutral-950 cursor-none">
+      <CustomCursor />
+      <AnimatePresence>
+        {isFirstLoad && (
+          <InitialPreloader key="initial-preloader" onComplete={handlePreloaderComplete} />
         )}
       </AnimatePresence>
+
+      <AppLayout>
+        <AnimatePresence mode="wait" initial={false}>
+          <PageTransition key={location.pathname}>
+            <Suspense fallback={
+              <div className="flex h-screen w-full items-center justify-center text-white">
+                <div className="flex items-center space-x-2">
+                  <div className="h-3 w-3 animate-pulse rounded-full bg-white"></div>
+                  <div className="h-3 w-3 animate-pulse rounded-full bg-white delay-75"></div>
+                  <div className="h-3 w-3 animate-pulse rounded-full bg-white delay-150"></div>
+                </div>
+              </div>
+            }>
+              <AppRoutes location={location} />
+            </Suspense>
+          </PageTransition>
+        </AnimatePresence>
+      </AppLayout>
     </div>
   )
 }
+
+
+

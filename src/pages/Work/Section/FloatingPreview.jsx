@@ -1,7 +1,7 @@
-
 import { createPortal } from 'react-dom'
 import { motion } from 'framer-motion'
 import { PREVIEW_SIZE } from '@/data/projects'
+import { SmartImage } from '@/components/UI/SmartImage'
 
 export function FloatingPreview({ activeIndex, cursorX, cursorY, intent, projects }) {
     if (activeIndex === null) return null
@@ -52,9 +52,9 @@ export function FloatingPreview({ activeIndex, cursorX, cursorY, intent, project
                             className="w-full overflow-hidden"
                         >
                             <div className="w-full aspect-square overflow-hidden">
-                                <img
+                                <SmartImage
                                     src={p.image}
-                                    className="w-full h-full object-cover"
+                                    className="w-full h-full"
                                 />
                             </div>
 

@@ -2,7 +2,6 @@ import { Routes, Route } from 'react-router-dom'
 import { lazy } from 'react'
 import {
   importHome,
-  importAbout,
   importWork,
   importContact,
   importNotFound,
@@ -10,7 +9,6 @@ import {
 } from '@/hooks/preloadTasks'
 
 const Home = lazy(importHome)
-const About = lazy(importAbout)
 const Work = lazy(importWork)
 const Contact = lazy(importContact)
 const NotFound = lazy(importNotFound)
@@ -20,7 +18,6 @@ export default function AppRoutes({ location }) {
   return (
     <Routes location={location}>
       <Route path="/" element={<Home />} />
-      <Route path="/about" element={<About />} />
       <Route path="/work" element={<Work />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/work/:slug" element={<ProjectDetail />} />

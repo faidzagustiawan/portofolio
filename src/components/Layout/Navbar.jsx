@@ -4,6 +4,7 @@ import { FiMenu, FiX } from 'react-icons/fi'
 import { motion } from 'framer-motion'
 import { useTransitionNavigate } from '@/hooks/useTransitionNavigate'
 import Magnet from '@/components/Animation/Magnet'
+import { playHoverSound, playClickSound } from '@/utils/sound'
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -49,7 +50,13 @@ const Navbar = () => {
       >
         <button
           onClick={() => {
-            if (!active) tNavigate(path, label)
+            if (!active) {
+              playClickSound()
+              tNavigate(path, label)
+            }
+          }}
+          onMouseEnter={() => {
+            if (!active) playHoverSound()
           }}
           className={linkClass(path)}
           aria-disabled={active}
@@ -80,12 +87,14 @@ const Navbar = () => {
         <Magnet padding={70} magnetStrength={5000}>
           <button
             onClick={(e) => {
+              playClickSound()
               if (location.pathname === '/') {
                 e.preventDefault()
                 return
               }
               tNavigate('/', 'Home')
             }}
+            onMouseEnter={playHoverSound}
             className={`group flex items-center space-x-2 text-lg font-bold tracking-wide select-none transition-colors duration-500 ${location.pathname === '/' ? 'text-white' : 'text-white cursor-pointer'}`}
           >
             {/* COPYRIGHT */}
@@ -105,7 +114,6 @@ const Navbar = () => {
         {/* DESKTOP MENU - Perubahan disini (md -> lg) */}
         {/* Menu ini sekarang HILANG di tablet, dan hanya muncul di Desktop Besar */}
         <div className="hidden lg:flex items-center space-x-8">
-          {renderNavItem('About', '/about')}
           {renderNavItem('Work', '/work')}
           {renderNavItem('Contact', '/contact')}
         </div>
@@ -132,7 +140,6 @@ const Navbar = () => {
         >
           <div className="flex flex-col px-6 py-4 space-y-4 text-right">
             {renderNavItem('Home', '/')}
-            {renderNavItem('About', '/about')}
             {renderNavItem('Work', '/work')}
             {renderNavItem('Contact', '/contact')}
           </div>

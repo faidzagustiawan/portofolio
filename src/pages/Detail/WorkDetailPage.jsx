@@ -6,6 +6,7 @@ import { ArrowLeft, ArrowUpRight, ExternalLink } from 'lucide-react'
 import { projects } from '@/data/projects'
 import { NoLiveUrlModal } from './NoLiveUrlModal'
 import { TeamSection } from './TeamSection'
+import { SmartImage } from '@/components/UI/SmartImage'
 
 
 const FadeUp = ({ children, delay = 0 }) => (
@@ -30,15 +31,13 @@ const ScaleIn = ({ children, delay = 0 }) => (
     </motion.div>
 )
 
+import SEO from "@/components/SEO"
+
 export default function ProjectDetailPage() {
     const { slug } = useParams()
     const [isModalOpen, setIsModalOpen] = useState(false)
 
     const project = projects.find((p) => p.slug === slug)
-
-    useEffect(() => {
-        window.scrollTo(0, 0)
-    }, [slug])
 
     if (!project) {
         return (
@@ -76,6 +75,7 @@ export default function ProjectDetailPage() {
             key={slug}
             className="min-h-screen bg-neutral-950 text-white selection:bg-white selection:text-neutral-950"
         >
+            <SEO title={project.name} description={project.tagline} image={project.image} url={`/work/${project.slug}`} type="article" />
             {/* Modal */}
             <NoLiveUrlModal
                 isOpen={isModalOpen}
@@ -223,21 +223,33 @@ export default function ProjectDetailPage() {
                 </div>
             </section>
 
-            {/* --- IMAGE GRID --- */}
-            <section className="px-6 md:px-12 lg:px-16 max-w-7xl mx-auto py-12">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-                    <FadeUp>
-                        <div className="aspect-[4/3] bg-neutral-900 border border-neutral-800 rounded-lg flex items-center justify-center overflow-hidden">
-                            <div className="w-full h-full bg-neutral-800/50 flex items-center justify-center text-neutral-600">Visual Detail 1</div>
-                        </div>
-                    </FadeUp>
-                    <FadeUp delay={0.2}>
-                        <div className="aspect-[4/3] bg-neutral-900 border border-neutral-800 rounded-lg flex items-center justify-center overflow-hidden">
-                            <div className="w-full h-full bg-neutral-800/50 flex items-center justify-center text-neutral-600">Visual Detail 2</div>
-                        </div>
-                    </FadeUp>
-                </div>
-            </section>
+            {/* --- VISUAL DETAILS CAROUSEL --- */}
+            {project.visualDetails && project.visualDetails.length > 0 && (
+                <section className="py-12">
+                    <div className="px-6 md:px-12 lg:px-16 max-w-7xl mx-auto mb-8">
+                        <FadeUp>
+                            <h2 className="text-sm font-mono uppercase tracking-widest text-neutral-500 mb-4">02.5 — Visual Details</h2>
+                            <h3 className="text-3xl font-bold text-white">Project Highlights</h3>
+                        </FadeUp>
+                    </div>
+                    {/* Horizontal scroll container */}
+                    <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 px-6 md:px-12 lg:px-16 pb-8 hide-scrollbar">
+                        {project.visualDetails.map((src, i) => (
+                            <div key={i} className="shrink-0 w-[85vw] md:w-[60vw] lg:w-[45vw] snap-center">
+                                <FadeUp delay={i * 0.1}>
+                                    <div className="aspect-[4/3] bg-neutral-900 border border-neutral-800 rounded-lg overflow-hidden relative">
+                                        <SmartImage 
+                                            src={src} 
+                                            alt={`${project.name} Detail ${i + 1}`} 
+                                            className="w-full h-full object-cover" 
+                                        />
+                                    </div>
+                                </FadeUp>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            )}
 
             {/* --- APPROACH --- */}
             <section className="px-6 md:px-12 lg:px-16 max-w-7xl mx-auto py-24 border-t border-neutral-900">
@@ -281,6 +293,26 @@ export default function ProjectDetailPage() {
 
                 {/* --- TEAM SECTION --- */}
                 <TeamSection team={project.team} />
+
+
+                {/* --- CONTRIBUTION --- */}
+                {project.contribution && (
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 mb-24 mt-24">
+                        <div className="lg:col-span-4">
+                            <FadeUp>
+                                <h2 className="text-sm font-mono uppercase tracking-widest text-neutral-500 mb-4">05 — My Contribution</h2>
+                                <h3 className="text-3xl font-bold text-white">What I Did</h3>
+                            </FadeUp>
+                        </div>
+                        <div className="lg:col-span-8">
+                            <FadeUp delay={0.1}>
+                                <p className="text-lg md:text-xl text-neutral-400 leading-relaxed text-justify">
+                                    {project.contribution}
+                                </p>
+                            </FadeUp>
+                        </div>
+                    </div>
+                )}
 
 
                 {/* --- OUTCOME --- */}

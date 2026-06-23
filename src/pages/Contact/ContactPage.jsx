@@ -5,10 +5,15 @@ import {
   Send,
   Loader2,
   CheckCircle2,
-  XCircle
+  XCircle,
+  Github,
+  Linkedin,
+  Mail,
+  Download
 } from 'lucide-react'
 import emailjs from '@emailjs/browser'
 import toast from 'react-hot-toast'
+import SEO from "@/components/SEO"
 
 /* =====================
    ANIMATION
@@ -189,6 +194,7 @@ export default function ContactPage() {
 
   return (
     <main className="min-h-screen bg-neutral-950 text-white selection:bg-white selection:text-neutral-950">
+      <SEO title="Contact" description="Get in touch. Let's discuss your next project." url="/contact" />
       {/* --- HEADER & FORM SECTION --- */}
       <div className="pt-32 lg:pt-60 pb-20 px-6 md:px-12 lg:px-16">
         <div className="max-w-7xl mx-auto">
@@ -218,6 +224,30 @@ export default function ContactPage() {
                       <span>Malang, ID</span>
                     </div>
                     <div>{time}</div>
+                  </div>
+
+                  <div className="flex flex-col gap-4 mt-8 pt-8 border-t border-neutral-800">
+                    <span className="text-sm font-mono uppercase tracking-widest text-neutral-500">Connect</span>
+                    <div className="flex flex-wrap gap-4">
+                      <a href="mailto:faidzagustiawan@gmail.com" className="flex items-center gap-2 px-4 py-2 bg-neutral-900 border border-neutral-800 rounded-full text-sm font-medium hover:bg-white hover:text-black hover:border-white transition-all group">
+                        <Mail className="w-4 h-4 transition-transform group-hover:scale-110" />
+                        Email
+                      </a>
+                      <a href="https://www.linkedin.com/in/muhammad-faidz-agustiawan-8692821bb" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 bg-neutral-900 border border-neutral-800 rounded-full text-sm font-medium hover:bg-white hover:text-black hover:border-white transition-all group">
+                        <Linkedin className="w-4 h-4 transition-transform group-hover:scale-110" />
+                        LinkedIn
+                      </a>
+                      <a href="https://github.com/faidzagustiawan" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 bg-neutral-900 border border-neutral-800 rounded-full text-sm font-medium hover:bg-white hover:text-black hover:border-white transition-all group">
+                        <Github className="w-4 h-4 transition-transform group-hover:scale-110" />
+                        GitHub
+                      </a>
+                    </div>
+                    <div className="mt-2">
+                      <a href="/CV-Muhammad%20Faidz%20Agustiawan.pdf" target="_blank" rel="noopener noreferrer" download className="inline-flex items-center gap-2 px-6 py-3 bg-neutral-800 border border-neutral-700 text-white rounded-full text-sm font-medium hover:bg-white hover:text-black transition-all group">
+                        <Download className="w-4 h-4 transition-transform group-hover:-translate-y-0.5" />
+                        Download Resume
+                      </a>
+                    </div>
                   </div>
                 </div>
               </FadeUp>

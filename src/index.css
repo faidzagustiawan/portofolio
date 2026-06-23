@@ -132,7 +132,12 @@
     -moz-osx-font-smoothing: grayscale;
     scrollbar-width: none;
     -ms-overflow-style: none;
- 
+    cursor: none;
+  }
+  
+  /* Hide cursor on all elements globally */
+  * {
+    cursor: none !important;
   }
 
   ::-webkit-scrollbar {

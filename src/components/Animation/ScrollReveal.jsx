@@ -1,89 +1,58 @@
-import { useEffect, useRef, useMemo } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-
-gsap.registerPlugin(ScrollTrigger)
+import { useMemo, useRef } from 'react'
+import { motion, useInView } from 'framer-motion'
 
 const ScrollReveal = ({
   children,
-  scrollContainerRef,
-  containerRefExternal,
   enableBlur = true,
   baseOpacity = 0,
   blurStrength = 10,
   containerClassName = '',
   textClassName = '',
-  wordAnimationEnd = 'bottom top+=40%',
 }) => {
-  const internalRef = useRef(null)
-  const containerRef = containerRefExternal || internalRef
+  const containerRef = useRef(null)
+  const isInView = useInView(containerRef, { once: true, margin: "-10% 0px" })
 
-  // SPLIT TEXT → WORD
   const splitText = useMemo(() => {
     const text = typeof children === 'string' ? children : ''
     return text.split(/(\s+)/).map((word, index) => {
       if (word.match(/^\s+$/)) return word
       return (
-        <span key={index} className="inline-block word">
+        <motion.span
+          key={index}
+          className="inline-block"
+          variants={{
+            hidden: {
+              opacity: baseOpacity,
+              filter: enableBlur ? `blur(${blurStrength}px)` : 'none',
+              y: 20
+            },
+            visible: {
+              opacity: 1,
+              filter: 'blur(0px)',
+              y: 0
+            }
+          }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        >
           {word}
-        </span>
+        </motion.span>
       )
     })
-  }, [children])
-
-  useEffect(() => {
-    const el = containerRef.current
-    if (!el) return
-
-    const scroller =
-      scrollContainerRef?.current || window
-
-    const ctx = gsap.context(() => {
-      const words = el.querySelectorAll('.word')
-
-      gsap.fromTo(
-        words,
-        {
-          opacity: baseOpacity,
-          filter: enableBlur ? `blur(${blurStrength}px)` : 'none',
-        },
-        {
-          opacity: 1,
-          filter: 'blur(0px)',
-          stagger: 0.18,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: el,
-            scroller,
-            start: 'top ',
-            end: '+=160%',
-            scrub: true,
-          },
-        }
-      )
-
-    }, el)
-
-    return () => ctx.revert()
-  }, [
-    scrollContainerRef,
-    enableBlur,
-    baseOpacity,
-    blurStrength,
-    wordAnimationEnd,
-    containerRef,
-  ])
+  }, [children, baseOpacity, enableBlur, blurStrength])
 
   return (
     <h2
       ref={containerRef}
       className={`my-5 ${containerClassName}`}
     >
-      <p
+      <motion.p
         className={`text-[clamp(1.6rem,4vw,3rem)] leading-[1.5] font-semibold ${textClassName}`}
+        initial="hidden"
+        animate={isInView ? "visible" : "hidden"}
+        transition={{ staggerChildren: 0.05 }}
       >
         {splitText}
-      </p>
+      </motion.p>
     </h2>
   )
 }

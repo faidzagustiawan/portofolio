@@ -1,75 +1,55 @@
-import { useLayoutEffect, useMemo, useRef } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-
-gsap.registerPlugin(ScrollTrigger)
+import { useMemo, useRef } from 'react'
+import { motion, useInView } from 'framer-motion'
 
 const ScrollFloat = ({
   children,
-  scrollContainerRef,
   containerClassName = '',
   textClassName = '',
   animationDuration = 1,
-  ease = 'power3.out',
-  scrollStart = 'top center',
-  scrollEnd = '+=160%',
+  ease = [0.16, 1, 0.3, 1], // similar to power3.out
   stagger = 0.04,
 }) => {
   const containerRef = useRef(null)
+  const isInView = useInView(containerRef, { once: true, margin: "-10% 0px" })
 
   const splitText = useMemo(() => {
     const text = typeof children === 'string' ? children : ''
     return text.split('').map((char, index) => (
-      <span key={index} className="inline-block char">
-        {char === ' ' ? '\u00A0' : char}
-      </span>
-    ))
-  }, [children])
-
-  useLayoutEffect(() => {
-    const el = containerRef.current
-    if (!el) return
-
-    const scroller = scrollContainerRef?.current || window
-    const chars = el.querySelectorAll('.char')
-
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        chars,
-        {
-          opacity: 0,
-          yPercent: 140,
-          scaleY: 2.6,
-          scaleX: 0.7,
-          transformOrigin: '50% 0%',
-          willChange: 'transform, opacity',
-        },
-        {
-          opacity: 1,
-          yPercent: 0,
-          scaleY: 1,
-          scaleX: 1,
-          stagger,
-          ease,
-          scrollTrigger: {
-            trigger: el,
-            scroller,
-            start: scrollStart,
-            end: scrollEnd,
-            scrub: true,
+      <motion.span
+        key={index}
+        className="inline-block"
+        variants={{
+          hidden: {
+            opacity: 0,
+            y: "140%",
+            scaleY: 2.6,
+            scaleX: 0.7,
           },
-        }
-      )
-    }, el)
-
-    return () => ctx.revert()
-  }, [scrollContainerRef, animationDuration, ease, scrollStart, scrollEnd, stagger])
+          visible: {
+            opacity: 1,
+            y: "0%",
+            scaleY: 1,
+            scaleX: 1,
+          }
+        }}
+        transition={{ duration: animationDuration, ease }}
+      >
+        {char === ' ' ? '\u00A0' : char}
+      </motion.span>
+    ))
+  }, [children, animationDuration, ease])
 
   return (
     <h2 ref={containerRef} className={containerClassName}>
-      <span className={`inline-block ${textClassName}`}>
+      <motion.span
+        className={`inline-block ${textClassName}`}
+        style={{ transformOrigin: '50% 0%' }}
+        initial="hidden"
+        animate={isInView ? "visible" : "hidden"}
+        transition={{ staggerChildren: stagger }}
+      >
         {splitText}
-      </span>
+      </motion.span>
     </h2>
   )
 }

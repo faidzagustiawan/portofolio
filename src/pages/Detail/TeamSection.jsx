@@ -1,5 +1,6 @@
 
 import { motion } from 'framer-motion'
+import { SmartImage } from '@/components/UI/SmartImage'
 
 const FadeUp = ({ children, delay = 0 }) => (
   <motion.div
@@ -44,10 +45,10 @@ export function TeamSection({ team }) {
                   <div className="relative">
                     <div className="w-16 h-16 rounded-full overflow-hidden bg-neutral-800 flex-shrink-0 ring-2 ring-neutral-800 group-hover:ring-neutral-600 transition-all">
                       {member.avatar ? (
-                        <img 
+                        <SmartImage 
                           src={member.avatar} 
                           alt={member.name}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-2xl font-bold text-neutral-600">
