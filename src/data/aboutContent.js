@@ -4,7 +4,7 @@ export const timelineNodes = [
   {
     id: 1,
     title: "Awakening",
-    text: "The moment I realized the web isn't static — it responds."
+    text: "The moment I realized the web isn't static, it responds."
   },
   {
     id: 2,
@@ -24,7 +24,7 @@ export const timelineNodes = [
   {
     id: 5,
     title: "Shift",
-    text: "From making things move — to making them communicate."
+    text: "From making things move to making them communicate."
   },
   {
     id: 6,
@@ -57,7 +57,7 @@ export const principles = [
 ];
 
 export const toolsNarrative = {
-  text: "Along the way, I naturally gravitated toward tools that respect structure and flexibility — ",
+  text: "Along the way, I naturally gravitated toward tools that respect structure and flexibility. ",
   tools: ["HTML", "CSS", "JavaScript", "React", "animation libraries", "design tools"],
   closing: ". But tools change. Principles don't."
 };

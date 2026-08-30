@@ -227,23 +227,23 @@ export default function ContactPage() {
                   </div>
 
                   <div className="flex flex-col gap-4 mt-8 pt-8 border-t border-neutral-800">
-                    <span className="text-sm font-mono uppercase tracking-widest text-neutral-500">Connect</span>
+                    <span className="text-sm font-mono uppercase tracking-widest text-neutral-400">Connect</span>
                     <div className="flex flex-wrap gap-4">
-                      <a href="mailto:faidzagustiawan@gmail.com" className="flex items-center gap-2 px-4 py-2 bg-neutral-900 border border-neutral-800 rounded-full text-sm font-medium hover:bg-white hover:text-black hover:border-white transition-all group">
-                        <Mail className="w-4 h-4 transition-transform group-hover:scale-110" />
+                      <a href="mailto:faidzagustiawan@gmail.com" className="flex items-center gap-2 px-4 py-2 bg-neutral-900 border border-neutral-800 rounded-xl text-sm font-medium hover:bg-white hover:text-black hover:border-white transition-all group">
+                        <Mail className="w-4 h-4 transition-transform group-hover:scale-110" aria-hidden="true" />
                         Email
                       </a>
-                      <a href="https://www.linkedin.com/in/muhammad-faidz-agustiawan-8692821bb" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 bg-neutral-900 border border-neutral-800 rounded-full text-sm font-medium hover:bg-white hover:text-black hover:border-white transition-all group">
-                        <Linkedin className="w-4 h-4 transition-transform group-hover:scale-110" />
+                      <a href="https://www.linkedin.com/in/muhammad-faidz-agustiawan-8692821bb" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 bg-neutral-900 border border-neutral-800 rounded-xl text-sm font-medium hover:bg-white hover:text-black hover:border-white transition-all group">
+                        <Linkedin className="w-4 h-4 transition-transform group-hover:scale-110" aria-hidden="true" />
                         LinkedIn
                       </a>
-                      <a href="https://github.com/faidzagustiawan" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 bg-neutral-900 border border-neutral-800 rounded-full text-sm font-medium hover:bg-white hover:text-black hover:border-white transition-all group">
-                        <Github className="w-4 h-4 transition-transform group-hover:scale-110" />
+                      <a href="https://github.com/faidzagustiawan" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 bg-neutral-900 border border-neutral-800 rounded-xl text-sm font-medium hover:bg-white hover:text-black hover:border-white transition-all group">
+                        <Github className="w-4 h-4 transition-transform group-hover:scale-110" aria-hidden="true" />
                         GitHub
                       </a>
                     </div>
                     <div className="mt-2">
-                      <a href="/CV-Muhammad%20Faidz%20Agustiawan.pdf" target="_blank" rel="noopener noreferrer" download className="inline-flex items-center gap-2 px-6 py-3 bg-neutral-800 border border-neutral-700 text-white rounded-full text-sm font-medium hover:bg-white hover:text-black transition-all group">
+                      <a href="/CV-Muhammad%20Faidz%20Agustiawan.pdf" target="_blank" rel="noopener noreferrer" download className="inline-flex items-center gap-2 px-6 py-3 bg-neutral-800 border border-neutral-700 text-white rounded-xl text-sm font-medium hover:bg-white hover:text-black transition-all group">
                         <Download className="w-4 h-4 transition-transform group-hover:-translate-y-0.5" />
                         Download Resume
                       </a>
@@ -275,7 +275,7 @@ export default function ContactPage() {
 
                     {/* Name */}
                     <div className="space-y-2">
-                      <label className="text-sm font-mono uppercase tracking-widest text-neutral-500">
+                      <label className="text-sm font-mono uppercase tracking-widest text-neutral-400">
                         Your Name
                       </label>
                       <input
@@ -294,7 +294,7 @@ export default function ContactPage() {
 
                     {/* Email */}
                     <div className="space-y-2">
-                      <label className="text-sm font-mono uppercase tracking-widest text-neutral-500">
+                      <label className="text-sm font-mono uppercase tracking-widest text-neutral-400">
                        Your Email
                       </label>
                       <input
@@ -314,7 +314,7 @@ export default function ContactPage() {
 
                     {/* Title */}
                     <div className="space-y-2">
-                      <label className="text-sm font-mono uppercase tracking-widest text-neutral-500">
+                      <label className="text-sm font-mono uppercase tracking-widest text-neutral-400">
                         Project / Subject
                       </label>
                       <input
@@ -333,7 +333,7 @@ export default function ContactPage() {
 
                     {/* Message */}
                     <div className="space-y-2">
-                      <label className="text-sm font-mono uppercase tracking-widest text-neutral-500">
+                      <label className="text-sm font-mono uppercase tracking-widest text-neutral-400">
                         Message
                       </label>
                       <textarea
@@ -355,7 +355,7 @@ export default function ContactPage() {
                     <button
                       type="submit"
                       disabled={isSubmitting || isSuccess}
-                      className={`w-full py-4 rounded-full font-medium transition-all flex items-center justify-center gap-2 ${isSuccess
+                      className={`w-full py-4 rounded-xl font-medium transition-all flex items-center justify-center gap-2 ${isSuccess
                         ? 'bg-green-500 text-white'
                         : 'bg-white text-black hover:bg-neutral-200'
                         }`}

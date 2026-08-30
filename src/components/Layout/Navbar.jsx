@@ -122,6 +122,7 @@ const Navbar = () => {
         {/* Tombol ini sekarang MUNCUL di tablet */}
         <button
           onClick={() => setIsOpen(!isOpen)}
+          aria-label={isOpen ? "Close menu" : "Open menu"}
           className="lg:hidden text-white cursor-pointer"
         >
           {isOpen ? <FiX size={22} /> : <FiMenu size={22} />}

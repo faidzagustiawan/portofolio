@@ -23,13 +23,13 @@ export function TeamSection({ team }) {
         {/* Title */}
         <div className="lg:col-span-4">
           <FadeUp>
-            <h2 className="text-sm font-mono uppercase tracking-widest text-neutral-500 mb-4">
-              05 — Team
+            <h2 className="text-sm font-mono uppercase tracking-widest text-neutral-400 mb-4">
+              05. Team
             </h2>
             <h3 className="text-3xl font-bold text-white">
               The People Behind
             </h3>
-            <p className="text-neutral-500 mt-4 leading-relaxed">
+            <p className="text-neutral-400 mt-4 leading-relaxed">
               Great projects are built by great teams.
             </p>
           </FadeUp>
@@ -63,7 +63,7 @@ export function TeamSection({ team }) {
                     <h4 className="font-semibold text-white group-hover:text-neutral-200 transition-colors truncate">
                       {member.name}
                     </h4>
-                    <p className="text-sm text-neutral-500 group-hover:text-neutral-400 transition-colors truncate">
+                    <p className="text-sm text-neutral-400 group-hover:text-neutral-400 transition-colors truncate">
                       {member.role}
                     </p>
                   </div>

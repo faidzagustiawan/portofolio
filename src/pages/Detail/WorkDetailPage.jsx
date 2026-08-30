@@ -43,7 +43,7 @@ export default function ProjectDetailPage() {
         return (
             <div className="min-h-screen bg-neutral-950 flex flex-col items-center justify-center text-white p-6 text-center">
                 <h2 className="text-3xl font-bold mb-4">Project Not Found</h2>
-                <p className="text-neutral-500 mb-8">The project you are looking for does not exist.</p>
+                <p className="text-neutral-400 mb-8">The project you are looking for does not exist.</p>
                 <Link
                     to="/work"
                     className="px-6 py-3 bg-white text-black rounded-full font-medium hover:bg-neutral-200 transition-colors"
@@ -88,7 +88,7 @@ export default function ProjectDetailPage() {
                 <FadeUp>
                     <Link
                         to="/work"
-                        className="inline-flex items-center gap-2 text-sm text-neutral-500 hover:text-white transition-colors mb-12 group"
+                        className="inline-flex items-center gap-2 text-sm text-neutral-400 hover:text-white transition-colors mb-12 group"
                     >
                         <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
                         Back to Work
@@ -125,7 +125,7 @@ export default function ProjectDetailPage() {
                                     { label: "Duration", value: project.duration },
                                 ].map((item, i) => (
                                     <div key={i}>
-                                        <span className="text-xs font-mono uppercase tracking-widest text-neutral-500 block mb-2">
+                                        <span className="text-xs font-mono uppercase tracking-widest text-neutral-400 block mb-2">
                                             {item.label}
                                         </span>
                                         <p className="font-medium text-base md:text-lg">{item.value}</p>
@@ -188,7 +188,7 @@ export default function ProjectDetailPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
                     <div className="lg:col-span-4">
                         <FadeUp>
-                            <h2 className="text-sm font-mono uppercase tracking-widest text-neutral-500 mb-4">01 — Overview</h2>
+                            <h2 className="text-sm font-mono uppercase tracking-widest text-neutral-400 mb-4">01. Overview</h2>
                             <h3 className="text-3xl font-bold text-white">Project Context</h3>
                         </FadeUp>
                     </div>
@@ -208,7 +208,7 @@ export default function ProjectDetailPage() {
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
                         <div className="lg:col-span-4">
                             <FadeUp>
-                                <h2 className="text-sm font-mono uppercase tracking-widest text-neutral-500 mb-4">02 — Challenge</h2>
+                                <h2 className="text-sm font-mono uppercase tracking-widest text-neutral-400 mb-4">02. Challenge</h2>
                                 <h3 className="text-3xl font-bold text-white">The Problem</h3>
                             </FadeUp>
                         </div>
@@ -228,7 +228,7 @@ export default function ProjectDetailPage() {
                 <section className="py-12">
                     <div className="px-6 md:px-12 lg:px-16 max-w-7xl mx-auto mb-8">
                         <FadeUp>
-                            <h2 className="text-sm font-mono uppercase tracking-widest text-neutral-500 mb-4">02.5 — Visual Details</h2>
+                            <h2 className="text-sm font-mono uppercase tracking-widest text-neutral-400 mb-4">02.5. Visual Details</h2>
                             <h3 className="text-3xl font-bold text-white">Project Highlights</h3>
                         </FadeUp>
                     </div>
@@ -256,7 +256,7 @@ export default function ProjectDetailPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
                     <div className="lg:col-span-4">
                         <FadeUp>
-                            <h2 className="text-sm font-mono uppercase tracking-widest text-neutral-500 mb-4">03 — Approach</h2>
+                            <h2 className="text-sm font-mono uppercase tracking-widest text-neutral-400 mb-4">03. Approach</h2>
                             <h3 className="text-3xl font-bold text-white">My Process</h3>
                         </FadeUp>
                     </div>
@@ -276,7 +276,7 @@ export default function ProjectDetailPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 mb-24">
                     <div className="lg:col-span-4">
                         <FadeUp>
-                            <h2 className="text-sm font-mono uppercase tracking-widest text-neutral-500 mb-4">04 — Solution</h2>
+                            <h2 className="text-sm font-mono uppercase tracking-widest text-neutral-400 mb-4">04. Solution</h2>
                             <h3 className="text-3xl font-bold text-white">The Build</h3>
                         </FadeUp>
                     </div>
@@ -300,7 +300,7 @@ export default function ProjectDetailPage() {
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 mb-24 mt-24">
                         <div className="lg:col-span-4">
                             <FadeUp>
-                                <h2 className="text-sm font-mono uppercase tracking-widest text-neutral-500 mb-4">05 — My Contribution</h2>
+                                <h2 className="text-sm font-mono uppercase tracking-widest text-neutral-400 mb-4">05. My Contribution</h2>
                                 <h3 className="text-3xl font-bold text-white">What I Did</h3>
                             </FadeUp>
                         </div>
@@ -320,7 +320,7 @@ export default function ProjectDetailPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 p-8 md:p-12 bg-neutral-900 rounded-2xl border border-neutral-800">
                     <div className="lg:col-span-4">
                         <FadeUp>
-                            <h2 className="text-sm font-mono uppercase tracking-widest text-neutral-500 mb-4">06 — Outcome</h2>
+                            <h2 className="text-sm font-mono uppercase tracking-widest text-neutral-400 mb-4">06. Outcome</h2>
                             <h3 className="text-3xl font-bold text-white">The Result</h3>
                         </FadeUp>
                     </div>
@@ -378,7 +378,7 @@ export default function ProjectDetailPage() {
                         <div className="px-6 md:px-12 lg:px-16 max-w-7xl mx-auto py-24 md:py-32 relative z-10">
                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
                                 <div>
-                                    <span className="text-sm font-mono uppercase tracking-widest text-neutral-500 mb-4 block group-hover:text-neutral-400 transition-colors">
+                                    <span className="text-sm font-mono uppercase tracking-widest text-neutral-400 mb-4 block group-hover:text-neutral-400 transition-colors">
                                         Next Project
                                     </span>
                                     <h2 className="text-4xl md:text-6xl lg:text-8xl font-bold tracking-tight text-white transition-transform duration-700 group-hover:translate-x-4">

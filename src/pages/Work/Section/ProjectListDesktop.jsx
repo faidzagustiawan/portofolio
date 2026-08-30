@@ -10,7 +10,7 @@ export function ProjectListDesktop({ projects, activeIndex, setActiveIndex, mous
           <FolderOpen className="w-8 h-8 text-neutral-600" />
         </div>
         <h3 className="text-2xl font-medium text-white mb-2">No projects found</h3>
-        <p className="text-neutral-500 max-w-sm">
+        <p className="text-neutral-400 max-w-sm">
           We couldn't find any projects matching your current filters. Try adjusting your search criteria.
         </p>
       </section>

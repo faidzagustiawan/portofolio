@@ -10,7 +10,7 @@ export function ProjectGridMobile({ projects }) {
           <FolderOpen className="w-6 h-6 text-neutral-600" />
         </div>
         <h3 className="text-xl font-medium text-white mb-2">No projects found</h3>
-        <p className="text-neutral-500 text-sm">
+        <p className="text-neutral-400 text-sm">
           Try adjusting your search or filters to see more results.
         </p>
       </section>

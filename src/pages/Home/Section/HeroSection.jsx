@@ -10,7 +10,7 @@ const HeroSection = () => {
         <div className="absolute inset-x-0 bottom-0 h-100 bg-linear-to-t from-neutral-950 to-transparent z-40 pointer-events-none" />
         
         {/* Subtle background glow replacing LightRays */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-white/5 rounded-full blur-[120px] pointer-events-none z-0" />
+        {/* <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-white/5 rounded-full blur-[120px] pointer-events-none z-0" /> */}
 
         {/* LOCATED BADGE */}
         <div className="z-50">
@@ -22,8 +22,11 @@ const HeroSection = () => {
           <div className="relative overflow-visible rounded-2xl">
 
             <img
-              src="/FotoFaidz.svg" // dari PUBLIC
-              alt="Faidz"
+              src="/FotoFaidz.svg"
+              alt="Faidz Agustiawan"
+              width="800"
+              height="1200"
+              fetchPriority="high"
               className="
                 object-cover h-[70vh] xl:h-[110vh] w-auto
                 -bottom-10  

@@ -25,7 +25,7 @@ const FinalCTASection = () => {
             <Link
               to="/contact"
               className="inline-flex items-center gap-3 text-base md:text-lg font-medium
-              text-black bg-white border border-white/30 px-8 py-4 rounded-full
+              text-black bg-white border border-white/30 px-8 py-4 rounded-xl
               hover:bg-neutral-200 transition"
             >
               Contact Me →

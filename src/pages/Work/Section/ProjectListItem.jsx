@@ -41,15 +41,15 @@ export function ProjectListItem({ project, index, isActive, onMouseEnter, onMous
 
             {/* Right */}
             <div className=" flex w-1/2 relative items-center justify-between gap-8 lg:gap-16">
-              <p className="w-1/2 text-neutral-500 transition-transform duration-500 group-hover:-translate-x-2 group-hover:text-neutral-300">
+              <p className="w-1/2 text-neutral-400 transition-transform duration-500 group-hover:-translate-x-2 group-hover:text-neutral-300">
                 {project.tagline}
               </p>
               <div className="w-1/2 justify-between flex items-center gap-6">
-                <span className="text-sm font-mono uppercase tracking-widest text-neutral-500">
+                <span className="text-sm font-mono uppercase tracking-widest text-neutral-400">
                   {project.category}
                 </span>
                 <div className='flex justify-end items-center gap-3'>
-                  <span className="text-sm font-mono uppercase tracking-widest text-neutral-500">
+                  <span className="text-sm font-mono uppercase tracking-widest text-neutral-400">
                     {project.year}
                   </span>
                   <div className="w-10 h-10 border border-white/20 rounded-full flex items-center justify-center transition-all duration-500 group-hover:bg-white group-hover:text-black group-hover:border-transparent">

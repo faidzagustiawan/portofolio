@@ -9,7 +9,7 @@ export function CustomCursor() {
   const cursorX = useMotionValue(-100)
   const cursorY = useMotionValue(-100)
 
-  const springConfig = { damping: 25, stiffness: 300, mass: 0.5 }
+  const springConfig = { damping: 20, stiffness: 400, mass: 0.2 }
   const cursorXSpring = useSpring(cursorX, springConfig)
   const cursorYSpring = useSpring(cursorY, springConfig)
 

@@ -132,7 +132,7 @@ const UnderDevelopment = () => {
             </p>
 
             <p className="text-white/50 text-base leading-relaxed">
-              This page isn’t ready yet — but the developer is currently
+              This page isn’t ready yet, but the developer is currently
               <span className="text-white"> working hard </span>
               polishing pixels, fixing bugs, and shipping something meaningful.
               🛠️☕

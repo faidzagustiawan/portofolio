@@ -17,6 +17,7 @@ const VideoCard = ({ item }) => {
           playsInline
           preload="metadata"
           className="w-full h-full object-cover"
+          aria-hidden="true"
         />
 
         {/* OVERLAY */}

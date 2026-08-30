@@ -24,7 +24,7 @@ const NotFound = () => {
           className="mt-10"
         >
           <p className="text-lg md:text-xl text-white/70 max-w-xl">
-            The page you’re looking for doesn’t exist —
+            The page you’re looking for doesn’t exist.
             or maybe it was never meant to be found.
           </p>
         </ScrollRevealBlock>

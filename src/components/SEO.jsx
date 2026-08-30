@@ -14,22 +14,25 @@ export default function SEO({ title, description, image, url, type = 'website' }
   // Schema.org JSON-LD
   const schema = {
     "@context": "https://schema.org",
-    "@type": type === 'article' ? 'Article' : 'WebSite',
-    "name": seoTitle,
-    "description": seoDescription,
-    "url": seoUrl,
-    "image": seoImage,
-    // Add Person schema if it's the root website type
-    ...(type === 'website' && seoUrl === defaultUrl && {
-      "@type": "Person",
-      "name": "Faidz Agustiawan",
-      "jobTitle": "Frontend Developer",
-      "url": defaultUrl,
-      "sameAs": [
-        "https://www.linkedin.com/in/muhammad-faidz-agustiawan-8692821bb",
-        "https://github.com/faidzagustiawan"
-      ]
-    })
+    "@graph": [
+      {
+        "@type": type === 'article' ? 'Article' : 'WebSite',
+        "name": seoTitle,
+        "description": seoDescription,
+        "url": seoUrl,
+        "image": seoImage,
+      },
+      ...(type === 'website' && seoUrl === defaultUrl ? [{
+        "@type": "Person",
+        "name": "Faidz Agustiawan",
+        "jobTitle": "Frontend Developer",
+        "url": defaultUrl,
+        "sameAs": [
+          "https://www.linkedin.com/in/muhammad-faidz-agustiawan-8692821bb",
+          "https://github.com/faidzagustiawan"
+        ]
+      }] : [])
+    ]
   };
 
   return (

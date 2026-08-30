@@ -15,7 +15,7 @@ export function SearchFilter({
       <div className="space-y-6">
         {/* Search Bar */}
         <div className="relative group">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-500 group-focus-within:text-white transition-colors" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400 group-focus-within:text-white transition-colors" />
           <input
             type="text"
             value={searchQuery}
@@ -26,7 +26,7 @@ export function SearchFilter({
           {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-white transition-colors"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white transition-colors"
               aria-label="Clear search"
             >
               <X className="w-5 h-5" />
@@ -38,7 +38,7 @@ export function SearchFilter({
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Category Filter */}
           <div className="space-y-3">
-            <label className="text-xs md:text-sm font-mono uppercase tracking-widest text-neutral-500 block">
+            <label className="text-xs md:text-sm font-mono uppercase tracking-widest text-neutral-400 block">
               Project Type
             </label>
             <div className="flex flex-wrap gap-2">
@@ -46,7 +46,7 @@ export function SearchFilter({
                 <button
                   key={category}
                   onClick={() => setSelectedCategory(category)}
-                  className={`px-3 md:px-4 py-2 text-xs md:text-sm font-medium rounded-full transition-all duration-200 border ${
+                  className={`px-3 md:px-4 py-2 text-xs md:text-sm font-medium rounded-xl transition-all duration-200 border ${
                     selectedCategory === category
                       ? 'bg-white text-black border-white shadow-[0_0_15px_rgba(255,255,255,0.3)] scale-105'
                       : 'bg-transparent text-neutral-400 border-neutral-800 hover:border-neutral-600 hover:text-white hover:scale-105'
@@ -60,7 +60,7 @@ export function SearchFilter({
 
           {/* Year Filter */}
           <div className="space-y-3">
-            <label className="text-xs md:text-sm font-mono uppercase tracking-widest text-neutral-500 block">
+            <label className="text-xs md:text-sm font-mono uppercase tracking-widest text-neutral-400 block">
               Year
             </label>
             <div className="flex flex-wrap gap-2">
@@ -68,7 +68,7 @@ export function SearchFilter({
                 <button
                   key={item}
                   onClick={() => setSelectedYear(item)}
-                  className={`px-3 md:px-4 py-2 text-xs md:text-sm font-medium rounded-full transition-all duration-200 border ${
+                  className={`px-3 md:px-4 py-2 text-xs md:text-sm font-medium rounded-xl transition-all duration-200 border ${
                     selectedYear === item
                       ? 'bg-white text-black border-white shadow-[0_0_15px_rgba(255,255,255,0.3)] scale-105'
                       : 'bg-transparent text-neutral-400 border-neutral-800 hover:border-neutral-600 hover:text-white hover:scale-105'
@@ -83,7 +83,7 @@ export function SearchFilter({
 
         {/* Results Count with Clear Filters */}
         <div className="flex items-center justify-between pt-2 border-t border-neutral-900 mt-4">
-          <div className="text-sm text-neutral-500 mt-4">
+          <div className="text-sm text-neutral-400 mt-4">
             Showing <span className="font-semibold text-white">{resultsCount}</span> project{resultsCount !== 1 ? 's' : ''}
           </div>
           
@@ -94,7 +94,7 @@ export function SearchFilter({
                 setSelectedYear('All')
                 setSearchQuery('')
               }}
-              className="text-sm text-neutral-500 hover:text-white transition-colors underline decoration-neutral-700 underline-offset-4 mt-4"
+              className="text-sm text-neutral-400 hover:text-white transition-colors underline decoration-neutral-700 underline-offset-4 mt-4"
             >
               Clear all filters
             </button>

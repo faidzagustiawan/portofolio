@@ -53,7 +53,7 @@ export function NoLiveUrlModal({ isOpen, onClose, projectName }) {
               {/* Close Button */}
               <button
                 onClick={onClose}
-                className="absolute top-6 right-6 text-neutral-500 hover:text-white transition-colors"
+                className="absolute top-6 right-6 text-neutral-400 hover:text-white transition-colors"
                 aria-label="Close modal"
               >
                 <X className="w-6 h-6" />
@@ -97,7 +97,7 @@ export function NoLiveUrlModal({ isOpen, onClose, projectName }) {
                 </button>
               </div>
 
-              <p className="mt-6 text-sm text-neutral-500 text-center">
+              <p className="mt-6 text-sm text-neutral-400 text-center">
                 I'd be happy to discuss this project in detail over a call or meeting.
               </p>
             </motion.div>

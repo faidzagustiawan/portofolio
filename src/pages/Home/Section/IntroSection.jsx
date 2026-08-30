@@ -10,12 +10,12 @@ export function IntroSection() {
         {/* Left - Title */}
         <div className="lg:col-span-5">
           <div className="relative">
-            <span className="text-sm font-mono uppercase tracking-widest text-neutral-500 mb-6 block">
+            <span className="text-sm font-mono uppercase tracking-widest text-neutral-400 mb-6 block">
               Introduction
             </span>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight">
               Interaction <br />
-              <span className="text-neutral-500">Motion & Performance</span>
+              <span className="text-neutral-400">Motion & Performance</span>
             </h2>
           </div>
         </div>
@@ -28,10 +28,10 @@ export function IntroSection() {
             </p>
 
             <p className="text-lg md:text-xl leading-relaxed text-neutral-400">
-              Over the years, I have honed my skills in modern web technologies, particularly React and its ecosystem. I focus on building interfaces that perfectly balance stunning visual aesthetics with solid, scalable engineering. I sweat the small stuff—transitions, micro-interactions, and timing—because those details are what elevate a good product into an exceptional one.
+              Over the years, I have honed my skills in modern web technologies, particularly React and its ecosystem. I focus on building interfaces that perfectly balance stunning visual aesthetics with solid, scalable engineering. I sweat the small stuff, like transitions, micro-interactions, and timing, because those details are what elevate a good product into an exceptional one.
             </p>
 
-            <p className="text-lg leading-relaxed text-neutral-500">
+            <p className="text-lg leading-relaxed text-neutral-400">
               Beyond writing code, I constantly explore contemporary design, 3D web environments, and UI/UX patterns. Whether I'm building a complex web application or a slick landing page, my goal is always the same: to deliver an immersive digital experience that leaves a lasting impression.
             </p>
           </div>

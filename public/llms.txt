@@ -1,0 +1,13 @@
+# Faidz Agustiawan - Portfolio
+
+Welcome to the portfolio of Faidz Agustiawan, a Frontend Developer specializing in React, Taildwind CSS, and Framer Motion.
+
+## Navigation Links
+- [Home](/)
+- [Work](/work)
+- [Contact](/contact)
+
+## Overview
+This site is built to showcase projects focusing on modern interaction design and performance.
+- Projects are listed under `/work`
+- Connect or reach out through `/contact`

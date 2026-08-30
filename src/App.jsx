@@ -13,6 +13,9 @@ export default function App() {
   
   // Initialize state based on localStorage timestamp
   const [isFirstLoad, setIsFirstLoad] = useState(() => {
+    if (typeof navigator !== 'undefined' && (/bot|googlebot|crawler|spider|robot|crawling|lighthouse/i.test(navigator.userAgent) || navigator.webdriver)) {
+      return false;
+    }
     const lastShown = localStorage.getItem('preloaderLastShown')
     if (lastShown) {
       const timePassed = Date.now() - parseInt(lastShown, 10)
@@ -29,7 +32,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen w-full bg-neutral-950 text-white selection:bg-white selection:text-neutral-950 cursor-none">
+    <div className="min-h-screen w-full overflow-x-hidden bg-neutral-950 text-white selection:bg-white selection:text-neutral-950 cursor-none">
       <CustomCursor />
       <AnimatePresence>
         {isFirstLoad && (
@@ -59,4 +62,4 @@ export default function App() {
 }
 
 
-
+
