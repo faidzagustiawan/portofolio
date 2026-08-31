@@ -338,7 +338,7 @@ export const projects = [
 export const categories = ['All', 'Web Application', 'Landing Page', 'Mobile', 'AI/ML',]
 
 // Tahun untuk Filter di List Page
-export const year = ['All', '2025', '2024', '2023']
+export const year = ['All', '2026', '2025', '2024']
 
 // Ukuran default untuk floating preview image (Desktop List)
 export const PREVIEW_SIZE = 400

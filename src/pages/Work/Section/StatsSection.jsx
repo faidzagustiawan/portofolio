@@ -3,7 +3,7 @@ import { projects } from '@/data/projects'
 
 export function StatsSection({}) {
   const yearsExperience = useMemo(() => {
-    const startYear = 2023
+    const startYear = 2024
     const currentYear = new Date().getFullYear()
     return Math.max(1, currentYear - startYear)
   }, [])
