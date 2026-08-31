@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import { usePageTransition } from '@/context/PageTransitionContext'
 
-import { projects } from '@/data/projects'
+import { useProjects } from '@/context/ProjectsContext'
 import { WorkHero } from './Section/WorkHero'
 import { SearchFilter } from './Section/SearchFilter'
 import { ProjectListDesktop } from './Section/ProjectListDesktop'
@@ -16,6 +16,7 @@ import { useProjectFilter } from '@/hooks/useProjectFilter'
 import SEO from "@/components/SEO"
 
 export default function WorkPage() {
+  const { projects } = useProjects()
   const [activeIndex, setActiveIndex] = useState(null)
   const { show } = usePageTransition()
   const booted = useRef(false)

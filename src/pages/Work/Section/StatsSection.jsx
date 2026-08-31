@@ -1,7 +1,9 @@
 import { useMemo } from 'react'
-import { projects } from '@/data/projects'
+import { useProjects } from '@/context/ProjectsContext'
 
 export function StatsSection({}) {
+  const { projects } = useProjects()
+
   const yearsExperience = useMemo(() => {
     const startYear = 2024
     const currentYear = new Date().getFullYear()

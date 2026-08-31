@@ -1,10 +1,11 @@
 import { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useLocation } from 'react-router-dom'
-import { projects } from '@/data/projects'
+import { useProjects } from '@/context/ProjectsContext'
 
 const PageTransition = ({ children }) => {
   const location = useLocation()
+  const { projects } = useProjects()
 
   useEffect(() => {
     // Scroll to top immediately when the new route mounts 

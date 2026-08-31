@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowLeft, ArrowUpRight, ExternalLink } from 'lucide-react'
-import { projects } from '@/data/projects'
+import { useProjects } from '@/context/ProjectsContext'
 import { NoLiveUrlModal } from './NoLiveUrlModal'
 import { TeamSection } from './TeamSection'
 import { SmartImage } from '@/components/UI/SmartImage'
-
+import SEO from "@/components/SEO"
 
 const FadeUp = ({ children, delay = 0 }) => (
     <motion.div
@@ -31,11 +31,18 @@ const ScaleIn = ({ children, delay = 0 }) => (
     </motion.div>
 )
 
-import SEO from "@/components/SEO"
-
 export default function ProjectDetailPage() {
     const { slug } = useParams()
+    const { projects, isLoading } = useProjects()
     const [isModalOpen, setIsModalOpen] = useState(false)
+
+    if (isLoading) {
+        return (
+            <div className="min-h-screen bg-neutral-950 flex items-center justify-center text-white">
+                <p>Loading project...</p>
+            </div>
+        )
+    }
 
     const project = projects.find((p) => p.slug === slug)
 

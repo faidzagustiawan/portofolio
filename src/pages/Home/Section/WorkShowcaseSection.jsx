@@ -1,16 +1,17 @@
 import LogoLoop from "@/components/Animation/LogoLoop"
 import Magnet from "@/components/Animation/Magnet"
 import { Link } from "react-router-dom"
-import { projects } from "@/data/projects"
+import { useProjects } from "@/context/ProjectsContext"
 import VideoCard from "./VideoCard"
 
-const featuredProjects = projects.filter(p => p.featured)
-
-const renderCard = (item) => (
-  <VideoCard key={item.id} item={item} />
-)
-
 const WorkShowcaseSection = () => {
+  const { projects } = useProjects()
+  const featuredProjects = projects.filter(p => p.featured)
+
+  const renderCard = (item) => (
+    <VideoCard key={item.id} item={item} />
+  )
+
   return (
     <section className="relative bg-neutral-950 py-32 overflow-hidden">
 
