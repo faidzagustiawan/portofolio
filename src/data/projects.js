@@ -328,10 +328,172 @@ export const projects = [
 
     liveUrl: 'https://exhibitly-nu.vercel.app/',
     githubUrl: 'https://github.com/faidzagustiawan/Exhibitly',
+    nextProjectSlug: 'spk-property-backend'
+  },
+  {
+    id: '6',
+    slug: 'spk-property-backend',
+    name: 'SPK Property Backend',
+    featured: true,
+    tagline: 'Decision Support System API with ML Integration',
+    year: '2024',
+    category: 'AI/ML',
+    role: 'Backend Developer',
+    client: 'Academic / Independent',
+    duration: '±2 Months',
+
+    image: `${R2_BASE_URL}/projects/spk-image.jpg`,
+    video: `${R2_BASE_URL}/projects/spk-video.mp4`,
+    visualDetails: [
+      `${R2_BASE_URL}/projects/spk-detail-1.jpg`,
+      `${R2_BASE_URL}/projects/spk-detail-2.jpg`
+    ],
+
+    color: 'from-slate-700 to-zinc-500',
+
+    technologies: [
+      'Node.js',
+      'Express',
+      'PostgreSQL',
+      'Docker',
+      'Swagger UI',
+      'JWT'
+    ],
+
+    team: [
+      { ...teamMembers.faidz, role: 'Backend Developer' }
+    ],
+
+    overview:
+      'A REST API for a property selection Decision Support System (DSS). It combines Analytic Hierarchy Process (AHP) weighting with four ranking algorithms (SAW, SMART, WP, TOPSIS).',
+
+    challenge:
+      'Implementing complex mathematical decision-making algorithms cleanly within a RESTful architecture, ensuring the calculations are both accurate and performant.',
+
+    approach:
+      'Built a robust service layer to handle the AHP matrix calculations independently, and containerized the entire application with Docker for seamless deployment.',
+
+    solution:
+      'Developed using Node.js and Express with a PostgreSQL database. Included a specialized Machine Learning Dataset Generator endpoint to pivot relational data into tabular format for Scikit-learn consumption.',
+
+    contribution:
+      'Sole developer. Designed the database schema, implemented JWT authentication, wrote the ranking algorithms, and documented the API using OpenAPI/Swagger.',
+
+    outcome:
+      'Successfully delivered a highly complex algorithmic backend that seamlessly bridges decision-support mathematics with modern web API standards and machine learning readiness.',
+
+    liveUrl: null,
+    githubUrl: 'https://github.com/faidzagustiawan/spk-property-backend',
+    nextProjectSlug: 'kalkulator-sdmk'
+  },
+  {
+    id: '7',
+    slug: 'kalkulator-sdmk',
+    name: 'Kalkulator SDMK',
+    featured: false,
+    tagline: 'Health Worker Requirement Calculator',
+    year: '2024',
+    category: 'Web Application',
+    role: 'Frontend Developer',
+    client: 'Healthcare Sector',
+    duration: '±1 Month',
+
+    image: `${R2_BASE_URL}/projects/sdmk-image.jpg`,
+    video: `${R2_BASE_URL}/projects/sdmk-video.mp4`,
+    visualDetails: [
+      `${R2_BASE_URL}/projects/sdmk-detail-1.jpg`,
+      `${R2_BASE_URL}/projects/sdmk-detail-2.jpg`
+    ],
+
+    color: 'from-emerald-600 to-cyan-600',
+
+    technologies: [
+      'Next.js',
+      'React',
+      'Tailwind CSS',
+      'Google Apps Script'
+    ],
+
+    team: [
+      { ...teamMembers.faidz, role: 'Frontend Developer' }
+    ],
+
+    overview:
+      'A modern Next.js frontend application for calculating the standard requirements of healthcare human resources (SDMK).',
+
+    challenge:
+      'The client needed a modern, responsive web application but relied on an existing Google Apps Script (Google Sheets) backend for data storage and logic.',
+
+    approach:
+      'Designed a clean, multi-step calculation form interface in Next.js that safely interacts with the existing Apps Script endpoints without requiring backend modifications.',
+
+    solution:
+      'Implemented an App Router Next.js architecture with custom UI components, toast notifications, and strict authentication guards, utilizing localStorage for session management.',
+
+    contribution:
+      'Developed the entire frontend architecture, translating legacy HTML/CSS into reusable React components while preserving 100% of the original calculation engine logic.',
+
+    outcome:
+      'Modernized a critical healthcare calculation tool, drastically improving the UX and maintainability while keeping infrastructure costs effectively at zero.',
+
+    liveUrl: null,
+    githubUrl: 'https://github.com/faidzagustiawan/SDMK',
+    nextProjectSlug: 'travel-backend'
+  },
+  {
+    id: '8',
+    slug: 'travel-backend',
+    name: 'Travel Backend API',
+    featured: false,
+    tagline: 'RESTful API for Travel & Tourism Platform',
+    year: '2024',
+    category: 'Web Application',
+    role: 'Backend Developer',
+    client: 'Independent Project',
+    duration: '±1 Month',
+
+    image: `${R2_BASE_URL}/projects/travel-image.jpg`,
+    video: `${R2_BASE_URL}/projects/travel-video.mp4`,
+    visualDetails: [
+      `${R2_BASE_URL}/projects/travel-detail-1.jpg`,
+      `${R2_BASE_URL}/projects/travel-detail-2.jpg`
+    ],
+
+    color: 'from-rose-600 to-orange-500',
+
+    technologies: [
+      'Laravel',
+      'PHP',
+      'MySQL',
+      'REST API'
+    ],
+
+    team: [
+      { ...teamMembers.faidz, role: 'Backend Developer' }
+    ],
+
+    overview:
+      'A comprehensive backend API built with Laravel to support a travel and tourism booking platform.',
+
+    challenge:
+      'Structuring a scalable relational database to handle complex travel itineraries, user bookings, and transaction states.',
+
+    approach:
+      'Utilized Laravel Eloquent ORM to establish strict relationships between users, destinations, and booking records, exposing them via clean RESTful endpoints.',
+
+    solution:
+      'Built with the Laravel framework, featuring secure authentication, data validation, and optimized database queries to ensure fast response times for the frontend client.',
+
+    contribution:
+      'Handled the entire backend development lifecycle from database design to API routing and controller logic.',
+
+    outcome:
+      'Solidified my expertise in PHP and Laravel ecosystem, delivering a robust API ready for integration with modern mobile or web frontends.',
+
+    liveUrl: null,
+    githubUrl: 'https://github.com/faidzagustiawan/travel_backend_laravel',
     nextProjectSlug: 'pantausam'
   }
-
-
 ]
 
 // Kategori untuk Filter di List Page
