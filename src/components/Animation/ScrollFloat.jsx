@@ -14,30 +14,49 @@ const ScrollFloat = ({
 
   const splitText = useMemo(() => {
     const text = typeof children === 'string' ? children : ''
-    return text.split('').map((char, index) => (
-      <motion.span
-        key={index}
-        className="inline-block"
-        variants={{
-          hidden: {
-            opacity: 0,
-            y: "140%",
-            scaleY: 2.6,
-            scaleX: 0.7,
-          },
-          visible: {
-            opacity: 1,
-            y: "0%",
-            scaleY: 1,
-            scaleX: 1,
-          }
-        }}
-        transition={{ duration: animationDuration, ease }}
-      >
-        {char === ' ' ? '\u00A0' : char}
-      </motion.span>
-    ))
-  }, [children, animationDuration, ease])
+    const words = text.split(' ')
+    let charCount = 0
+
+    return words.map((word, wordIndex) => {
+      const wordSpan = (
+        <span key={wordIndex} className="inline-block whitespace-nowrap">
+          {word.split('').map((char, charIndex) => {
+            const currentDelay = charCount * stagger
+            charCount++
+            return (
+              <motion.span
+                key={charIndex}
+                className="inline-block"
+                variants={{
+                  hidden: {
+                    opacity: 0,
+                    y: "140%",
+                    scaleY: 2.6,
+                    scaleX: 0.7,
+                  },
+                  visible: {
+                    opacity: 1,
+                    y: "0%",
+                    scaleY: 1,
+                    scaleX: 1,
+                  }
+                }}
+                transition={{ duration: animationDuration, ease, delay: currentDelay }}
+              >
+                {char}
+              </motion.span>
+            )
+          })}
+        </span>
+      )
+
+      if (wordIndex < words.length - 1) {
+        charCount++ // increment for the space
+        return [wordSpan, ' ']
+      }
+      return wordSpan
+    })
+  }, [children, animationDuration, ease, stagger])
 
   return (
     <h2 ref={containerRef} className={containerClassName}>
@@ -46,7 +65,6 @@ const ScrollFloat = ({
         style={{ transformOrigin: '50% 0%' }}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
-        transition={{ staggerChildren: stagger }}
       >
         {splitText}
       </motion.span>
