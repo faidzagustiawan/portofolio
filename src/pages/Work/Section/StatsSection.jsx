@@ -9,10 +9,10 @@ export function StatsSection({}) {
   }, [])
 
   const stats = [
-    { value: projects.length, label: 'Production Apps' },
-    { value: '100', label: 'Lighthouse Score' },
+    { value: projects.length, label: 'Projects' },
+    { value: '12+', label: 'Technologies' },
     { value: `${yearsExperience}+`, label: 'Years Experience' },
-    { value: '100%', label: 'End-to-End Ownership' },
+    { value: '1,000+', label: 'Git Commits' },
   ]
 
   return (
