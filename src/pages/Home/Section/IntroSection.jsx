@@ -24,15 +24,15 @@ export function IntroSection() {
         <div className="lg:col-span-7 space-y-8">
           <div className="space-y-6 text-justify">
             <p className="text-xl md:text-2xl leading-relaxed text-white font-light">
-              I'm <span className="text-white font-medium">Faidz Agustiawan</span>, a passionate <span className='text-blue-300 font-bold'>frontend developer</span> based in Malang, Indonesia. My journey into web development started with a deep fascination for motion and interaction.
+              I'm <span className="text-white font-medium">Faidz Agustiawan</span>, a software developer based in Malang, Indonesia. My work is heavily focused on JavaScript, building full-stack web applications from a blank file all the way to a live deployment.
             </p>
 
             <p className="text-lg md:text-xl leading-relaxed text-neutral-400">
-              Over the years, I have honed my skills in modern web technologies, particularly React and its ecosystem. I focus on building interfaces that perfectly balance stunning visual aesthetics with solid, scalable engineering. I sweat the small stuff, like transitions, micro-interactions, and timing, because those details are what elevate a good product into an exceptional one.
+              I handle the entire lifecycle of a project—designing the database, writing the server logic, and managing the deployment for real users. I enjoy the process of owning a product end-to-end and ensuring the backend can support the features I want to build.
             </p>
 
             <p className="text-lg leading-relaxed text-neutral-400">
-              Beyond writing code, I constantly explore contemporary design, 3D web environments, and UI/UX patterns. Whether I'm building a complex web application or a slick landing page, my goal is always the same: to deliver an immersive digital experience that leaves a lasting impression.
+              But even when wrestling with server logic, I never treat the frontend as an afterthought. I work primarily with React and still spend hours tweaking spring physics and micro-interactions. Whether it's a complex system or a simple landing page, I build software that is fast, reliable, and fun to use.
             </p>
           </div>
 
