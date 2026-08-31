@@ -2,20 +2,17 @@ import { useMemo } from 'react'
 import { projects } from '@/data/projects'
 
 export function StatsSection({}) {
-  // tanggal pertama ngoding
-  const startDate = new Date('2023-08-20')
-
-  const daysCoding = useMemo(() => {
-    const now = new Date()
-    const diff = now - startDate
-    return Math.floor(diff / (1000 * 60 * 60 * 24))
+  const yearsExperience = useMemo(() => {
+    const startYear = 2023
+    const currentYear = new Date().getFullYear()
+    return Math.max(1, currentYear - startYear)
   }, [])
 
   const stats = [
-    { value: projects.length, label: 'Projects Built' },
-    { value: `${daysCoding}+`, label: 'Days Coding' },
-    { value: '∞', label: 'Cups of Coffee' },
-    { value: '∞', label: 'Music Played' },
+    { value: projects.length, label: 'Production Apps' },
+    { value: '100', label: 'Lighthouse Score' },
+    { value: `${yearsExperience}+`, label: 'Years Experience' },
+    { value: '100%', label: 'End-to-End Ownership' },
   ]
 
   return (
