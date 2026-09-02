@@ -150,7 +150,14 @@ Cloudflare Workers Builds runs `pnpm run build`, then `wrangler deploy`. The
 whole config is [wrangler.toml](wrangler.toml): an assets-only Worker pointed at
 `dist`, with no `main` entry.
 
-Two things are easy to get wrong here:
+Three things are easy to get wrong here:
+
+- **`name` must match the Worker that owns the custom domain.** Deploying under
+  a different name silently succeeds and creates a second Worker that no route
+  points at, so the domain keeps serving whatever the old one had. That is what
+  happened here: faidzagustiawan.id answered every path with an 11-byte
+  "Hello world" from a starter Worker while the repo deployed to a
+  differently-named one.
 
 - **`wrangler.toml` must exist.** Without it, `wrangler deploy` tries to infer
   the project and falls back to parsing `vite.config.js`, which fails with

@@ -1,4 +1,7 @@
-name = "faidz-portfolio"
+# Must match the Worker that already owns the faidzagustiawan.id custom domain.
+# Deploying under any other name creates a second Worker that nothing routes to,
+# which is why the site was unreachable while this said "faidz-portfolio".
+name = "portofolio"
 compatibility_date = "2026-08-31"
 
 # This file is what stops `wrangler deploy` from trying to infer the project
