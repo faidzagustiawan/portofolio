@@ -169,7 +169,7 @@ export default function ProjectDetailPage() {
             <section className="px-6 md:px-12 lg:px-16 max-w-7xl mx-auto py-16 md:py-24">
                 <ScaleIn>
                     <div className="aspect-video w-full bg-neutral-900 border border-neutral-800 rounded-xl overflow-hidden relative">
-                        {project.image ? (
+                        {project.video ? (
                             <video
                                 src={project.video}
                                 muted
@@ -177,6 +177,12 @@ export default function ProjectDetailPage() {
                                 loop
                                 autoPlay
                                 preload="auto"
+                                className="w-full h-full object-cover"
+                            />
+                        ) : project.image ? (
+                            <SmartImage
+                                src={project.image}
+                                alt={project.name}
                                 className="w-full h-full object-cover"
                             />
                         ) : (

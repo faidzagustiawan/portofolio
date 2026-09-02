@@ -1,43 +1,46 @@
-// URL R2 Base. Pastikan menambahkan .env di root proyek (contoh di .env.example)
-// Vite menggunakan import.meta.env, jika tidak ada fallback ke string kosong agar tidak error saat build/dev tanpa env
-const R2_BASE_URL = import.meta.env.VITE_R2_PUBLIC_URL || '';
+// Media dikosongkan: file aslinya hilang dan bucket R2 kosong, jadi setiap URL
+// lama menghasilkan 404. Nama file yang dulu dipakai disimpan sebagai komentar
+// di sebelah tiap field; daftar lengkapnya ada di r2-assets/MANIFEST.txt.
+//
+// Untuk memulihkan: taruh file di r2-assets/, jalankan `npm run r2:sync`, kembalikan
+// nilainya jadi `${import.meta.env.VITE_R2_PUBLIC_URL}/<path>`, lalu `npm run pb:media`.
 
 export const teamMembers = {
   faidz: {
     name: 'Muhammad Faidz Agustiawan',
-    avatar: `${R2_BASE_URL}/avatars/faidz-avatar.png`
+    avatar: null // avatars/faidz-avatar.png
   },
   fikri: {
     name: 'Fikri Irfan Hidayah',
-    avatar: `${R2_BASE_URL}/avatars/fikri-avatar.png`
+    avatar: null // avatars/fikri-avatar.png
   },
   dama: {
     name: 'Dama Saputra Ganatha',
-    avatar: `${R2_BASE_URL}/avatars/dama-avatar.png`
+    avatar: null // avatars/dama-avatar.png
   },
   radit: {
     name: 'Radit',
-    avatar: `${R2_BASE_URL}/avatars/radit-avatar.png`
+    avatar: null // avatars/radit-avatar.png
   },
   gerard: {
     name: 'Gerard',
-    avatar: `${R2_BASE_URL}/avatars/gerard-avatar.png`
+    avatar: null // avatars/gerard-avatar.png
   },
   katherine: {
     name: 'Katherine',
-    avatar: `${R2_BASE_URL}/avatars/katherine-avatar.png`
+    avatar: null // avatars/katherine-avatar.png
   },
   tia: {
     name: 'Tia',
-    avatar: `${R2_BASE_URL}/avatars/tia-avatar.png`
+    avatar: null // avatars/tia-avatar.png
   },
   yehezkiel: {
     name: 'Yehezkiel',
-    avatar: `${R2_BASE_URL}/avatars/yehezkiel-avatar.png`
+    avatar: null // avatars/yehezkiel-avatar.png
   },
   erza: {
     name: 'Erza',
-    avatar: `${R2_BASE_URL}/avatars/erza-avatar.png`
+    avatar: null // avatars/erza-avatar.png
   }
 };
 
@@ -54,13 +57,9 @@ export const projects = [
     client: 'Academic Project',
     duration: '±5 Months',
 
-    // ⬇️ R2 Cloudflare URL Dynamic
-    image: `${R2_BASE_URL}/projects/pantausam-image.jpg`,
-    video: `${R2_BASE_URL}/projects/pantausam-video.mp4`,
-    visualDetails: [
-      `${R2_BASE_URL}/projects/pantausam-detail-1.jpg`,
-      `${R2_BASE_URL}/projects/pantausam-detail-2.jpg`
-    ],
+    image: null, // projects/pantausam-image.jpg
+    video: null, // projects/pantausam-video.mp4
+    visualDetails: [], // projects/pantausam-detail-1.jpg, projects/pantausam-detail-2.jpg
 
     color: 'from-blue-600 to-cyan-500',
 
@@ -117,13 +116,9 @@ export const projects = [
     client: 'ASCEND Team Project',
     duration: '1 Months',
 
-    // ⬇️ R2 Cloudflare URL Dynamic
-    image: `${R2_BASE_URL}/projects/re-enviro-image.jpg`,
-    video: `${R2_BASE_URL}/projects/re-enviro-video.mp4`,
-    visualDetails: [
-      `${R2_BASE_URL}/projects/re-enviro-detail-1.jpg`,
-      `${R2_BASE_URL}/projects/re-enviro-detail-2.jpg`
-    ],
+    image: null, // projects/re-enviro-image.jpg
+    video: null, // projects/re-enviro-video.mp4
+    visualDetails: [], // projects/re-enviro-detail-1.jpg, projects/re-enviro-detail-2.jpg
 
     color: 'from-emerald-600 to-teal-500',
 
@@ -177,13 +172,9 @@ export const projects = [
     client: 'Personal Project',
     duration: '±3 Months',
 
-    // ⬇️ R2 Cloudflare URL Dynamic
-    image: `${R2_BASE_URL}/projects/finote-image.jpg`,
-    video: `${R2_BASE_URL}/projects/finote-video.mp4`,
-    visualDetails: [
-      `${R2_BASE_URL}/projects/finote-detail-1.jpg`,
-      `${R2_BASE_URL}/projects/finote-detail-2.jpg`
-    ],
+    image: null, // projects/finote-image.jpg
+    video: null, // projects/finote-video.mp4
+    visualDetails: [], // projects/finote-detail-1.jpg, projects/finote-detail-2.jpg
 
     color: 'from-indigo-600 to-purple-500',
 
@@ -234,13 +225,9 @@ export const projects = [
     client: 'Independent Coffee Brand',
     duration: '1 Weeks',
 
-    // ⬇️ R2 Cloudflare URL Dynamic
-    image: `${R2_BASE_URL}/projects/engineer-coffee-image.jpg`,
-    video: `${R2_BASE_URL}/projects/engineer-coffee-video.mp4`,
-    visualDetails: [
-      `${R2_BASE_URL}/projects/engineer-coffee-detail-1.jpg`,
-      `${R2_BASE_URL}/projects/engineer-coffee-detail-2.jpg`
-    ],
+    image: null, // projects/engineer-coffee-image.jpg
+    video: null, // projects/engineer-coffee-video.mp4
+    visualDetails: [], // projects/engineer-coffee-detail-1.jpg, projects/engineer-coffee-detail-2.jpg
 
     color: 'from-amber-600 to-orange-500',
 
@@ -288,13 +275,9 @@ export const projects = [
     client: 'Personal Experimental Project',
     duration: '2 Weeks',
 
-    // ⬇️ R2 Cloudflare URL Dynamic
-    image: `${R2_BASE_URL}/projects/exhibitly-image.jpg`,
-    video: `${R2_BASE_URL}/projects/exhibitly-video.mp4`,
-    visualDetails: [
-      `${R2_BASE_URL}/projects/exhibitly-detail-1.jpg`,
-      `${R2_BASE_URL}/projects/exhibitly-detail-2.jpg`
-    ],
+    image: null, // projects/exhibitly-image.jpg
+    video: null, // projects/exhibitly-video.mp4
+    visualDetails: [], // projects/exhibitly-detail-1.jpg, projects/exhibitly-detail-2.jpg
 
     color: 'from-purple-600 to-pink-500',
 
@@ -342,12 +325,9 @@ export const projects = [
     client: 'Academic / Independent',
     duration: '±2 Months',
 
-    image: `${R2_BASE_URL}/projects/spk-image.jpg`,
-    video: `${R2_BASE_URL}/projects/spk-video.mp4`,
-    visualDetails: [
-      `${R2_BASE_URL}/projects/spk-detail-1.jpg`,
-      `${R2_BASE_URL}/projects/spk-detail-2.jpg`
-    ],
+    image: null, // projects/spk-image.jpg
+    video: null, // projects/spk-video.mp4
+    visualDetails: [], // projects/spk-detail-1.jpg, projects/spk-detail-2.jpg
 
     color: 'from-slate-700 to-zinc-500',
 
@@ -398,12 +378,9 @@ export const projects = [
     client: 'Healthcare Sector',
     duration: '±1 Month',
 
-    image: `${R2_BASE_URL}/projects/sdmk-image.jpg`,
-    video: `${R2_BASE_URL}/projects/sdmk-video.mp4`,
-    visualDetails: [
-      `${R2_BASE_URL}/projects/sdmk-detail-1.jpg`,
-      `${R2_BASE_URL}/projects/sdmk-detail-2.jpg`
-    ],
+    image: null, // projects/sdmk-image.jpg
+    video: null, // projects/sdmk-video.mp4
+    visualDetails: [], // projects/sdmk-detail-1.jpg, projects/sdmk-detail-2.jpg
 
     color: 'from-emerald-600 to-cyan-600',
 
@@ -452,12 +429,9 @@ export const projects = [
     client: 'Independent Project',
     duration: '±1 Month',
 
-    image: `${R2_BASE_URL}/projects/travel-image.jpg`,
-    video: `${R2_BASE_URL}/projects/travel-video.mp4`,
-    visualDetails: [
-      `${R2_BASE_URL}/projects/travel-detail-1.jpg`,
-      `${R2_BASE_URL}/projects/travel-detail-2.jpg`
-    ],
+    image: null, // projects/travel-image.jpg
+    video: null, // projects/travel-video.mp4
+    visualDetails: [], // projects/travel-detail-1.jpg, projects/travel-detail-2.jpg
 
     color: 'from-rose-600 to-orange-500',
 
