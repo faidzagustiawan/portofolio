@@ -38,3 +38,6 @@ r2-assets/
 
 # SSR bundle used only by the prerender step
 dist-ssr
+
+# Wrangler local state
+.wrangler/

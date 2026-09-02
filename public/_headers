@@ -1,0 +1,20 @@
+# Cloudflare reads this from the deployed asset directory. The equivalent for a
+# Vercel deploy lives in vercel.json; keep the two in step.
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/hero/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/og/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/og-cover.jpg
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+  Permissions-Policy: camera=(), microphone=(), geolocation=()

@@ -75,8 +75,12 @@ function buildPage(template, { route, head, html, projects }) {
 
   const dataScript = `<script type="application/json" id="__PROJECTS__">${safeJson(projects)}</script>`
 
+  // data-route lets the browser entry check that the markup it was served
+  // actually belongs to the URL. Cloudflare's single-page-application fallback
+  // hands out the prerendered home page for any unknown path, and hydrating
+  // that against a different route would tear the tree apart.
   return withHead
-    .replace('<html lang="en">', '<html lang="en" data-prerendered="true">')
+    .replace('<html lang="en">', `<html lang="en" data-prerendered="true" data-route="${route}">`)
     .replace(LINKS_MARKER, route === '/' ? HERO_PRELOAD : '')
     .replace(APP_MARKER, html)
     .replace('</body>', `  ${dataScript}\n</body>`)
