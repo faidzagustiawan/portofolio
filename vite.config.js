@@ -2,10 +2,9 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import path from 'node:path'
-import { fileURLToPath } from 'node:url'
 import { visualizer } from 'rollup-plugin-visualizer'
 
-const rootDir = path.dirname(fileURLToPath(import.meta.url))
+const rootDir = process.cwd()
 
 // Opt in with `pnpm build:analyze` — otherwise the build stays headless, which
 // matters on CI and on Vercel where nothing can open a browser.
