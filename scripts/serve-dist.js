@@ -1,6 +1,11 @@
 /**
- * Serves dist/ the way Vercel does, which `vite preview` does not: exact file
- * first, then the directory's index.html, then spa.html as the fallback.
+ * Serves dist/ the way the real hosts do, which `vite preview` does not: exact
+ * file first, then the directory's index.html, then a fallback.
+ *
+ * The fallback differs per host, so it is selectable:
+ *   HOST=cloudflare (default) — index.html, matching wrangler's
+ *                               `not_found_handling = "single-page-application"`
+ *   HOST=vercel               — spa.html, matching the rewrite in vercel.json
  *
  * Without this, preview rewrites every route to the prerendered home page and
  * the per-route HTML never gets exercised locally.
@@ -13,6 +18,8 @@ import { fileURLToPath } from 'node:url'
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const DIST = path.join(root, 'dist')
 const PORT = Number(process.env.PORT || 4173)
+const HOST = process.env.HOST === 'vercel' ? 'vercel' : 'cloudflare'
+const FALLBACK = HOST === 'vercel' ? 'spa.html' : 'index.html'
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -41,7 +48,7 @@ function resolveFile(urlPath) {
   const indexed = path.join(target, 'index.html')
   if (isFile(indexed)) return indexed
 
-  const shell = path.join(DIST, 'spa.html')
+  const shell = path.join(DIST, FALLBACK)
   return isFile(shell) ? shell : null
 }
 
@@ -54,8 +61,7 @@ http
       return
     }
 
-    const isFallback = path.basename(file) === 'spa.html' && req.url !== '/spa.html'
-    res.writeHead(isFallback ? 200 : 200, {
+    res.writeHead(200, {
       'content-type': TYPES[path.extname(file)] || 'application/octet-stream',
       'cache-control': file.includes(`${path.sep}assets${path.sep}`)
         ? 'public, max-age=31536000, immutable'
@@ -64,5 +70,5 @@ http
     createReadStream(file).pipe(res)
   })
   .listen(PORT, () => {
-    console.log(`dist served at http://localhost:${PORT} (Vercel-style resolution)`)
+    console.log(`dist served at http://localhost:${PORT} (${HOST}-style resolution, fallback: ${FALLBACK})`)
   })

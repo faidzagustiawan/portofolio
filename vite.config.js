@@ -8,7 +8,7 @@ import { visualizer } from 'rollup-plugin-visualizer'
 const rootDir = path.dirname(fileURLToPath(import.meta.url))
 
 // Opt in with `pnpm build:analyze` — otherwise the build stays headless, which
-// matters on CI and on Vercel where nothing can open a browser.
+// matters in CI, where nothing can open a browser.
 const analyze = process.env.ANALYZE === '1'
 
 export default defineConfig(({ isSsrBuild }) => ({

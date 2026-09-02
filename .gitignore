@@ -27,6 +27,7 @@ dist-ssr
 .env
 .env.*
 !.env.example
+!.env.production
 
 # Build analysis / scratch output
 stats.html
@@ -38,3 +39,6 @@ r2-assets/
 
 # SSR bundle used only by the prerender step
 dist-ssr
+
+# Wrangler local state
+.wrangler/

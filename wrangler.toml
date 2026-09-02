@@ -1,0 +1,18 @@
+# Must match the Worker that already owns the faidzagustiawan.id custom domain.
+# Deploying under any other name creates a second Worker that nothing routes to,
+# which is why the site was unreachable while this said "faidz-portfolio".
+name = "portofolio"
+compatibility_date = "2026-08-31"
+
+# This file is what stops `wrangler deploy` from trying to infer the project
+# from vite.config.js — that inference is what failed the deploy before it
+# existed, not anything in the Vite config itself.
+
+[assets]
+directory = "dist"
+
+# Every real route is prerendered to its own index.html, so this only answers
+# paths the last build did not know about — a project published since then.
+# The response is the prerendered home page; src/main.jsx compares data-route
+# against the URL and does a clean client render instead of hydrating.
+not_found_handling = "single-page-application"

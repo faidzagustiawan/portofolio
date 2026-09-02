@@ -7,11 +7,11 @@
 import { writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import 'dotenv/config'
+import './load-env.js'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
-const SITE_URL = (process.env.VITE_SITE_URL || 'https://faidzagustiawan.com').replace(/\/+$/, '')
+const SITE_URL = (process.env.VITE_SITE_URL || 'https://faidzagustiawan.id').replace(/\/+$/, '')
 const PB_URL = (process.env.VITE_PB_URL || 'https://faidz.fun/pb').replace(/\/+$/, '')
 
 const STATIC_ROUTES = [
@@ -72,7 +72,14 @@ async function main() {
   ].join('\n')
 
   writeFileSync(path.join(root, 'public', 'sitemap.xml'), xml)
-  console.log(`[sitemap] ${entries.length} URLs written`)
+
+  // robots.txt is written here too: its only variable part is the sitemap URL,
+  // and keeping it in the same script is what stops the two from drifting onto
+  // different domains.
+  const robots = ['User-agent: *', 'Allow: /', '', `Sitemap: ${SITE_URL}/sitemap.xml`, ''].join('\n')
+  writeFileSync(path.join(root, 'public', 'robots.txt'), robots)
+
+  console.log(`[sitemap] ${entries.length} URLs written for ${SITE_URL}`)
 }
 
 main().catch((err) => {

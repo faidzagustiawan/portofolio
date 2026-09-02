@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 
-const SITE_URL = (import.meta.env.VITE_SITE_URL || 'https://faidzagustiawan.com').replace(/\/+$/, '')
+const SITE_URL = (import.meta.env.VITE_SITE_URL || 'https://faidzagustiawan.id').replace(/\/+$/, '')
 const SITE_NAME = 'Faidz Agustiawan'
 const ROLE = 'Full-Stack Developer'
 

@@ -4,11 +4,18 @@ import './index.css'
 import AppRoot from '@/AppRoot'
 
 const container = document.getElementById('root')
+const { prerendered, route } = document.documentElement.dataset
 
-// The build prerenders every known route and embeds the project feed, so the
-// markup is already correct and the data is already here. Adopt both instead of
-// rebuilding the page and refetching what the build already resolved.
-const isPrerendered = document.documentElement.dataset.prerendered === 'true'
+const normalise = (pathname) => (pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname)
+
+/**
+ * True only when the served markup was rendered for this exact URL.
+ *
+ * Cloudflare's `single-page-application` fallback answers any unknown path with
+ * the prerendered home page, so "there is markup" is not enough — hydrating the
+ * home tree against `/work/something` would mismatch every node.
+ */
+const isExactPrerender = prerendered === 'true' && normalise(route || '') === normalise(location.pathname)
 
 function readEmbeddedProjects() {
   const node = document.getElementById('__PROJECTS__')
@@ -21,10 +28,17 @@ function readEmbeddedProjects() {
   }
 }
 
-const tree = <AppRoot router={BrowserRouter} initialProjects={readEmbeddedProjects()} />
+// On a fallback the embedded feed is whatever the last build knew about, which
+// is exactly the case where it might be missing the project being asked for.
+// Passing null makes the provider fetch fresh.
+const initialProjects = isExactPrerender ? readEmbeddedProjects() : null
 
-if (isPrerendered) {
+const tree = <AppRoot router={BrowserRouter} initialProjects={initialProjects} />
+
+if (isExactPrerender) {
   hydrateRoot(container, tree)
 } else {
+  // Drop any markup meant for a different route before rendering over it.
+  container.replaceChildren()
   createRoot(container).render(tree)
 }

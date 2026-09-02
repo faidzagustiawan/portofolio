@@ -1,10 +1,10 @@
-# faidzagustiawan.com
+# faidzagustiawan.id
 
 Personal portfolio of Faidz Agustiawan — a full-stack developer in Malang,
 Indonesia. A motion-led React app, prerendered to static HTML at build time and
 backed by a PocketBase instance that holds the project case studies.
 
-**Live:** https://faidzagustiawan.com
+**Live:** https://faidzagustiawan.id
 
 ## Stack
 
@@ -18,7 +18,7 @@ backed by a PocketBase instance that holds the project case studies.
 | Content | PocketBase REST (`/api/collections/projects/records`) |
 | Media | Cloudflare R2 |
 | Mail | EmailJS |
-| Hosting | Vercel |
+| Hosting | Cloudflare Workers (static assets), via wrangler |
 
 ## Getting started
 
@@ -28,9 +28,20 @@ cp .env.example .env   # then fill in the values
 pnpm dev
 ```
 
-The app reads its configuration from `.env`. Only `VITE_`-prefixed variables
-reach the browser bundle — never put a secret behind that prefix. The R2 keys
-are used solely by `pnpm r2:sync`, which runs on your machine.
+Configuration is split by whether it is secret:
+
+- **`.env.production`** is committed and holds the public `VITE_` values — site
+  URL, PocketBase URL, EmailJS ids. All of them are inlined into the JavaScript
+  bundle and served to every visitor anyway, so the repo exposes nothing extra,
+  and CI cannot silently build without them. That is not hypothetical: before
+  this file existed, a Cloudflare build produced a contact form that reported
+  itself unconfigured, because `.env` is gitignored and never reaches CI.
+- **`.env`** is gitignored and holds the real secrets: the R2 access keys and
+  `ADMIN_PASSWORD`. Only `pnpm r2:sync` reads them, on your machine. Values here
+  win over `.env.production` locally.
+
+Never put a secret behind a `VITE_` prefix — the prefix is what makes Vite ship
+it to the browser.
 
 ## Scripts
 
@@ -39,7 +50,8 @@ are used solely by `pnpm r2:sync`, which runs on your machine.
 | `pnpm dev` | Vite dev server |
 | `pnpm build` | Sitemap → client bundle → project OG cards → SSR bundle → prerender |
 | `pnpm build:analyze` | Same, plus a rollup bundle treemap in `stats.html` |
-| `pnpm preview` | Serves `dist/` with Vercel's file-resolution rules |
+| `pnpm preview` | Serves `dist/` with the host's file-resolution rules |
+| `pnpm deploy` | `wrangler deploy` (CI runs this; needs Cloudflare credentials) |
 | `pnpm lint` | ESLint over `src/` and the Node scripts |
 | `pnpm sitemap` | Regenerates the sitemap only |
 | `pnpm prerender` | Re-runs the prerender step against an existing build |
@@ -73,11 +85,13 @@ Notes on the pieces that are easy to break:
   `<script type="application/json" id="__PROJECTS__">`. Prerendered pages make
   no PocketBase request at all; `ProjectsProvider` only fetches when that
   payload is missing or a retry is requested.
-- **The shell.** `dist/spa.html` is the same document without prerendered
-  markup. Vercel rewrites unknown paths to it, so a project published after the
-  last build still resolves — client-rendered, with the site-level head.
-  `main.jsx` picks `hydrateRoot` or `createRoot` from the `data-prerendered`
-  flag on `<html>`.
+- **The fallback.** Each page stamps `data-route` on `<html>`. `main.jsx`
+  hydrates only when that matches `location.pathname`; otherwise it clears the
+  container and does a full client render. This matters because Cloudflare
+  answers unknown paths with the prerendered *home page*, and hydrating that
+  against another URL would mismatch every node. `dist/spa.html` is the same
+  document with no prerendered markup, used when the host can be pointed at a
+  dedicated shell (Vercel can; Workers Assets cannot). See Deployment.
 - **The intro.** Only a synchronous script can read `localStorage` early enough
   to cover prerendered markup without a flash, so the decision lives in an
   inline script in `index.html` and React reads it back through
@@ -85,9 +99,9 @@ Notes on the pieces that are easy to break:
   step). `PageTransition` skips its reveal cover on the first mount for the
   same reason.
 
-`pnpm preview` mimics Vercel's resolution — exact file, then the directory's
-`index.html`, then `spa.html`. `vite preview` does not, and would serve the
-prerendered home page for every route.
+`pnpm preview` mimics the real resolution — exact file, then the directory's
+`index.html`, then the host's fallback. `vite preview` does not, and would serve
+the prerendered home page for every route.
 
 ## Content model
 
@@ -109,7 +123,7 @@ whichever fields are filled in, and a project with no `image` or `video` gets a
 generated placeholder built from its `color` and initials.
 
 Content changes need a rebuild to reach the prerendered HTML. Until then the
-SPA shell serves them with the site-level head.
+fallback serves them client-rendered, with the site-level head.
 
 ## Hero image
 
@@ -129,3 +143,35 @@ the SVG itself; it was the single largest asset on the site.
   `*Context.jsx` holds the provider. That keeps Fast Refresh working.
 - `src/AppRoot.jsx` is the tree both entries share. Anything below it must
   render identically on the server and in the browser, or hydration breaks.
+
+## Deployment
+
+Cloudflare Workers Builds runs `pnpm run build`, then `wrangler deploy`. The
+whole config is [wrangler.toml](wrangler.toml): an assets-only Worker pointed at
+`dist`, with no `main` entry.
+
+Three things are easy to get wrong here:
+
+- **`name` must match the Worker that owns the custom domain.** Deploying under
+  a different name silently succeeds and creates a second Worker that no route
+  points at, so the domain keeps serving whatever the old one had. That is what
+  happened here: faidzagustiawan.id answered every path with an 11-byte
+  "Hello world" from a starter Worker while the repo deployed to a
+  differently-named one.
+
+- **`wrangler.toml` must exist.** Without it, `wrangler deploy` tries to infer
+  the project and falls back to parsing `vite.config.js`, which fails with
+  `Error parsing file`. The Vite config is not the problem — the missing
+  wrangler config is. Reproduce with
+  `mv wrangler.toml wrangler.toml.off && npx wrangler deploy --dry-run`.
+- **`not_found_handling = "single-page-application"` answers unknown paths with
+  the prerendered home page**, not with `spa.html`. `src/main.jsx` compares the
+  `data-route` stamped on `<html>` against `location.pathname` and, when they
+  differ, clears the container and does a full client render instead of
+  hydrating — and refetches the feed, because a path the build did not know
+  about is exactly the case where the embedded copy may be missing it.
+
+Headers live in [public/\_headers](public/_headers) for Cloudflare. `vercel.json`
+carries the same rules for a Vercel deploy; if you change one, change the other.
+`pnpm preview` defaults to Cloudflare's resolution — set `HOST=vercel` to
+exercise the `spa.html` fallback instead.
