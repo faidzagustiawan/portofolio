@@ -57,6 +57,7 @@ it to the browser.
 | `pnpm prerender` | Re-runs the prerender step against an existing build |
 | `pnpm assets:build` | Rebuilds the hero portrait and the site OG card |
 | `pnpm og:projects` | Rebuilds the per-project OG cards (needs a built `dist/`) |
+| `pnpm pb:upload` | Bulk-uploads project media to PocketBase from `media/` |
 | `pnpm r2:sync` | Uploads local media to the R2 bucket |
 
 ## Rendering

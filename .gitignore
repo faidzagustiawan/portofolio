@@ -42,3 +42,6 @@ dist-ssr
 
 # Wrangler local state
 .wrangler/
+
+# Media staging for pb:upload
+media/
