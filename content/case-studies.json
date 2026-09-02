@@ -11,9 +11,14 @@
     "Setiap isian berasal dari pembacaan repo, bukan dari catatan. Kalau ada yang",
     "keliru, perbaiki di sini — file ini yang jadi sumber kebenarannya."
   ],
-
   "exhibitly": {
-    "technologies": ["React", "Supabase", "Cloudinary", "Tailwind CSS", "Framer Motion"],
+    "technologies": [
+      "React",
+      "Supabase",
+      "Cloudinary",
+      "Tailwind CSS",
+      "Framer Motion"
+    ],
     "overview": "Galeri seni digital tempat seniman mengunggah karya dan pengunjung memberi apresiasi lewat like dan komentar. Dibangun tanpa server sendiri: Supabase memegang data dan autentikasi, Cloudinary memegang berkas gambarnya.",
     "challenge": "Karya seni diunggah dalam resolusi tinggi, dan menyimpannya sebagai blob di Supabase akan menghabiskan kuota storage jauh sebelum galerinya terisi. Aplikasi ini juga tidak punya backend sendiri, jadi tidak ada tempat untuk memproses atau mengompresi gambar di antara browser dan database.",
     "approach": "Memisahkan berkas dari metadata alih-alih menyimpan keduanya di satu tempat. Cloudinary menerima unggahan langsung dari browser dan mengembalikan URL; Supabase hanya menyimpan URL itu beserta data karya, like, dan komentar. Konsekuensinya tidak ada backend perantara yang perlu ditulis, di-deploy, atau dibayar.",
@@ -21,18 +26,22 @@
     "contribution": "[ISI: solo atau tim? Kalau tim, sebut bagian yang bukan kamu.] Membangun seluruh frontend: routing dan guard sesi, integrasi Supabase Auth, alur unggah ke Cloudinary, serta fitur like dan komentar per karya.",
     "outcome": "[ISI: kalau belum dipakai orang lain, tulis apa adanya — itu tetap lebih kuat daripada klaim kosong. Contoh bentuk: Berjalan di <URL>, dengan <berapa> karya terunggah selama <periode>. Biaya penyimpanan tetap nol karena seluruh berkas dilayani dari tier gratis Cloudinary.]"
   },
-
   "spk-property-backend": {
     "overview": "REST API untuk sistem pendukung keputusan pemilihan properti. Pengguna menyusun kriteria, menetapkan bobot lewat perbandingan berpasangan AHP, lalu memeringkat alternatif dengan empat metode sekaligus untuk membandingkan hasilnya.",
     "challenge": "SAW, SMART, WP, dan TOPSIS menormalisasi data dengan cara yang berbeda-beda, tapi keempatnya harus memakai satu sumber bobot dari AHP dan satu struktur data yang sama. Menempelkan keempatnya ke satu controller berarti setiap penambahan metode kelima membongkar kode yang sudah berjalan.",
     "approach": "Memisahkan tanggung jawab per lapisan alih-alih per fitur: controller hanya menerjemahkan HTTP, service memegang matematikanya, repository memegang query. Tiap metode perankingan berdiri sebagai service sendiri, jadi AHP menghitung bobot satu kali dan keempat metode mengonsumsinya lewat antarmuka yang sama.",
     "solution": "Express di atas PostgreSQL, dijalankan lewat Docker Compose. AHP menurunkan bobot dari matriks perbandingan berpasangan; SAW, SMART, WP, dan TOPSIS memeringkat alternatif memakai bobot tersebut. Endpoint Dataset Generator mem-pivot data relasional menjadi tabular agar bisa langsung dikonsumsi model scikit-learn di layanan FastAPI terpisah. Otentikasi JWT dengan bcrypt, seluruh endpoint terdokumentasi di Swagger OpenAPI 3.0.",
-    "contribution": "[ISI: solo atau tim? Dan layanan FastAPI-nya kamu juga atau orang lain?] Merancang skema basis data dan arsitektur berlapisnya, mengimplementasi AHP beserta keempat metode perankingan, dan menyiapkan endpoint dataset untuk konsumsi model.",
-    "outcome": "[ISI: yang paling meyakinkan di sini adalah bukti kebenaran hitungan. Contoh bentuk: Hasil AHP divalidasi lewat consistency ratio di bawah <angka>, dan peringkat keempat metode dibandingkan terhadap <hitungan manual / paper rujukan / data uji>. Kalau belum divalidasi, tulis itu apa adanya.]"
+    "contribution": "Membangun sisi sistem pendukung keputusannya: skema basis data, arsitektur berlapis controller-service-repository, pembobotan AHP, keempat metode perankingan, dan otentikasi JWT. Lapisan machine learning — endpoint, service, dan integrasinya — dikerjakan [ISI: nama lengkap rekan tim, handle GitHub-nya nabil142] sebagai bagian terpisah.",
+    "outcome": "Selesai sebagai proyek akademik dalam waktu sekitar dua bulan. Seluruh endpoint terdokumentasi di Swagger OpenAPI dan lingkungannya dapat direproduksi lewat Docker Compose, sehingga penguji bisa menjalankannya tanpa menyiapkan basis data secara manual. [ISI: hasil AHP pernah divalidasi? Sebutkan consistency ratio, perbandingan dengan hitungan manual, atau data uji. Kalau belum, ganti kalimat ini dengan: \"Peringkat keempat metode belum divalidasi terhadap data nyata.\"]"
   },
-
   "finote": {
-    "technologies": ["Kotlin", "Jetpack Compose", "CameraX", "ML Kit", "Supabase"],
+    "technologies": [
+      "Kotlin",
+      "Jetpack Compose",
+      "CameraX",
+      "ML Kit",
+      "Supabase"
+    ],
     "overview": "Aplikasi Android pencatat keuangan pribadi dengan pelacak target tabungan. Selain input manual, pengguna bisa memotret struk belanja dan nominalnya dibaca otomatis lewat OCR.",
     "challenge": "Alasan utama orang berhenti mencatat keuangan adalah mengetik ulang tiap transaksi. Tapi struk belanja tidak punya tata letak baku — posisi nominal total berbeda di tiap toko, jadi tidak ada koordinat tetap yang bisa dijadikan patokan pembacaan.",
     "approach": "Menjadikan kamera sebagai jalur masuk utama, bukan fitur tambahan. Hasil OCR sengaja tidak langsung disimpan: nominal yang terbaca ditampilkan lebih dulu di form yang bisa dikoreksi, karena satu pembacaan salah yang diam-diam tersimpan merusak kepercayaan lebih parah daripada mengetik manual.",
@@ -40,17 +49,23 @@
     "contribution": "[ISI: tim bertiga bersama Yehezkiel dan Erza, ketiganya Android Developer. Sebutkan pembagiannya — bagian mana yang kamu pegang, bagian mana yang bukan. Ini menaikkan kredibilitas, bukan menurunkannya.]",
     "outcome": "[ISI: angka paling relevan di sini adalah akurasi OCR. Contoh bentuk: Pembacaan struk berhasil pada <berapa> dari <berapa> struk uji dari <berapa> toko berbeda. Kalau belum diuji sistematis, tulis begitu — itu jujur dan tetap informatif.]"
   },
-
   "travel-backend": {
-    "technologies": ["Laravel", "PHP", "MySQL", "Laravel Sanctum", "Xendit", "Midtrans", "Cloudinary"],
+    "technologies": [
+      "Laravel",
+      "PHP",
+      "MySQL",
+      "Laravel Sanctum",
+      "Xendit",
+      "Midtrans",
+      "Cloudinary"
+    ],
     "overview": "REST API untuk platform pemesanan wisata: destinasi, paket perjalanan, pemesanan, dan pembayaran. Dibangun sebagai backend yang dikonsumsi klien web maupun mobile.",
     "challenge": "Pembayaran menentukan status pemesanan, tapi konfirmasinya datang belakangan dan dari luar — lewat webhook penyedia, bukan dari permintaan pengguna. Pemesanan harus punya keadaan yang jelas selama menunggu, dan tidak boleh berubah dua kali kalau webhook yang sama terkirim ulang.",
     "approach": "[ISI: kenapa dua gateway — Xendit dan Midtrans? Cadangan, beda metode bayar, atau permintaan klien? Alasannya justru bagian menariknya.] Pemanggilan gateway dipisahkan ke service tersendiri, bukan ditaruh di controller, supaya penyedia bisa ditukar tanpa menyentuh alur pemesanan.",
     "solution": "Laravel dengan Sanctum sebagai otentikasi berbasis token, sehingga API bisa dipakai klien web maupun mobile tanpa sesi. Relasi destinasi–paket–pemesanan ditata lewat Eloquent dan migrasi. XenditService membungkus komunikasi ke penyedia pembayaran, dan berkas media dilayani dari Cloudinary alih-alih disimpan di server aplikasi.",
-    "contribution": "[ISI: solo atau tim?] Merancang skema basis data dan seluruh lapisan API, dari migrasi sampai controller, termasuk integrasi kedua penyedia pembayaran.",
-    "outcome": "[ISI: jangan tulis 'memperkuat penguasaan Laravel' — itu menilai diri sendiri. Tulis apa yang jadi. Contoh bentuk: API selesai dan diintegrasikan dengan <klien apa>. Alur pembayaran diuji lewat sandbox pada <berapa> skenario. Kalau berhenti di tahap pengembangan, tulis begitu.]"
+    "contribution": "Seluruh backend dikerjakan sendiri: skema basis data dan migrasi, lapisan API dari rute sampai controller, otentikasi token dengan Sanctum, serta penyambungan ke kedua penyedia pembayaran.",
+    "outcome": "Proyek mandiri yang selesai dalam waktu sekitar satu bulan, dengan seluruh endpoint terdokumentasi lewat OpenAPI dan bisa dijelajahi di Swagger UI. Belum dipakai klien nyata. [ISI: alur pembayaran sudah diuji lewat sandbox Xendit/Midtrans, atau berhenti di tahap implementasi? Tulis yang benar.]"
   },
-
   "re-enviro": {
     "overview": "Platform aksi lingkungan dengan dua program: EcoAct untuk mendaftar kegiatan relawan seperti penanaman pohon dan bersih pantai, dan Dana Hijau untuk mendanai proyek lingkungan lewat donasi terbuka.",
     "challenge": "Dua program dengan alur yang berbeda — mendaftar kegiatan dan menyumbang dana — harus tinggal di satu aplikasi tanpa membuat penggunanya bingung berada di mana. Keduanya juga perlu riwayat kontribusi yang sama, padahal yang dicatat berbeda bentuk: kehadiran versus nominal.",
@@ -59,7 +74,6 @@
     "contribution": "[ISI: tim berempat — kamu Frontend Developer, dengan Gerard (PM), Katherine (Backend), Tia (UI/UX). Sebutkan batas peranmu: bagian frontend mana yang kamu kerjakan, dan skema Supabase-nya kamu atau Katherine.]",
     "outcome": "[ISI: contoh bentuk — Dikerjakan untuk <lomba / mata kuliah / komunitas apa>, dengan hasil <peringkat, nilai, atau status>. Kalau ada yang benar-benar memakai: berapa kegiatan atau donasi yang tercatat.]"
   },
-
   "pantausam": {
     "githuburl": "https://github.com/faidzagustiawan/PantauSAM",
     "overview": "Platform pelaporan infrastruktur publik. Warga mengirim laporan kerusakan lengkap dengan lokasi dan foto, admin memverifikasinya, lalu laporan yang lolos tampil di peta interaktif beserta status pengerjaannya.",
@@ -69,7 +83,6 @@
     "contribution": "[ISI: tim berempat — kamu Fullstack Developer, dengan Fikri (UI Designer), Dama (PM), Radit (Document Manager). Karena kamu satu-satunya yang menulis kode, tulis itu terang-terangan: klaim itu kuat dan mudah diverifikasi lewat riwayat commit.]",
     "outcome": "[ISI: contoh bentuk — Dikerjakan sebagai <proyek akademik apa> selama lima bulan, dengan hasil <nilai / status / penilaian>. Kalau pernah diuji ke pengguna nyata, berapa laporan yang masuk.]"
   },
-
   "kalkulator-sdmk": {
     "overview": "Kalkulator kebutuhan tenaga kesehatan menurut metode beban kerja Kemenkes. Frontend Next.js yang dipasang di atas backend Google Apps Script dan Spreadsheet yang sudah berjalan dan tidak bisa diganti.",
     "challenge": "[ISI: ganti <klien/instansi> dengan yang sebenarnya.] Data dan otentikasi sudah tinggal di Google Apps Script dengan Spreadsheet sebagai basis data, dan <klien/instansi> tidak bisa pindah dari sana. Apps Script juga tidak melayani preflight CORS dengan benar, jadi permintaan JSON biasa dari origin frontend terpisah gagal sebelum sampai ke script.",
@@ -78,7 +91,6 @@
     "contribution": "[ISI: solo atau tim?] Seluruh frontend: arsitektur App Router, komponen UI tanpa pustaka pihak ketiga, lapisan auth berbasis token di localStorage, dan port rumus perhitungan dari sistem lama ke sdmk-engine.js. Backend Apps Script tidak saya sentuh.",
     "outcome": "[ISI: contoh bentuk — Menggantikan <antarmuka lama> untuk <berapa> fasilitas kesehatan. Biaya infrastruktur tetap nol karena backend Spreadsheet tidak berubah. Hasil perhitungan divalidasi terhadap <pembanding apa>.]"
   },
-
   "engineer-coffee": {
     "overview": "Landing page satu halaman untuk kedai kopi Engineer Coffee: profil brand, menu, lokasi, dan kontak. Dibangun tanpa framework dan tanpa build step, cukup dibuka langsung di browser.",
     "challenge": "[ISI: apa batasan nyatanya? Kemungkinan: kedai belum punya anggaran hosting, atau pemiliknya harus bisa mengubah teks sendiri tanpa developer. Tulis yang benar — batasan kecil yang jujur lebih bernilai daripada tantangan besar yang dikarang.]",
