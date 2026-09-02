@@ -28,9 +28,20 @@ cp .env.example .env   # then fill in the values
 pnpm dev
 ```
 
-The app reads its configuration from `.env`. Only `VITE_`-prefixed variables
-reach the browser bundle — never put a secret behind that prefix. The R2 keys
-are used solely by `pnpm r2:sync`, which runs on your machine.
+Configuration is split by whether it is secret:
+
+- **`.env.production`** is committed and holds the public `VITE_` values — site
+  URL, PocketBase URL, EmailJS ids. All of them are inlined into the JavaScript
+  bundle and served to every visitor anyway, so the repo exposes nothing extra,
+  and CI cannot silently build without them. That is not hypothetical: before
+  this file existed, a Cloudflare build produced a contact form that reported
+  itself unconfigured, because `.env` is gitignored and never reaches CI.
+- **`.env`** is gitignored and holds the real secrets: the R2 access keys and
+  `ADMIN_PASSWORD`. Only `pnpm r2:sync` reads them, on your machine. Values here
+  win over `.env.production` locally.
+
+Never put a secret behind a `VITE_` prefix — the prefix is what makes Vite ship
+it to the browser.
 
 ## Scripts
 

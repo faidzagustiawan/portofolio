@@ -13,7 +13,7 @@ import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
-import 'dotenv/config'
+import './load-env.js'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const DIST = path.join(root, 'dist')

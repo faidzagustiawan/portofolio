@@ -7,7 +7,7 @@
 import { writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import 'dotenv/config'
+import './load-env.js'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
