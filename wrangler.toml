@@ -11,6 +11,12 @@ compatibility_date = "2026-08-31"
 [assets]
 directory = "dist"
 
+# Serve /work directly instead of redirecting it to /work/. The default,
+# auto-trailing-slash, answers /work with a 307 to /work/ — which costs a round
+# trip on every navigation and, worse, serves a URL that disagrees with the
+# canonical tag and the sitemap, both of which omit the trailing slash.
+html_handling = "drop-trailing-slash"
+
 # Every real route is prerendered to its own index.html, so this only answers
 # paths the last build did not know about — a project published since then.
 # The response is the prerendered home page; src/main.jsx compares data-route
