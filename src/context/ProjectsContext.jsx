@@ -1,18 +1,30 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ProjectsContext } from '@/context/projects-context'
 import { PB_URL, mapProjectRecord } from '@/lib/pb'
 
 const ENDPOINT = `${PB_URL}/api/collections/projects/records?sort=-year&perPage=200`
 
-export function ProjectsProvider({ children }) {
-  const [projects, setProjects] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
+export function ProjectsProvider({ children, initialProjects = null }) {
+  const hasInitial = Array.isArray(initialProjects) && initialProjects.length > 0
+
+  const [projects, setProjects] = useState(() => initialProjects ?? [])
+  const [isLoading, setIsLoading] = useState(!hasInitial)
   const [error, setError] = useState(null)
   const [reloadToken, setReloadToken] = useState(0)
+
+  // The build bakes the feed into every page, so the first paint after
+  // hydration already has data. Only refetch when there was none, or when
+  // something explicitly asks for a retry.
+  const skipInitialFetch = useRef(hasInitial)
 
   const retry = useCallback(() => setReloadToken((n) => n + 1), [])
 
   useEffect(() => {
+    if (skipInitialFetch.current) {
+      skipInitialFetch.current = false
+      return
+    }
+
     const controller = new AbortController()
 
     async function fetchProjects() {

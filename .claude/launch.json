@@ -14,12 +14,9 @@
     },
     {
       "name": "preview",
-      "runtimeExecutable": "pnpm",
+      "runtimeExecutable": "node",
       "runtimeArgs": [
-        "preview",
-        "--port",
-        "4173",
-        "--strictPort"
+        "scripts/serve-dist.js"
       ],
       "port": 4173
     }

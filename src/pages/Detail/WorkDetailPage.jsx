@@ -116,7 +116,7 @@ export default function ProjectDetailPage() {
       <SEO
         title={project.name}
         description={project.tagline || project.overview}
-        image={project.image}
+        image={project.image || `/og/${project.slug}.jpg`}
         url={`/work/${project.slug}`}
         type="article"
       />

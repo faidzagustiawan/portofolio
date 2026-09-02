@@ -6,7 +6,7 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist', 'public', 'stats.html']),
+  globalIgnores(['dist', 'dist-ssr', 'public', 'stats.html']),
 
   // Browser code
   {

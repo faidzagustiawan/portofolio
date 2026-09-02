@@ -1,4 +1,4 @@
-import { Suspense, useState } from 'react'
+import { Suspense } from 'react'
 import { useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 
@@ -7,39 +7,24 @@ import AppRoutes from './Routes'
 import PageTransition from '@/components/Animation/PageTransition'
 import InitialPreloader from '@/components/Animation/InitialPreloader'
 import { CustomCursor } from '@/components/UI/CustomCursor'
-import { prefersReducedMotionNow } from '@/hooks/usePrefersReducedMotion'
+import { useIntroGate } from '@/hooks/useIntroGate'
 
 const PRELOADER_KEY = 'preloaderLastShown'
-const PRELOADER_COOLDOWN = 10 * 60 * 1000
-
-const isAutomated = () =>
-  typeof navigator !== 'undefined' &&
-  (navigator.webdriver || /bot|googlebot|crawler|spider|robot|crawling|lighthouse/i.test(navigator.userAgent))
-
-// Crawlers, automation, and anyone who asked for less motion skip the intro
-// outright; everyone else sees it at most once per cooldown window.
-function shouldShowPreloader() {
-  if (isAutomated() || prefersReducedMotionNow()) return false
-  try {
-    const lastShown = localStorage.getItem(PRELOADER_KEY)
-    if (lastShown && Date.now() - parseInt(lastShown, 10) < PRELOADER_COOLDOWN) return false
-  } catch {
-    // Storage blocked (private mode, cookies off) — fall through and show it.
-  }
-  return true
-}
 
 export default function App() {
   const location = useLocation()
-  const [isFirstLoad, setIsFirstLoad] = useState(shouldShowPreloader)
+
+  const [isFirstLoad, dismissIntro] = useIntroGate()
 
   const handlePreloaderComplete = () => {
     try {
       localStorage.setItem(PRELOADER_KEY, Date.now().toString())
     } catch {
-      // Non-fatal: the intro simply replays next visit.
+      // Storage blocked (private mode, cookies off) — the intro replays next visit.
     }
-    setIsFirstLoad(false)
+    // Dropping the flag also removes the pre-paint backdrop, which would
+    // otherwise outlive the exit animation.
+    dismissIntro()
   }
 
   return (

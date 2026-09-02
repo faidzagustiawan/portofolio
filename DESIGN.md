@@ -65,3 +65,17 @@ The custom cursor replaces the native one only where a precise pointer exists.
 native cursor is scoped to both that class and
 `@media (hover: hover) and (pointer: fine)`. If the component never mounts, the
 platform cursor stays.
+
+## Link previews
+Every route ships its own Open Graph card, generated at build time:
+
+- **Site card** (`/og-cover.jpg`) — the portrait beside the name and role. Used
+  for the home page, `/work`, and `/contact`.
+- **Project cards** (`/og/<slug>.jpg`) — the project's own accent gradient under
+  a dark veil, with its name, tagline, category, year, and top technologies.
+  Built by `scripts/build-project-cards.js`, which resolves the CMS gradient
+  class names against the compiled stylesheet, so a card always matches the
+  colour the site actually renders.
+
+Both are 1200×630. When a project eventually has a real `image` in PocketBase,
+that wins over the generated card.

@@ -35,3 +35,6 @@ scripts/.pb-schema-backup-*.json
 
 # Local media staging for r2:sync
 r2-assets/
+
+# SSR bundle used only by the prerender step
+dist-ssr

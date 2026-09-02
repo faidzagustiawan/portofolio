@@ -5,16 +5,18 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/generate-sitemap.js && vite build",
+    "build": "node scripts/generate-sitemap.js && vite build && node scripts/build-project-cards.js && vite build --ssr src/entry-server.jsx --outDir dist-ssr && node scripts/prerender.js",
     "build:analyze": "cross-env ANALYZE=1 pnpm build",
-    "preview": "vite preview",
+    "preview": "node scripts/serve-dist.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "hero:build": "node scripts/optimize-hero.js",
     "sitemap": "node scripts/generate-sitemap.js",
     "r2:sync": "node scripts/sync-r2.js",
     "og:build": "node scripts/build-og-card.js",
-    "assets:build": "node scripts/optimize-hero.js && node scripts/build-og-card.js"
+    "assets:build": "node scripts/optimize-hero.js && node scripts/build-og-card.js",
+    "prerender": "node scripts/prerender.js",
+    "og:projects": "node scripts/build-project-cards.js"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",

@@ -21,7 +21,15 @@ const absolute = (value, fallback) => {
   return value.startsWith('http') ? value : `${SITE_URL}${value}`
 }
 
-export default function SEO({ title, description, image, url, type = 'website', noIndex = false }) {
+export default function SEO({
+  title,
+  description,
+  image,
+  imageAlt,
+  url,
+  type = 'website',
+  noIndex = false,
+}) {
   // index.html carries a site-level copy of these tags so link unfurlers, which
   // do not run JS, still get something. Once Helmet is live it owns them, so the
   // static pair is dropped to avoid two of every tag in the rendered document.
@@ -90,6 +98,9 @@ export default function SEO({ title, description, image, url, type = 'website', 
       <meta property="og:title" content={seoTitle} />
       <meta property="og:description" content={seoDescription} />
       <meta property="og:image" content={seoImage} />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:image:alt" content={imageAlt || seoTitle} />
       <meta property="og:site_name" content={SITE_NAME} />
 
       <meta name="twitter:card" content="summary_large_image" />

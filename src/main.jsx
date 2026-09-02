@@ -1,27 +1,30 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import { createRoot, hydrateRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
-import { HelmetProvider } from 'react-helmet-async'
-import { MotionConfig } from 'framer-motion'
-import { PageTransitionProvider } from '@/context/PageTransitionContext'
-import { ProjectsProvider } from '@/context/ProjectsContext'
 import './index.css'
-import App from './App.jsx'
+import AppRoot from '@/AppRoot'
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    {/* reducedMotion="user" makes every framer-motion transform and layout
-        animation respect the OS setting without per-component guards. */}
-    <MotionConfig reducedMotion="user">
-      <HelmetProvider>
-        <BrowserRouter>
-          <ProjectsProvider>
-            <PageTransitionProvider>
-              <App />
-            </PageTransitionProvider>
-          </ProjectsProvider>
-        </BrowserRouter>
-      </HelmetProvider>
-    </MotionConfig>
-  </StrictMode>
-)
+const container = document.getElementById('root')
+
+// The build prerenders every known route and embeds the project feed, so the
+// markup is already correct and the data is already here. Adopt both instead of
+// rebuilding the page and refetching what the build already resolved.
+const isPrerendered = document.documentElement.dataset.prerendered === 'true'
+
+function readEmbeddedProjects() {
+  const node = document.getElementById('__PROJECTS__')
+  if (!node) return null
+  try {
+    return JSON.parse(node.textContent)
+  } catch {
+    // Malformed payload: fall through and let the provider fetch normally.
+    return null
+  }
+}
+
+const tree = <AppRoot router={BrowserRouter} initialProjects={readEmbeddedProjects()} />
+
+if (isPrerendered) {
+  hydrateRoot(container, tree)
+} else {
+  createRoot(container).render(tree)
+}

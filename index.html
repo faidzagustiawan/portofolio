@@ -6,22 +6,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0a0a0a" />
   <meta name="color-scheme" content="dark" />
+  <meta name="author" content="Faidz Agustiawan" />
+  <meta property="og:site_name" content="Faidz Agustiawan" />
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="apple-touch-icon" href="/favicon.svg" />
 
-  <title>Faidz Agustiawan | Full-Stack Developer</title>
+  <!-- Per-page title, description, canonical, Open Graph and JSON-LD are
+       written here at build time by scripts/prerender.js. The fallback below
+       covers the SPA shell that serves routes added after the last build. -->
+  <!--app-head-->
+  <title data-static-seo>Faidz Agustiawan | Full-Stack Developer</title>
   <meta data-static-seo name="description"
     content="Faidz Agustiawan is a full-stack developer in Malang, Indonesia, building web and mobile products end to end with a frontend obsession for motion, interaction, and performance." />
-  <meta name="author" content="Faidz Agustiawan" />
   <meta data-static-seo property="og:type" content="website" />
-  <meta property="og:site_name" content="Faidz Agustiawan" />
   <meta data-static-seo property="og:url" content="https://faidzagustiawan.com/" />
   <meta data-static-seo property="og:title" content="Faidz Agustiawan | Full-Stack Developer" />
-  <meta data-static-seo property="og:description"
-    content="Full-stack developer in Malang, Indonesia. Web and mobile products built end to end, with a frontend obsession for motion and performance." />
   <meta data-static-seo property="og:image" content="https://faidzagustiawan.com/og-cover.jpg" />
   <meta data-static-seo name="twitter:card" content="summary_large_image" />
+  <!--/app-head-fallback-->
 
   <!-- Fonts: preconnect first so the stylesheet and its faces overlap. -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -29,30 +32,47 @@
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400..700&family=Lora:wght@400..600&family=Space+Mono&display=swap" />
 
-  <!-- LCP element. Two preloads because the <picture> switches on viewport,
-       not on a sizes descriptor; the type hint makes a browser without AVIF
-       skip both. -->
-  <link rel="preload" as="image" type="image/avif" fetchpriority="high" media="(min-width: 769px)"
-    href="/hero/portrait-1200.avif" />
-  <link rel="preload" as="image" type="image/avif" fetchpriority="high" media="(max-width: 768px)"
-    href="/hero/portrait-720.avif" />
+  <!-- Route-specific hints: the hero preload only on the page that shows it,
+       the PocketBase preconnect only on the shell that has to fetch. -->
+  <!--app-links-->
 
-  <link rel="preconnect" href="https://faidz.fun" crossorigin />
+  <style>
+    /* Backdrop for the intro. Pages are prerendered, so without something
+       painted before React mounts, the visitor would see the real page for a
+       frame and then have it covered. */
+    html[data-preloader="on"]::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 99998;
+      background: #0a0a0a;
+    }
+  </style>
+  <script>
+    // Runs before first paint: only synchronous script can read localStorage
+    // early enough to decide whether the intro plays. React reads the result.
+    (function () {
+      try {
+        var ua = navigator.userAgent;
+        if (navigator.webdriver || /bot|googlebot|crawler|spider|robot|crawling|lighthouse/i.test(ua)) return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var last = localStorage.getItem('preloaderLastShown');
+        if (last && Date.now() - parseInt(last, 10) < 600000) return;
+        document.documentElement.dataset.preloader = 'on';
+      } catch (e) {
+        /* Storage unavailable: skip the intro rather than risk covering the page. */
+      }
+    })();
+  </script>
 </head>
 
 <body>
-  <div id="root"></div>
+  <div id="root"><!--app-html--></div>
   <noscript>
-    <div style="padding:2rem;font-family:system-ui,sans-serif;color:#fff;background:#0a0a0a">
-      <h1>Faidz Agustiawan — Full-Stack Developer</h1>
-      <p>This portfolio needs JavaScript. You can still reach me directly:</p>
-      <ul>
-        <li><a style="color:#fff" href="mailto:faidzagustiawan@gmail.com">faidzagustiawan@gmail.com</a></li>
-        <li><a style="color:#fff" href="https://github.com/faidzagustiawan">GitHub</a></li>
-        <li><a style="color:#fff"
-            href="https://www.linkedin.com/in/muhammad-faidz-agustiawan-8692821bb">LinkedIn</a></li>
-      </ul>
-    </div>
+    <p style="padding:1rem 2rem;font-family:system-ui,sans-serif;color:#a3a3a3;background:#0a0a0a;margin:0">
+      This site animates with JavaScript, but every page is readable without it.
+      Reach me at <a style="color:#fff" href="mailto:faidzagustiawan@gmail.com">faidzagustiawan@gmail.com</a>.
+    </p>
   </noscript>
   <script type="module" src="/src/main.jsx"></script>
 </body>
