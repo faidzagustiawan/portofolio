@@ -24,7 +24,22 @@ export function ProjectsProvider({ children }) {
         // Map PocketBase data to match previous structure
         const mappedProjects = data.items.map(item => {
           const pbBase = 'https://faidz.fun/pb/api/files';
-          
+
+          // A media field is either a full URL (kept on R2) or a PocketBase filename
+          const toMediaUrl = value => {
+            if (!value) return null;
+            return /^https?:\/\//.test(value)
+              ? value
+              : `${pbBase}/${item.collectionId}/${item.id}/${value}`;
+          };
+          const toList = value => {
+            if (!value) return [];
+            const list = typeof value === 'string'
+              ? (value.trim().startsWith('[') ? JSON.parse(value) : [value])
+              : value;
+            return list.map(toMediaUrl).filter(Boolean);
+          };
+
           return {
             id: item.id,
             slug: item.slug,
@@ -33,27 +48,25 @@ export function ProjectsProvider({ children }) {
             featured: item.featured,
             year: item.year ? item.year.toString() : '',
             category: item.category,
-            // Construct full URLs for images/videos
-            image: item.image ? `${pbBase}/${item.collectionId}/${item.id}/${item.image}` : null,
-            // If they add video/visualDetails later, map them here:
-            // video: item.video ? `${pbBase}/${item.collectionId}/${item.id}/${item.video}` : null,
-            // visualDetails: item.visualDetails?.map(img => `${pbBase}/${item.collectionId}/${item.id}/${img}`) || [],
+            image: toMediaUrl(item.image),
+            video: toMediaUrl(item.video),
+            visualDetails: toList(item.visualDetails ?? item.visualdetails),
             technologies: item.technologies ? (typeof item.technologies === 'string' ? JSON.parse(item.technologies) : item.technologies) : [],
             overview: item.overview,
-            githubUrl: item.githuburl,
+            githubUrl: item.githuburl ?? item.githubUrl ?? '',
             // Keep empty fields so components don't break
             role: item.role || '',
             client: item.client || '',
             duration: item.duration || '',
             color: item.color || 'from-neutral-700 to-neutral-900',
-            team: [],
+            team: item.team ? (typeof item.team === 'string' ? JSON.parse(item.team) : item.team) : [],
             challenge: item.challenge || '',
             approach: item.approach || '',
             solution: item.solution || '',
             contribution: item.contribution || '',
             outcome: item.outcome || '',
-            liveUrl: item.liveUrl || null,
-            nextProjectSlug: item.nextProjectSlug || null
+            liveUrl: item.liveUrl ?? item.liveurl ?? null,
+            nextProjectSlug: item.nextProjectSlug ?? item.nextprojectslug ?? null
           };
         });
 

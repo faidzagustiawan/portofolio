@@ -8,7 +8,13 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "r2:sync": "node scripts/sync-r2.js"
+    "r2:sync": "node scripts/sync-r2.js",
+    "pb:migrate": "node scripts/migrate-to-pb.js",
+    "pb:migrate:dry": "node scripts/migrate-to-pb.js --dry-run",
+    "pb:schema": "node scripts/pb-ensure-schema.js",
+    "pb:schema:dry": "node scripts/pb-ensure-schema.js --dry-run",
+    "pb:media:check": "node scripts/migrate-to-pb.js --check-media",
+    "pb:media": "node scripts/migrate-to-pb.js --upload-media"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
