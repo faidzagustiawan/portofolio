@@ -20,6 +20,12 @@ const DIST = path.join(root, 'dist')
 const OUT_DIR = path.join(DIST, 'og')
 const PB_URL = (process.env.VITE_PB_URL || 'https://faidz.fun/pb').replace(/\/+$/, '')
 
+// Printed in the card's corner. Derived rather than written out again, so the
+// cards cannot end up advertising a domain the site no longer uses.
+const SITE_HOST = (process.env.VITE_SITE_URL || 'https://faidzagustiawan.id')
+  .replace(/^https?:\/\//, '')
+  .replace(/\/+$/, '')
+
 const WIDTH = 1200
 const HEIGHT = 630
 const SANS = 'Segoe UI, Helvetica Neue, Helvetica, Arial, sans-serif'
@@ -166,7 +172,7 @@ function cardSvg(project, palette) {
     ${escapeXml(tech)}
   </text>
   <text x="${WIDTH - 72}" y="556" text-anchor="end" font-family="${SANS}" font-size="22" font-weight="600" fill="#ffffff" opacity="0.75">
-    faidzagustiawan.com
+    ${escapeXml(SITE_HOST)}
   </text>
 </svg>`
 }

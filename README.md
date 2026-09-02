@@ -1,10 +1,10 @@
-# faidzagustiawan.com
+# faidzagustiawan.id
 
 Personal portfolio of Faidz Agustiawan — a full-stack developer in Malang,
 Indonesia. A motion-led React app, prerendered to static HTML at build time and
 backed by a PocketBase instance that holds the project case studies.
 
-**Live:** https://faidzagustiawan.com
+**Live:** https://faidzagustiawan.id
 
 ## Stack
 
