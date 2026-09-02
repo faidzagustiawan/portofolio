@@ -1,23 +1,38 @@
-import React from 'react';
 import { SiGithub, SiInstagram, SiLinkedin, SiGmail } from 'react-icons/si'
 
-const Footer = () => {
-  return (
-    <footer className="relative z-20 bg-gray-900 border-t border-gray-200 py-8 mt-auto">
-      <div className="container mx-auto px-4 text-center">
-        <div className="flex justify-center space-x-6 mb-4 text-gray-500">
+const LINKS = [
+  { label: 'GitHub', href: 'https://github.com/faidzagustiawan', Icon: SiGithub },
+  { label: 'Instagram', href: 'https://www.instagram.com/faidzagustiawan', Icon: SiInstagram },
+  {
+    label: 'LinkedIn',
+    href: 'https://www.linkedin.com/in/muhammad-faidz-agustiawan-8692821bb',
+    Icon: SiLinkedin,
+  },
+  { label: 'Email', href: 'mailto:faidzagustiawan@gmail.com', Icon: SiGmail },
+]
 
-          <a href="https://github.com/faidzagustiawan" aria-label="GitHub" className="hover:text-blue-600 transition-colors"><SiGithub size={20} aria-hidden="true" /></a>
-          <a href="https://www.instagram.com/faidzagustiawan" aria-label="Instagram" className="hover:text-pink-600 transition-colors"><SiInstagram size={20} aria-hidden="true" /></a>
-          <a href="https://www.linkedin.com/in/muhammad-faidz-agustiawan-8692821bb" aria-label="LinkedIn" className="hover:text-blue-700 transition-colors"><SiLinkedin size={20} aria-hidden="true" /></a>
-          <a href="mailto:faidzagustiawan@gmail.com" aria-label="Email" className="hover:text-red-600 transition-colors"><SiGmail size={20} aria-hidden="true" /></a>
-        </div>
-        <p className="text-gray-500 text-sm">
-          © {new Date().getFullYear()} Faidz Portfolio. Dibuat dengan React & Tailwind.
-        </p>
-      </div>
-    </footer>
-  );
-};
+const Footer = () => (
+  <footer className="relative z-20 bg-neutral-950 border-t border-neutral-800 py-10 mt-auto">
+    <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-16 flex flex-col sm:flex-row items-center justify-between gap-6">
+      <p className="text-sm text-neutral-400 order-2 sm:order-1">
+        © {new Date().getFullYear()} Faidz Agustiawan. Built with React and Tailwind CSS.
+      </p>
 
-export default Footer;
+      <nav aria-label="Social links" className="flex gap-6 order-1 sm:order-2">
+        {LINKS.map(({ label, href, Icon }) => (
+          <a
+            key={label}
+            href={href}
+            aria-label={label}
+            {...(href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+            className="text-neutral-400 hover:text-white transition-colors"
+          >
+            <Icon size={20} aria-hidden="true" />
+          </a>
+        ))}
+      </nav>
+    </div>
+  </footer>
+)
+
+export default Footer

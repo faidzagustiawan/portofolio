@@ -1,13 +1,20 @@
-# Faidz Agustiawan - Portfolio
+# Faidz Agustiawan — Portfolio
 
-Welcome to the portfolio of Faidz Agustiawan, a Frontend Developer specializing in React, Taildwind CSS, and Framer Motion.
+Faidz Agustiawan is a full-stack developer based in Malang, Indonesia. He builds
+web and mobile products end to end — database design, server logic, and
+deployment — with a frontend focus on motion, interaction, and performance.
 
-## Navigation Links
-- [Home](/)
-- [Work](/work)
-- [Contact](/contact)
+## Stack
+React, Next.js, TypeScript, Tailwind CSS, Framer Motion, Laravel, Node.js,
+PostgreSQL, MySQL, Kotlin (Jetpack Compose).
 
-## Overview
-This site is built to showcase projects focusing on modern interaction design and performance.
-- Projects are listed under `/work`
-- Connect or reach out through `/contact`
+## Navigation
+- [Home](/) — introduction and selected work
+- [Work](/work) — full project list, filterable by type and year
+- [Contact](/contact) — enquiry form, email, and resume download
+
+## Notes
+- Project records are served from a PocketBase instance and rendered client-side.
+- Individual case studies live at `/work/<slug>`; see `/sitemap.xml` for the
+  current list.
+- Contact: faidzagustiawan@gmail.com

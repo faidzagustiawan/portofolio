@@ -1,91 +1,87 @@
-import { useEffect, useState } from "react"
-import { motion, AnimatePresence } from "motion/react"
-import { FileDown } from "lucide-react"
-import clsx from "clsx"
+import { useEffect, useRef, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { FileDown, X } from 'lucide-react'
+
+const CV_HREF = '/CV-Muhammad-Faidz-Agustiawan.pdf'
+const NUDGE_DELAY = 7000
+const NUDGE_DURATION = 3000
 
 export default function FloatingCV() {
   const [expanded, setExpanded] = useState(false)
-  const [nudgeShown, setNudgeShown] = useState(false)
+  const [dismissed, setDismissed] = useState(false)
+  const nudgeDone = useRef(false)
+  const timers = useRef([])
 
+  // One unprompted nudge, then it stays a quiet icon until hovered.
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setExpanded(true)
-      setNudgeShown(true)
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      nudgeDone.current = true
+      return
+    }
 
-      setTimeout(() => setExpanded(false), 3000)
-    }, 7000)
+    timers.current.push(
+      setTimeout(() => {
+        setExpanded(true)
+        nudgeDone.current = true
+        timers.current.push(setTimeout(() => setExpanded(false), NUDGE_DURATION))
+      }, NUDGE_DELAY)
+    )
 
-    return () => clearTimeout(timer)
+    const pending = timers.current
+    return () => pending.forEach(clearTimeout)
   }, [])
 
+  if (dismissed) return null
+
   return (
-    <a
-      href="/CV-Muhammad Faidz Agustiawan.pdf"
-      download
-      className="fixed bottom-15 right-10 z-9999"
-      aria-label="Download CV"
-    >
-      <motion.div
-        initial={{ scale: 0.85 }}
-        animate={{
-          width: expanded ? 200 : 64,   // 🔥 LEBIH BESAR
-          scale: 1,
-          boxShadow: [
-            "0 0 0px rgba(185,28,28,0)",
-            "0 0 25px rgba(185,28,28,0.55)",
-            "0 0 0px rgba(185,28,28,0)",
-          ],
-        }}
-        transition={{
-          width: {
-            type: "spring",
-            stiffness: 260,
-            damping: 20,
-          },
-          scale: {
-            type: "spring",
-            stiffness: 180,
-          },
-          boxShadow: {
-            duration: 2.4,
-            repeat: Infinity,
-            ease: "easeInOut",
-          },
-        }}
-        onMouseEnter={() => setExpanded(true)}
-        onMouseLeave={() => nudgeShown && setExpanded(false)}
-        className={clsx(
-          "h-[64px]",                       // 🔥 LEBIH TINGGI
-          "bg-red-900 text-white",
-          "rounded-full",
-          "flex items-center gap-4",
-          "px-5",
-          "cursor-pointer",
-          "overflow-hidden",
-          "select-none",
-          "shadow-xl"
+    <div className="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-[9998] flex items-center gap-2">
+      <AnimatePresence>
+        {expanded && (
+          <motion.button
+            type="button"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            onClick={() => setDismissed(true)}
+            aria-label="Hide the resume shortcut"
+            className="h-8 w-8 shrink-0 rounded-full border border-neutral-700 bg-neutral-900 text-neutral-400 flex items-center justify-center hover:text-white hover:border-neutral-500 transition-colors"
+          >
+            <X size={14} aria-hidden="true" />
+          </motion.button>
         )}
+      </AnimatePresence>
+
+      <motion.a
+        href={CV_HREF}
+        download
+        onMouseEnter={() => setExpanded(true)}
+        onMouseLeave={() => nudgeDone.current && setExpanded(false)}
+        onFocus={() => setExpanded(true)}
+        onBlur={() => nudgeDone.current && setExpanded(false)}
+        animate={{ width: expanded ? 212 : 56 }}
+        transition={{ type: 'spring', stiffness: 260, damping: 24 }}
+        className="h-14 flex items-center gap-3 overflow-hidden rounded-full border border-neutral-700 bg-neutral-900 px-4 text-white shadow-xl select-none hover:border-neutral-500 transition-colors"
       >
-        {/* Icon */}
         <span className="shrink-0">
-          <FileDown size={24} />            {/* 🔥 ICON LEBIH BESAR */}
+          <FileDown size={22} aria-hidden="true" />
         </span>
 
-        {/* Text */}
         <AnimatePresence>
           {expanded && (
             <motion.span
               initial={{ opacity: 0, x: -8 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -8 }}
-              transition={{ duration: 0.25 }}
-              className="text-base whitespace-nowrap font-medium"
+              transition={{ duration: 0.2 }}
+              className="whitespace-nowrap text-sm font-medium"
             >
-              Yes, this is my CV
+              Download resume
             </motion.span>
           )}
         </AnimatePresence>
-      </motion.div>
-    </a>
+
+        <span className="sr-only">Download resume (PDF)</span>
+      </motion.a>
+    </div>
   )
 }

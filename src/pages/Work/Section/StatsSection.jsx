@@ -1,37 +1,35 @@
 import { useMemo } from 'react'
-import { useProjects } from '@/context/ProjectsContext'
+import { useProjects } from '@/context/projects-context'
 
-export function StatsSection({}) {
+const CAREER_START = 2024
+
+export function StatsSection() {
   const { projects } = useProjects()
 
-  const yearsExperience = useMemo(() => {
-    const startYear = 2024
-    const currentYear = new Date().getFullYear()
-    return Math.max(1, currentYear - startYear)
-  }, [])
+  const stats = useMemo(() => {
+    const technologies = new Set(projects.flatMap((p) => p.technologies))
+    const years = Math.max(1, new Date().getFullYear() - CAREER_START)
 
-  const stats = [
-    { value: projects.length, label: 'Projects' },
-    { value: '12+', label: 'Technologies' },
-    { value: `${yearsExperience}+`, label: 'Years Experience' },
-  ]
+    return [
+      { value: projects.length, label: projects.length === 1 ? 'Project' : 'Projects' },
+      { value: technologies.size, label: 'Technologies' },
+      { value: `${years}+`, label: 'Years building' },
+    ]
+  }, [projects])
 
   return (
-    // Background sedikit berbeda dari neutral-950 utama agar section terlihat
     <section className="py-24 md:py-32 lg:py-40 bg-neutral-950 border-t border-neutral-800">
       <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-16">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-16">
-          {stats.map((stat, i) => (
-            <div key={i} className="text-center">
-              <span className="block text-4xl md:text-6xl font-bold tracking-tight text-white">
+        <dl className="grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-16">
+          {stats.map((stat) => (
+            <div key={stat.label} className="text-center">
+              <dd className="block text-4xl md:text-6xl font-bold tracking-tight text-white">
                 {stat.value}
-              </span>
-              <p className="mt-2 text-sm md:text-base text-neutral-400">
-                {stat.label}
-              </p>
+              </dd>
+              <dt className="mt-2 text-sm md:text-base text-neutral-400">{stat.label}</dt>
             </div>
           ))}
-        </div>
+        </dl>
       </div>
     </section>
   )

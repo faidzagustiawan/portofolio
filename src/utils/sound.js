@@ -45,7 +45,7 @@ export function playHoverSound() {
     
     osc.start();
     osc.stop(ctx.currentTime + 0.03);
-  } catch (e) {
+  } catch {
     // Silent fail if AudioContext is blocked
   }
 }
@@ -73,7 +73,7 @@ export function playClickSound() {
     
     osc.start();
     osc.stop(ctx.currentTime + 0.1);
-  } catch (e) {
+  } catch {
     // Silent fail
   }
 }

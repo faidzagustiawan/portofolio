@@ -3,22 +3,58 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0a0a0a" />
-  <title>Faidz Agustiawan | Frontend Developer</title>
-  <meta name="description" content="Portfolio of Faidz Agustiawan, a frontend developer focused on motion, interaction, and performance." />
-  <meta name="keywords" content="Faidz Agustiawan, Frontend Developer, Web Developer, React Developer, Portfolio, Malang, Indonesia" />
+  <meta name="color-scheme" content="dark" />
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" href="/favicon.svg" />
+
+  <title>Faidz Agustiawan | Full-Stack Developer</title>
+  <meta data-static-seo name="description"
+    content="Faidz Agustiawan is a full-stack developer in Malang, Indonesia, building web and mobile products end to end with a frontend obsession for motion, interaction, and performance." />
   <meta name="author" content="Faidz Agustiawan" />
-  <meta property="og:title" content="Faidz Agustiawan | Frontend Developer" />
-  <meta property="og:description" content="Portfolio of Faidz Agustiawan, a frontend developer focused on motion, interaction, and performance." />
-  <meta property="og:type" content="website" />
-  <link rel="preload" href="/FotoFaidz.svg" as="image" type="image/svg+xml" fetchpriority="high" />
+  <meta data-static-seo property="og:type" content="website" />
+  <meta property="og:site_name" content="Faidz Agustiawan" />
+  <meta data-static-seo property="og:url" content="https://faidzagustiawan.com/" />
+  <meta data-static-seo property="og:title" content="Faidz Agustiawan | Full-Stack Developer" />
+  <meta data-static-seo property="og:description"
+    content="Full-stack developer in Malang, Indonesia. Web and mobile products built end to end, with a frontend obsession for motion and performance." />
+  <meta data-static-seo property="og:image" content="https://faidzagustiawan.com/og-cover.jpg" />
+  <meta data-static-seo name="twitter:card" content="summary_large_image" />
+
+  <!-- Fonts: preconnect first so the stylesheet and its faces overlap. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400..700&family=Lora:wght@400..600&family=Space+Mono&display=swap" />
+
+  <!-- LCP element. Two preloads because the <picture> switches on viewport,
+       not on a sizes descriptor; the type hint makes a browser without AVIF
+       skip both. -->
+  <link rel="preload" as="image" type="image/avif" fetchpriority="high" media="(min-width: 769px)"
+    href="/hero/portrait-1200.avif" />
+  <link rel="preload" as="image" type="image/avif" fetchpriority="high" media="(max-width: 768px)"
+    href="/hero/portrait-720.avif" />
+
+  <link rel="preconnect" href="https://faidz.fun" crossorigin />
 </head>
 
-<body style="background-color: #0a0a0a; color: #ffffff;">
+<body>
   <div id="root"></div>
+  <noscript>
+    <div style="padding:2rem;font-family:system-ui,sans-serif;color:#fff;background:#0a0a0a">
+      <h1>Faidz Agustiawan — Full-Stack Developer</h1>
+      <p>This portfolio needs JavaScript. You can still reach me directly:</p>
+      <ul>
+        <li><a style="color:#fff" href="mailto:faidzagustiawan@gmail.com">faidzagustiawan@gmail.com</a></li>
+        <li><a style="color:#fff" href="https://github.com/faidzagustiawan">GitHub</a></li>
+        <li><a style="color:#fff"
+            href="https://www.linkedin.com/in/muhammad-faidz-agustiawan-8692821bb">LinkedIn</a></li>
+      </ul>
+    </div>
+  </noscript>
   <script type="module" src="/src/main.jsx"></script>
 </body>
 
-</html>
+</html>

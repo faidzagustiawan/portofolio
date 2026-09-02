@@ -1,9 +1,11 @@
 import { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useLocation } from 'react-router-dom'
-import { useProjects } from '@/context/ProjectsContext'
+import { useProjects } from '@/context/projects-context'
+import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion'
 
 const PageTransition = ({ children }) => {
+  const shouldReduceMotion = usePrefersReducedMotion()
   const location = useLocation()
   const { projects } = useProjects()
 
@@ -32,6 +34,11 @@ const PageTransition = ({ children }) => {
   }
 
   const text = getTransitionText()
+
+  // MotionConfig suppresses the transform that would slide these covers away,
+  // so with reduced motion they must not be rendered at all — otherwise the
+  // page stays behind a panel that never leaves.
+  if (shouldReduceMotion) return children
 
   return (
     <>

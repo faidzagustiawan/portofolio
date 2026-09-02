@@ -1,67 +1,106 @@
-import { Helmet } from 'react-helmet-async';
+import { useEffect } from 'react'
+import { Helmet } from 'react-helmet-async'
 
-export default function SEO({ title, description, image, url, type = 'website' }) {
-  const siteTitle = 'Faidz Agustiawan | Frontend Developer';
-  const defaultDescription = 'Portfolio of Faidz Agustiawan, a frontend developer focused on motion, interaction, and performance.';
-  const defaultImage = 'https://faidzagustiawan.com/FotoFaidz.svg'; // Use absolute URL for OG image
-  const defaultUrl = 'https://faidzagustiawan.com';
+const SITE_URL = (import.meta.env.VITE_SITE_URL || 'https://faidzagustiawan.com').replace(/\/+$/, '')
+const SITE_NAME = 'Faidz Agustiawan'
+const ROLE = 'Full-Stack Developer'
 
-  const seoTitle = title ? `${title} | Faidz Agustiawan` : siteTitle;
-  const seoDescription = description || defaultDescription;
-  const seoImage = image ? (image.startsWith('http') ? image : `${defaultUrl}${image}`) : defaultImage;
-  const seoUrl = url ? `${defaultUrl}${url}` : defaultUrl;
+const DEFAULT_TITLE = `${SITE_NAME} | ${ROLE}`
+const DEFAULT_DESCRIPTION =
+  'Faidz Agustiawan is a full-stack developer in Malang, Indonesia, building web and mobile products end to end with a frontend obsession for motion, interaction, and performance.'
+const DEFAULT_IMAGE = `${SITE_URL}/og-cover.jpg`
 
-  // Schema.org JSON-LD
-  const schema = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": type === 'article' ? 'Article' : 'WebSite',
-        "name": seoTitle,
-        "description": seoDescription,
-        "url": seoUrl,
-        "image": seoImage,
-      },
-      ...(type === 'website' && seoUrl === defaultUrl ? [{
-        "@type": "Person",
-        "name": "Faidz Agustiawan",
-        "jobTitle": "Frontend Developer",
-        "url": defaultUrl,
-        "sameAs": [
-          "https://www.linkedin.com/in/muhammad-faidz-agustiawan-8692821bb",
-          "https://github.com/faidzagustiawan"
-        ]
-      }] : [])
-    ]
-  };
+const PROFILES = [
+  'https://www.linkedin.com/in/muhammad-faidz-agustiawan-8692821bb',
+  'https://github.com/faidzagustiawan',
+  'https://www.instagram.com/faidzagustiawan',
+]
+
+const absolute = (value, fallback) => {
+  if (!value) return fallback
+  return value.startsWith('http') ? value : `${SITE_URL}${value}`
+}
+
+export default function SEO({ title, description, image, url, type = 'website', noIndex = false }) {
+  // index.html carries a site-level copy of these tags so link unfurlers, which
+  // do not run JS, still get something. Once Helmet is live it owns them, so the
+  // static pair is dropped to avoid two of every tag in the rendered document.
+  useEffect(() => {
+    document.querySelectorAll('meta[data-static-seo]').forEach((el) => el.remove())
+  }, [])
+
+  const seoTitle = title ? `${title} | ${SITE_NAME}` : DEFAULT_TITLE
+  const seoDescription = description || DEFAULT_DESCRIPTION
+  const seoImage = absolute(image, DEFAULT_IMAGE)
+  const seoUrl = url ? `${SITE_URL}${url}` : SITE_URL
+
+  const person = {
+    '@type': 'Person',
+    '@id': `${SITE_URL}/#person`,
+    name: SITE_NAME,
+    jobTitle: ROLE,
+    url: SITE_URL,
+    image: `${SITE_URL}/hero/portrait-1200.webp`,
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Malang',
+      addressCountry: 'ID',
+    },
+    sameAs: PROFILES,
+  }
+
+  const graph = [
+    {
+      '@type': 'WebSite',
+      '@id': `${SITE_URL}/#website`,
+      name: DEFAULT_TITLE,
+      url: SITE_URL,
+      publisher: { '@id': `${SITE_URL}/#person` },
+    },
+    person,
+    type === 'article'
+      ? {
+          '@type': 'CreativeWork',
+          name: title,
+          headline: title,
+          description: seoDescription,
+          url: seoUrl,
+          image: seoImage,
+          author: { '@id': `${SITE_URL}/#person` },
+        }
+      : {
+          '@type': 'WebPage',
+          '@id': seoUrl,
+          name: seoTitle,
+          description: seoDescription,
+          url: seoUrl,
+          isPartOf: { '@id': `${SITE_URL}/#website` },
+        },
+  ]
 
   return (
-    <Helmet>
-      {/* Primary Meta Tags */}
+    <Helmet prioritizeSeoTags>
       <title>{seoTitle}</title>
-      <meta name="title" content={seoTitle} />
       <meta name="description" content={seoDescription} />
       <link rel="canonical" href={seoUrl} />
+      {noIndex && <meta name="robots" content="noindex, follow" />}
 
-      {/* Open Graph / Facebook */}
       <meta property="og:type" content={type} />
       <meta property="og:url" content={seoUrl} />
       <meta property="og:title" content={seoTitle} />
       <meta property="og:description" content={seoDescription} />
       <meta property="og:image" content={seoImage} />
-      <meta property="og:site_name" content="Faidz Agustiawan" />
+      <meta property="og:site_name" content={SITE_NAME} />
 
-      {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:url" content={seoUrl} />
       <meta name="twitter:title" content={seoTitle} />
       <meta name="twitter:description" content={seoDescription} />
       <meta name="twitter:image" content={seoImage} />
 
-      {/* Structured Data */}
       <script type="application/ld+json">
-        {JSON.stringify(schema)}
+        {JSON.stringify({ '@context': 'https://schema.org', '@graph': graph })}
       </script>
     </Helmet>
-  );
+  )
 }

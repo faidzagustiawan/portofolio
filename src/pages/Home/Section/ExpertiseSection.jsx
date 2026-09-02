@@ -1,5 +1,16 @@
-
-import { SiReact, SiNextdotjs, SiJavascript, SiTailwindcss, SiTypescript, SiVite, SiFigma, SiGit, SiGithub, SiFramer } from 'react-icons/si'
+import {
+  SiReact,
+  SiNextdotjs,
+  SiJavascript,
+  SiTailwindcss,
+  SiTypescript,
+  SiVite,
+  SiLaravel,
+  SiPostgresql,
+  SiGit,
+  SiFigma,
+  SiFramer,
+} from 'react-icons/si'
 import { LogoLoop } from '@/components/Animation/LogoLoop'
 
 const techLogos = [
@@ -8,17 +19,17 @@ const techLogos = [
   { node: <SiTypescript />, title: 'TypeScript', href: 'https://www.typescriptlang.org' },
   { node: <SiJavascript />, title: 'JavaScript', href: 'https://developer.mozilla.org' },
   { node: <SiTailwindcss />, title: 'Tailwind CSS', href: 'https://tailwindcss.com' },
-  { node: <SiVite />, title: 'Vue.js', href: 'https://vite.dev/' },
+  { node: <SiVite />, title: 'Vite', href: 'https://vite.dev' },
   { node: <SiFramer />, title: 'Framer Motion', href: 'https://www.framer.com/motion' },
-  { node: <SiFigma />, title: 'Figma', href: 'https://figma.com' },
+  { node: <SiLaravel />, title: 'Laravel', href: 'https://laravel.com' },
+  { node: <SiPostgresql />, title: 'PostgreSQL', href: 'https://www.postgresql.org' },
   { node: <SiGit />, title: 'Git', href: 'https://git-scm.com' },
-  { node: <SiGithub />, title: 'Github', href: 'https://github.com' },
+  { node: <SiFigma />, title: 'Figma', href: 'https://figma.com' },
 ]
 
 export function ExpertiseSection() {
   return (
-    <section className="py-10  bg-neutral-950">
-
+    <section className="py-10 bg-neutral-950" aria-label="Tools and technologies">
       <div className="relative h-[120px] overflow-visible">
         <LogoLoop
           logos={techLogos}
