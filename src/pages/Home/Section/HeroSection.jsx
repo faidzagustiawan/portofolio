@@ -1,7 +1,10 @@
 import ScrollVelocity from '@/components/Animation/ScrollVelocity'
 import LocationBadge from './LocationBadge'
+import { useCopy } from '@/i18n/locale-context'
 
 const HeroSection = () => {
+  const copy = useCopy().home
+
   return (
     <header className="fixed inset-0 z-0 bg-neutral-950">
       <section className="relative w-full h-screen overflow-hidden flex items-center justify-center">
@@ -23,7 +26,7 @@ const HeroSection = () => {
             <source type="image/webp" srcSet="/hero/portrait-1200.webp" />
             <img
               src="/hero/portrait-1200.webp"
-              alt="Faidz Agustiawan, arms folded, wearing a navy blazer"
+              alt={copy.portraitAlt}
               width="1200"
               height="2138"
               fetchPriority="high"

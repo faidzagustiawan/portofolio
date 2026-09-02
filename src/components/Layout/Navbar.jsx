@@ -4,12 +4,9 @@ import { FiMenu, FiX } from 'react-icons/fi'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useTransitionNavigate } from '@/hooks/useTransitionNavigate'
 import Magnet from '@/components/Animation/Magnet'
+import LanguageToggle from '@/components/Layout/LanguageToggle'
+import { useCopy } from '@/i18n/locale-context'
 import { playHoverSound, playClickSound } from '@/utils/sound'
-
-const NAV_ITEMS = [
-  { label: 'Work', path: '/work' },
-  { label: 'Contact', path: '/contact' },
-]
 
 // A modified click is the browser's to handle — open in a new tab, download,
 // context menu — so the animated navigation only claims the plain left click.
@@ -21,6 +18,12 @@ const Navbar = () => {
   const location = useLocation()
   const tNavigate = useTransitionNavigate()
   const menuButtonRef = useRef(null)
+  const copy = useCopy().nav
+
+  const navItems = [
+    { label: copy.work, path: '/work' },
+    { label: copy.contact, path: '/contact' },
+  ]
 
   // Derived during render rather than in an effect: closing the menu is a
   // reaction to the route changing, not a synchronisation with anything external.
@@ -87,14 +90,14 @@ const Navbar = () => {
         isScrolled ? 'bg-black/20 backdrop-blur-md border-b border-white/10' : 'bg-transparent'
       }`}
     >
-      <nav aria-label="Primary" className="max-w-8xl mx-6 lg:mx-50 py-5 flex items-center justify-between">
+      <nav aria-label={copy.primary} className="max-w-8xl mx-6 lg:mx-50 py-5 flex items-center justify-between">
         {/* LOGO — the label slides to reveal the surname on hover */}
         <Magnet padding={70} magnetStrength={5000}>
           <Link
             to="/"
-            onClick={(e) => handleNavClick(e, '/', 'Home')}
+            onClick={(e) => handleNavClick(e, '/', copy.home)}
             onMouseEnter={playHoverSound}
-            aria-label="Faidz Agustiawan — home"
+            aria-label={copy.homeAria}
             className="group flex items-center space-x-2 text-lg font-bold tracking-wide select-none text-white"
           >
             <span className="inline-block transition-transform duration-700 group-hover:rotate-[360deg]">
@@ -110,19 +113,25 @@ const Navbar = () => {
           </Link>
         </Magnet>
 
-        <div className="hidden lg:flex items-center space-x-8">{NAV_ITEMS.map(renderNavItem)}</div>
+        <div className="hidden lg:flex items-center space-x-8">
+          {navItems.map(renderNavItem)}
+          <LanguageToggle />
+        </div>
 
-        <button
-          ref={menuButtonRef}
-          type="button"
-          onClick={() => setIsOpen((open) => !open)}
-          aria-label={isOpen ? 'Close menu' : 'Open menu'}
-          aria-expanded={isOpen}
-          aria-controls="mobile-menu"
-          className="lg:hidden text-white"
-        >
-          {isOpen ? <FiX size={22} aria-hidden="true" /> : <FiMenu size={22} aria-hidden="true" />}
-        </button>
+        <div className="flex items-center gap-3 lg:hidden">
+          <LanguageToggle />
+          <button
+            ref={menuButtonRef}
+            type="button"
+            onClick={() => setIsOpen((open) => !open)}
+            aria-label={isOpen ? copy.closeMenu : copy.openMenu}
+            aria-expanded={isOpen}
+            aria-controls="mobile-menu"
+            className="text-white"
+          >
+            {isOpen ? <FiX size={22} aria-hidden="true" /> : <FiMenu size={22} aria-hidden="true" />}
+          </button>
+        </div>
       </nav>
 
       <AnimatePresence>
@@ -136,7 +145,7 @@ const Navbar = () => {
             className="lg:hidden bg-black/95 backdrop-blur-md border-t border-white/10 flex justify-end"
           >
             <div className="flex flex-col px-6 py-4 space-y-4 text-right">
-              {[{ label: 'Home', path: '/' }, ...NAV_ITEMS].map(renderNavItem)}
+              {[{ label: copy.home, path: '/' }, ...navItems].map(renderNavItem)}
             </div>
           </motion.div>
         )}

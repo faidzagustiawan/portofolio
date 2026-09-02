@@ -8,11 +8,13 @@ import PageTransition from '@/components/Animation/PageTransition'
 import InitialPreloader from '@/components/Animation/InitialPreloader'
 import { CustomCursor } from '@/components/UI/CustomCursor'
 import { useIntroGate } from '@/hooks/useIntroGate'
+import { useCopy } from '@/i18n/locale-context'
 
 const PRELOADER_KEY = 'preloaderLastShown'
 
 export default function App() {
   const location = useLocation()
+  const copy = useCopy()
 
   const [isFirstLoad, dismissIntro] = useIntroGate()
 
@@ -52,7 +54,7 @@ export default function App() {
                 <div
                   className="flex h-screen w-full items-center justify-center text-white"
                   role="status"
-                  aria-label="Loading page"
+                  aria-label={copy.common.loadingPage}
                 >
                   <div className="flex items-center space-x-2">
                     <div className="h-3 w-3 animate-pulse rounded-full bg-white" />

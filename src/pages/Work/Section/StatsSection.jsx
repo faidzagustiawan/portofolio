@@ -1,21 +1,23 @@
 import { useMemo } from 'react'
 import { useProjects } from '@/context/projects-context'
+import { useCopy } from '@/i18n/locale-context'
 
 const CAREER_START = 2024
 
 export function StatsSection() {
   const { projects } = useProjects()
+  const copy = useCopy().work.stats
 
   const stats = useMemo(() => {
     const technologies = new Set(projects.flatMap((p) => p.technologies))
     const years = Math.max(1, new Date().getFullYear() - CAREER_START)
 
     return [
-      { value: projects.length, label: projects.length === 1 ? 'Project' : 'Projects' },
-      { value: technologies.size, label: 'Technologies' },
-      { value: `${years}+`, label: 'Years building' },
+      { value: projects.length, label: projects.length === 1 ? copy.project : copy.projects },
+      { value: technologies.size, label: copy.technologies },
+      { value: `${years}+`, label: copy.years },
     ]
-  }, [projects])
+  }, [projects, copy])
 
   return (
     <section className="py-24 md:py-32 lg:py-40 bg-neutral-950 border-t border-neutral-800">

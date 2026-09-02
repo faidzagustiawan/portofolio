@@ -8,6 +8,7 @@ import { TeamSection } from './TeamSection'
 import { SmartImage } from '@/components/UI/SmartImage'
 import { ProjectMedia } from '@/components/UI/ProjectMedia'
 import SEO from '@/components/SEO'
+import { useCopy } from '@/i18n/locale-context'
 
 const FadeUp = ({ children, delay = 0 }) => (
   <motion.div
@@ -56,11 +57,12 @@ export default function ProjectDetailPage() {
   const { slug } = useParams()
   const { projects, isLoading, error } = useProjects()
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const copy = useCopy().detail
 
   if (isLoading) {
     return (
       <div className="min-h-screen bg-neutral-950 flex items-center justify-center text-neutral-400">
-        <p role="status">Loading project…</p>
+        <p role="status">{copy.loading}</p>
       </div>
     )
   }
@@ -70,18 +72,18 @@ export default function ProjectDetailPage() {
   if (!project) {
     return (
       <main className="min-h-screen bg-neutral-950 flex flex-col items-center justify-center text-white p-6 text-center">
-        <SEO title="Project not found" url={`/work/${slug}`} noIndex />
-        <h1 className="text-3xl font-bold mb-4">Project not found</h1>
+        <SEO title={copy.notFoundTitle} url={`/work/${slug}`} noIndex />
+        <h1 className="text-3xl font-bold mb-4">{copy.notFoundTitle}</h1>
         <p className="text-neutral-400 mb-8 max-w-md">
           {error
-            ? 'The project feed did not load, so this page cannot be shown right now.'
-            : 'That project does not exist, or it has been unpublished.'}
+            ? copy.notFoundFeedError
+            : copy.notFoundBody}
         </p>
         <Link
           to="/work"
           className="px-6 py-3 bg-white text-black rounded-xl font-medium hover:bg-neutral-200 transition-colors"
         >
-          Back to work
+          {copy.back}
         </Link>
       </main>
     )
@@ -91,11 +93,11 @@ export default function ProjectDetailPage() {
 
   // Only the sections this project actually filled in get a number.
   const sections = [
-    project.overview && { key: 'overview', eyebrow: 'Overview', heading: 'Project context', body: project.overview },
-    project.challenge && { key: 'challenge', eyebrow: 'Challenge', heading: 'The problem', body: project.challenge, banded: true },
-    project.approach && { key: 'approach', eyebrow: 'Approach', heading: 'My process', body: project.approach },
-    project.solution && { key: 'solution', eyebrow: 'Solution', heading: 'The build', body: project.solution },
-    project.contribution && { key: 'contribution', eyebrow: 'My contribution', heading: 'What I did', body: project.contribution },
+    project.overview && { key: 'overview', body: project.overview },
+    project.challenge && { key: 'challenge', body: project.challenge, banded: true },
+    project.approach && { key: 'approach', body: project.approach },
+    project.solution && { key: 'solution', body: project.solution },
+    project.contribution && { key: 'contribution', body: project.contribution },
   ].filter(Boolean)
 
   const teamStep = sections.length + 1
@@ -135,7 +137,7 @@ export default function ProjectDetailPage() {
             className="inline-flex items-center gap-2 text-sm text-neutral-400 hover:text-white transition-colors mb-12 group"
           >
             <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" aria-hidden="true" />
-            Back to work
+            {copy.back}
           </Link>
         </FadeUp>
 
@@ -165,10 +167,10 @@ export default function ProjectDetailPage() {
             <FadeUp delay={0.4}>
               <dl className="grid grid-cols-2 gap-y-8 gap-x-4 border-t border-neutral-800 pt-8 lg:border-none lg:pt-0">
                 {[
-                  { label: 'Role', value: project.role },
-                  { label: 'Year', value: project.year },
-                  { label: 'Client', value: project.client },
-                  { label: 'Duration', value: project.duration },
+                  { label: copy.role, value: project.role },
+                  { label: copy.year, value: project.year },
+                  { label: copy.client, value: project.client },
+                  { label: copy.duration, value: project.duration },
                 ]
                   .filter((item) => item.value)
                   .map((item) => (
@@ -188,7 +190,7 @@ export default function ProjectDetailPage() {
       {/* --- TECH MARQUEE --- */}
       {project.technologies.length > 0 && (
         <section className="py-8 border-y border-neutral-900 bg-neutral-900/20 overflow-hidden">
-          <h2 className="sr-only">Technologies used</h2>
+          <h2 className="sr-only">{copy.technologiesUsed}</h2>
           {/* The marquee repeats itself, so assistive tech reads the plain list
               above it instead of four duplicated passes. */}
           <ul className="sr-only">
@@ -241,7 +243,7 @@ export default function ProjectDetailPage() {
             className="py-24 bg-neutral-900/50 border-y border-neutral-900 my-12"
           >
             <div className="px-6 md:px-12 lg:px-16 max-w-7xl mx-auto">
-              <NumberedSection step={i + 1} eyebrow={section.eyebrow} heading={section.heading}>
+              <NumberedSection step={i + 1} eyebrow={copy.sections[section.key][0]} heading={copy.sections[section.key][1]}>
                 <Prose>{section.body}</Prose>
               </NumberedSection>
             </div>
@@ -251,7 +253,7 @@ export default function ProjectDetailPage() {
             key={section.key}
             className="px-6 md:px-12 lg:px-16 max-w-7xl mx-auto py-16 md:py-24"
           >
-            <NumberedSection step={i + 1} eyebrow={section.eyebrow} heading={section.heading}>
+            <NumberedSection step={i + 1} eyebrow={copy.sections[section.key][0]} heading={copy.sections[section.key][1]}>
               <Prose>{section.body}</Prose>
             </NumberedSection>
           </section>
@@ -264,9 +266,9 @@ export default function ProjectDetailPage() {
           <div className="px-6 md:px-12 lg:px-16 max-w-7xl mx-auto mb-8">
             <FadeUp>
               <h2 className="text-sm font-mono uppercase tracking-widest text-neutral-400 mb-4">
-                Visual details
+                {copy.visualEyebrow}
               </h2>
-              <p className="text-3xl font-bold text-white">Project highlights</p>
+              <p className="text-3xl font-bold text-white">{copy.visualHeading}</p>
             </FadeUp>
           </div>
 
@@ -277,7 +279,7 @@ export default function ProjectDetailPage() {
                   <div className="aspect-[4/3] bg-neutral-900 border border-neutral-800 rounded-lg overflow-hidden">
                     <SmartImage
                       src={src}
-                      alt={`${project.name} — detail ${i + 1}`}
+                      alt={copy.detailAlt(project.name, i + 1)}
                       className="w-full h-full"
                     />
                   </div>
@@ -295,7 +297,7 @@ export default function ProjectDetailPage() {
       {(project.outcome || project.liveUrl || project.githubUrl) && (
         <section className="px-6 md:px-12 lg:px-16 max-w-7xl mx-auto py-16 md:py-24">
           <div className="p-8 md:p-12 bg-neutral-900 rounded-2xl border border-neutral-800">
-            <NumberedSection step={outcomeStep} eyebrow="Outcome" heading="The result">
+            <NumberedSection step={outcomeStep} eyebrow={copy.sections.outcome[0]} heading={copy.sections.outcome[1]}>
               {project.outcome && <Prose>{project.outcome}</Prose>}
 
               <div className="flex flex-wrap gap-8 mt-8">
@@ -306,7 +308,7 @@ export default function ProjectDetailPage() {
                   rel={project.liveUrl ? 'noopener noreferrer' : undefined}
                   className="inline-flex items-center gap-2 text-base font-medium text-white border-b border-white pb-1 hover:text-neutral-400 hover:border-neutral-400 transition-all group"
                 >
-                  View live project
+                  {copy.viewLive}
                   <ExternalLink
                     aria-hidden="true"
                     className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
@@ -320,7 +322,7 @@ export default function ProjectDetailPage() {
                   rel={project.githubUrl ? 'noopener noreferrer' : undefined}
                   className="inline-flex items-center gap-2 text-base font-medium text-white border-b border-white pb-1 hover:text-neutral-400 hover:border-neutral-400 transition-all group"
                 >
-                  View source
+                  {copy.viewSource}
                   <ExternalLink
                     aria-hidden="true"
                     className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
@@ -345,7 +347,7 @@ export default function ProjectDetailPage() {
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
                 <div>
                   <span className="text-sm font-mono uppercase tracking-widest text-neutral-400 mb-4 block">
-                    Next project
+                    {copy.nextProject}
                   </span>
                   <p className="text-4xl md:text-6xl lg:text-8xl font-bold tracking-tight text-white transition-transform duration-700 group-hover:translate-x-4">
                     {nextProject.name}

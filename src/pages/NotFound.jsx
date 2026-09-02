@@ -2,10 +2,14 @@ import { Link } from 'react-router-dom'
 import ScrollRevealBlock from '@/components/Animation/ScrollRevealBlock'
 import Magnet from '@/components/Animation/Magnet'
 import SEO from '@/components/SEO'
+import { useCopy } from '@/i18n/locale-context'
 
-const NotFound = () => (
+const NotFound = () => {
+  const copy = useCopy().notFound
+
+  return (
   <main className="bg-neutral-950 text-white min-h-screen overflow-hidden">
-    <SEO title="Page not found" description="That page does not exist." noIndex />
+    <SEO title={copy.seoTitle} description={copy.seoDescription} noIndex />
 
     <section className="relative min-h-screen flex flex-col items-center justify-center px-6 text-center">
       <p
@@ -15,7 +19,7 @@ const NotFound = () => (
         404
       </p>
 
-      <h1 className="sr-only">Page not found</h1>
+      <h1 className="sr-only">{copy.heading}</h1>
 
       <ScrollRevealBlock y={40} blur={8} scale={0.95} className="mt-10">
         <p className="text-lg md:text-xl text-white/70 max-w-xl">
@@ -39,13 +43,14 @@ const NotFound = () => (
               to="/work"
               className="inline-flex items-center gap-2 px-8 py-4 rounded-xl border border-white/30 text-white text-base md:text-lg font-medium hover:bg-white/10 transition-colors duration-300"
             >
-              See the work
+              {copy.work}
             </Link>
           </Magnet>
         </div>
       </ScrollRevealBlock>
     </section>
-  </main>
-)
+    </main>
+  )
+}
 
 export default NotFound

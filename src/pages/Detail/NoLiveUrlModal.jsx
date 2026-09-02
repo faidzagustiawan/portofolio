@@ -2,10 +2,12 @@ import { useEffect, useId, useRef } from 'react'
 import { X, ArrowRight, Mail, Lock } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useCopy } from '@/i18n/locale-context'
 
 const FOCUSABLE = 'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
 
 export function NoLiveUrlModal({ isOpen, onClose, projectName }) {
+  const copy = useCopy().detail.modal
   const panelRef = useRef(null)
   const restoreFocusRef = useRef(null)
   const titleId = useId()
@@ -80,7 +82,7 @@ export function NoLiveUrlModal({ isOpen, onClose, projectName }) {
                 type="button"
                 onClick={onClose}
                 className="absolute top-6 right-6 text-neutral-400 hover:text-white transition-colors"
-                aria-label="Close dialog"
+                aria-label={copy.close}
               >
                 <X className="w-6 h-6" aria-hidden="true" />
               </button>
@@ -93,12 +95,11 @@ export function NoLiveUrlModal({ isOpen, onClose, projectName }) {
               </div>
 
               <h2 id={titleId} className="text-2xl md:text-3xl font-bold mb-4 text-white">
-                No public deployment
+                {copy.title}
               </h2>
 
               <p className="text-lg text-neutral-400 mb-8 leading-relaxed">
-                <span className="text-white font-medium">{projectName}</span> is not hosted at a
-                public URL right now. I can walk you through it directly, or share access on request.
+                {copy.body(projectName)}
               </p>
 
               <div className="space-y-3">
@@ -109,7 +110,7 @@ export function NoLiveUrlModal({ isOpen, onClose, projectName }) {
                 >
                   <span className="flex items-center gap-3 font-medium">
                     <Mail className="w-5 h-5" aria-hidden="true" />
-                    Ask me about it
+                    {copy.cta}
                   </span>
                   <ArrowRight
                     aria-hidden="true"
@@ -122,7 +123,7 @@ export function NoLiveUrlModal({ isOpen, onClose, projectName }) {
                   onClick={onClose}
                   className="w-full px-6 py-4 border border-neutral-700 text-white rounded-xl hover:bg-neutral-800 transition-colors duration-300 font-medium"
                 >
-                  Keep browsing
+                  {copy.dismiss}
                 </button>
               </div>
             </motion.div>

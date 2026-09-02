@@ -3,9 +3,11 @@ import Magnet from '@/components/Animation/Magnet'
 import { Link } from 'react-router-dom'
 import { useProjects } from '@/context/projects-context'
 import VideoCard from './VideoCard'
+import { useCopy } from '@/i18n/locale-context'
 
 const WorkShowcaseSection = () => {
   const { projects } = useProjects()
+  const copy = useCopy().home
 
   // Fall back to the full list so the marquee is never empty just because no
   // record has been flagged featured yet.
@@ -17,7 +19,7 @@ const WorkShowcaseSection = () => {
   return (
     <section className="relative bg-neutral-950 py-32 overflow-hidden">
       <div className="mb-16 px-4 md:px-16 flex flex-wrap justify-between items-center relative z-30 gap-4">
-        <h2 className="text-xl md:text-5xl font-medium">Selected Work</h2>
+        <h2 className="text-xl md:text-5xl font-medium">{copy.showcaseTitle}</h2>
 
         <Magnet padding={2000} magnetStrength={10}>
           <Link

@@ -1,8 +1,11 @@
 import { Link } from 'react-router-dom'
 import { ProjectMedia } from '@/components/UI/ProjectMedia'
 import { playHoverSound, playClickSound } from '@/utils/sound'
+import { useCopy } from '@/i18n/locale-context'
 
 export function ProjectGridItem({ project }) {
+  const categoryNames = useCopy().categories
+
   return (
     <Link
       to={`/work/${project.slug}`}
@@ -27,7 +30,7 @@ export function ProjectGridItem({ project }) {
 
         <div className="flex items-center justify-between pt-2 border-t border-neutral-900">
           <span className="text-sm font-mono uppercase tracking-widest text-neutral-400">
-            {project.category}
+            {categoryNames[project.category] || project.category}
           </span>
           <span className="text-sm font-mono uppercase tracking-widest text-neutral-400">
             {project.year}

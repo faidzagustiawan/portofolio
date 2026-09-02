@@ -2,6 +2,7 @@ import { StaticRouter } from 'react-router-dom'
 import { prerenderToNodeStream } from 'react-dom/static'
 import AppRoot from '@/AppRoot'
 import { mapProjectRecord } from '@/lib/pb'
+import { DEFAULT_LOCALE, PREFIX, localeFromPath } from '@/i18n/locale'
 
 const collect = (stream) =>
   new Promise((resolve, reject) => {
@@ -45,16 +46,27 @@ function liftHead(rendered) {
  * prerenderToNodeStream, not renderToString: it waits for every Suspense
  * boundary to settle, which is what makes the lazily imported route components
  * resolve into real markup instead of a fallback.
+ *
+ * `url` carries the locale prefix (`/id/work/exhibitly`); the router strips it
+ * through basename, exactly as it does in the browser.
  */
 export async function render(url, projects) {
+  const locale = localeFromPath(url)
+  const basename = PREFIX[locale] || undefined
+
   const { prelude } = await prerenderToNodeStream(
-    <AppRoot router={StaticRouter} routerProps={{ location: url }} initialProjects={projects} />
+    <AppRoot
+      router={StaticRouter}
+      routerProps={{ location: url, basename }}
+      locale={locale}
+      initialProjects={projects}
+    />
   )
 
-  return liftHead(await collect(prelude))
+  return { ...liftHead(await collect(prelude)), locale }
 }
 
 /** Same mapping the browser applies, so prerendered and hydrated data match. */
-export function mapProjects(records) {
-  return (records || []).map(mapProjectRecord)
+export function mapProjects(records, locale = DEFAULT_LOCALE) {
+  return (records || []).map((record) => mapProjectRecord(record, locale))
 }

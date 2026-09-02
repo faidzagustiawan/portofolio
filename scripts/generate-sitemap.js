@@ -8,6 +8,7 @@ import { writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import './load-env.js'
+import { HTML_LANG, LOCALES, PREFIX } from '../src/i18n/locale.js'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -31,10 +32,22 @@ async function fetchProjects() {
   return (data.items || []).filter((item) => item.slug)
 }
 
-function renderUrl({ path: routePath, changefreq, priority, lastmod }) {
+/** One entry per locale, each listing the others as alternates. */
+function renderUrl({ path: routePath, changefreq, priority, lastmod }, locale) {
+  const href = (loc) => {
+    const prefix = PREFIX[loc] || ''
+    return SITE_URL + (routePath === '/' ? prefix || '/' : `${prefix}${routePath}`)
+  }
+
   return [
     '  <url>',
-    `    <loc>${escapeXml(SITE_URL + routePath)}</loc>`,
+    `    <loc>${escapeXml(href(locale))}</loc>`,
+    // Each entry points at every language it exists in, which is what tells a
+    // search engine the two URLs are the same page rather than duplicates.
+    ...LOCALES.map(
+      (alt) =>
+        `    <xhtml:link rel="alternate" hreflang="${HTML_LANG[alt]}" href="${escapeXml(href(alt))}"/>`
+    ),
     lastmod ? `    <lastmod>${lastmod}</lastmod>` : null,
     `    <changefreq>${changefreq}</changefreq>`,
     `    <priority>${priority}</priority>`,
@@ -65,8 +78,8 @@ async function main() {
 
   const xml = [
     '<?xml version="1.0" encoding="UTF-8"?>',
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-    ...entries.map(renderUrl),
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
+    ...LOCALES.flatMap((locale) => entries.map((entry) => renderUrl(entry, locale))),
     '</urlset>',
     '',
   ].join('\n')
@@ -79,7 +92,7 @@ async function main() {
   const robots = ['User-agent: *', 'Allow: /', '', `Sitemap: ${SITE_URL}/sitemap.xml`, ''].join('\n')
   writeFileSync(path.join(root, 'public', 'robots.txt'), robots)
 
-  console.log(`[sitemap] ${entries.length} URLs written for ${SITE_URL}`)
+  console.log(`[sitemap] ${entries.length * LOCALES.length} URLs written for ${SITE_URL} (${LOCALES.length} locales)`)
 }
 
 main().catch((err) => {

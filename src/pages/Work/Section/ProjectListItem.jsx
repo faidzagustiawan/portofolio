@@ -1,8 +1,11 @@
 import { ArrowDownRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { playHoverSound, playClickSound } from '@/utils/sound'
+import { useCopy } from '@/i18n/locale-context'
 
 export function ProjectListItem({ project, index, isActive, onMouseEnter, onMouseLeave }) {
+  const categoryNames = useCopy().categories
+
   return (
     <div
       className="group relative border-t border-neutral-800"
@@ -47,7 +50,7 @@ export function ProjectListItem({ project, index, isActive, onMouseEnter, onMous
 
               <div className="flex w-1/2 items-center justify-end gap-6">
                 <span className="text-sm font-mono uppercase tracking-widest text-neutral-400">
-                  {project.category}
+                  {categoryNames[project.category] || project.category}
                 </span>
                 <span className="text-sm font-mono uppercase tracking-widest text-neutral-400">
                   {project.year}

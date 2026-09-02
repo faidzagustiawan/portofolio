@@ -1,5 +1,6 @@
 import { useInViewVideo } from '@/hooks/useInViewVideo'
 import { SmartImage } from '@/components/UI/SmartImage'
+import { useCopy } from '@/i18n/locale-context'
 
 /**
  * Renders whatever media a project actually has: a looping video, a still, or —
@@ -11,6 +12,7 @@ import { SmartImage } from '@/components/UI/SmartImage'
  */
 export function ProjectMedia({ project, className = '', priority = false }) {
   const videoRef = useInViewVideo()
+  const copy = useCopy().detail
 
   if (project.video) {
     return (
@@ -18,7 +20,7 @@ export function ProjectMedia({ project, className = '', priority = false }) {
         ref={videoRef}
         src={project.video}
         poster={project.image || undefined}
-        aria-label={`${project.name} preview`}
+        aria-label={copy.previewAlt(project.name)}
         muted
         loop
         playsInline
@@ -30,11 +32,7 @@ export function ProjectMedia({ project, className = '', priority = false }) {
 
   if (project.image) {
     return (
-      <SmartImage
-        src={project.image}
-        alt={`${project.name} — project preview`}
-        className={className}
-      />
+      <SmartImage src={project.image} alt={copy.previewAlt(project.name)} className={className} />
     )
   }
 
@@ -42,6 +40,8 @@ export function ProjectMedia({ project, className = '', priority = false }) {
 }
 
 export function ProjectPlaceholder({ project, className = '' }) {
+  const copy = useCopy()
+
   const initials = project.name
     .split(/\s+/)
     .slice(0, 2)
@@ -52,7 +52,7 @@ export function ProjectPlaceholder({ project, className = '' }) {
   return (
     <div
       role="img"
-      aria-label={`${project.name} — no preview image yet`}
+      aria-label={copy.detail.noPreviewAlt(project.name)}
       className={`relative flex items-center justify-center overflow-hidden bg-neutral-900 ${className}`}
     >
       <div className={`absolute inset-0 bg-linear-to-br ${project.color} opacity-25`} />
@@ -62,7 +62,7 @@ export function ProjectPlaceholder({ project, className = '' }) {
           {initials}
         </span>
         <span className="mt-2 block text-[0.65rem] font-mono uppercase tracking-widest text-white/50">
-          {project.category}
+          {copy.categories[project.category] || project.category}
         </span>
       </div>
     </div>

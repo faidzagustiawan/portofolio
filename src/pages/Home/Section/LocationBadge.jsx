@@ -1,7 +1,9 @@
 import { useState } from 'react'
+import { useCopy } from '@/i18n/locale-context'
 
 const LocationBadge = () => {
   const [open, setOpen] = useState(false)
+  const copy = useCopy().home
 
   return (
     <div className="absolute -left-6 md:-left-55 top-1/2 -translate-y-1/2 z-[999]">
@@ -23,7 +25,7 @@ const LocationBadge = () => {
           `}
         >
           <span className="text-xs md:text-xl leading-tight tracking-tight font-medium md:pr-5 whitespace-normal md:whitespace-nowrap">
-            Located in Indonesia
+            {copy.located}
           </span>
 
           <span

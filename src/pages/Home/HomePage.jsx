@@ -9,8 +9,10 @@ import WorkShowcaseSection from './Section/WorkShowcaseSection'
 import FinalCTASection from './Section/FinalCTASection'
 
 import SEO from '@/components/SEO'
+import { useCopy } from '@/i18n/locale-context'
 
 const HomePage = () => {
+  const copy = useCopy().home
   const { show } = usePageTransition()
   const booted = useRef(false)
 
@@ -22,11 +24,11 @@ const HomePage = () => {
 
   return (
     <main className="min-h-screen bg-neutral-950 text-white selection:bg-white selection:text-neutral-950">
-      <SEO url="/" title="Home" />
+      <SEO url="/" title={copy.seoTitle} />
 
       {/* The hero renders the name as a decorative marquee, so the page's real
           heading lives here for crawlers and screen readers. */}
-      <h1 className="sr-only">Faidz Agustiawan — full-stack developer in Malang, Indonesia</h1>
+      <h1 className="sr-only">{copy.h1}</h1>
 
       <HeroSection />
 

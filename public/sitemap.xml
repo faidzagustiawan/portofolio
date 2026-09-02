@@ -1,64 +1,171 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://faidzagustiawan.id/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id"/>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://faidzagustiawan.id/work</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/work"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id/work"/>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://faidzagustiawan.id/contact</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/contact"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id/contact"/>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://faidzagustiawan.id/work/pantausam</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/work/pantausam"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id/work/pantausam"/>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://faidzagustiawan.id/work/re-enviro</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/work/re-enviro"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id/work/re-enviro"/>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://faidzagustiawan.id/work/finote</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/work/finote"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id/work/finote"/>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://faidzagustiawan.id/work/engineer-coffee</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/work/engineer-coffee"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id/work/engineer-coffee"/>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://faidzagustiawan.id/work/exhibitly</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/work/exhibitly"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id/work/exhibitly"/>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://faidzagustiawan.id/work/spk-property-backend</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/work/spk-property-backend"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id/work/spk-property-backend"/>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://faidzagustiawan.id/work/kalkulator-sdmk</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/work/kalkulator-sdmk"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id/work/kalkulator-sdmk"/>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://faidzagustiawan.id/work/travel-backend</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/work/travel-backend"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id/work/travel-backend"/>
+    <lastmod>2026-09-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://faidzagustiawan.id/id</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id"/>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://faidzagustiawan.id/id/work</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/work"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id/work"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://faidzagustiawan.id/id/contact</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/contact"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id/contact"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://faidzagustiawan.id/id/work/pantausam</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/work/pantausam"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id/work/pantausam"/>
+    <lastmod>2026-09-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://faidzagustiawan.id/id/work/re-enviro</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/work/re-enviro"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id/work/re-enviro"/>
+    <lastmod>2026-09-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://faidzagustiawan.id/id/work/finote</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/work/finote"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id/work/finote"/>
+    <lastmod>2026-09-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://faidzagustiawan.id/id/work/engineer-coffee</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/work/engineer-coffee"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id/work/engineer-coffee"/>
+    <lastmod>2026-09-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://faidzagustiawan.id/id/work/exhibitly</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/work/exhibitly"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id/work/exhibitly"/>
+    <lastmod>2026-09-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://faidzagustiawan.id/id/work/spk-property-backend</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/work/spk-property-backend"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id/work/spk-property-backend"/>
+    <lastmod>2026-09-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://faidzagustiawan.id/id/work/kalkulator-sdmk</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/work/kalkulator-sdmk"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id/work/kalkulator-sdmk"/>
+    <lastmod>2026-09-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://faidzagustiawan.id/id/work/travel-backend</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/work/travel-backend"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id/work/travel-backend"/>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

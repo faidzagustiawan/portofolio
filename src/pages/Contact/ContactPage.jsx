@@ -13,6 +13,7 @@ import {
 } from 'lucide-react'
 import emailjs from '@emailjs/browser'
 import SEO from '@/components/SEO'
+import { useCopy } from '@/i18n/locale-context'
 
 const EMAILJS = {
   serviceId: import.meta.env.VITE_EMAILJS_SERVICE_ID,
@@ -79,6 +80,7 @@ export default function ContactPage() {
   const [status, setStatus] = useState('idle') // idle | sending | success | error
   const [errorMessage, setErrorMessage] = useState('')
   const isMounted = useRef(true)
+  const copy = useCopy().contact
 
   const time = useLocalTime()
   const ids = {
@@ -102,7 +104,7 @@ export default function ContactPage() {
     const configured = Object.values(EMAILJS).every(Boolean)
     if (!configured) {
       setStatus('error')
-      setErrorMessage('The contact form is not configured. Please email me directly.')
+      setErrorMessage(copy.form.notConfigured)
       return
     }
 
@@ -126,7 +128,7 @@ export default function ContactPage() {
     } catch (err) {
       if (!isMounted.current) return
       setStatus('error')
-      setErrorMessage(err?.text || 'Something went wrong sending that. Please email me directly.')
+      setErrorMessage(err?.text || copy.form.failed)
     }
   }
 
@@ -135,8 +137,8 @@ export default function ContactPage() {
   return (
     <main className="min-h-screen bg-neutral-950 text-white selection:bg-white selection:text-neutral-950">
       <SEO
-        title="Contact"
-        description="Get in touch with Faidz Agustiawan about freelance work, collaborations, or a role."
+        title={copy.seoTitle}
+        description={copy.seoDescription}
         url="/contact"
       />
 
@@ -147,29 +149,29 @@ export default function ContactPage() {
             <div>
               <FadeUp>
                 <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-8">
-                  Let's build <br className="hidden lg:block" /> something together
+                  {copy.heading[0]} <br className="hidden lg:block" /> {copy.heading[1]}
                 </h1>
               </FadeUp>
 
               <FadeUp delay={0.1}>
                 <div className="flex flex-col gap-6 text-neutral-400 text-lg md:text-xl max-w-md">
                   <p>
-                    Interested in working together? Use the form or email me directly. I'm currently{' '}
-                    <span className="text-emerald-400 font-medium">available</span> for freelance
-                    work.
+                    {copy.blurb[0]} {copy.blurb[1]}{' '}
+                    <span className="text-emerald-400 font-medium">{copy.availableWord}</span>{' '}
+                    {copy.blurb[3]}
                   </p>
 
                   <div className="flex items-center gap-6 text-sm font-mono uppercase tracking-widest mt-4">
                     <span className="flex items-center gap-2">
                       <MapPin className="w-4 h-4" aria-hidden="true" />
-                      Malang, ID
+                      {copy.location}
                     </span>
-                    <span>{time} local</span>
+                    <span>{time} {copy.localSuffix}</span>
                   </div>
 
                   <div className="flex flex-col gap-4 mt-8 pt-8 border-t border-neutral-800">
                     <span className="text-sm font-mono uppercase tracking-widest text-neutral-400">
-                      Connect
+                      {copy.connect}
                     </span>
                     <div className="flex flex-wrap gap-4">
                       <a
@@ -177,7 +179,7 @@ export default function ContactPage() {
                         className="flex items-center gap-2 px-4 py-2 bg-neutral-900 border border-neutral-800 rounded-xl text-sm font-medium hover:bg-white hover:text-black hover:border-white transition-all group"
                       >
                         <Mail className="w-4 h-4 transition-transform group-hover:scale-110" aria-hidden="true" />
-                        Email
+                        {copy.email}
                       </a>
                       <a
                         href="https://www.linkedin.com/in/muhammad-faidz-agustiawan-8692821bb"
@@ -206,7 +208,7 @@ export default function ContactPage() {
                         className="inline-flex items-center gap-2 px-6 py-3 bg-neutral-800 border border-neutral-700 text-white rounded-xl text-sm font-medium hover:bg-white hover:text-black transition-all group"
                       >
                         <Download className="w-4 h-4 transition-transform group-hover:-translate-y-0.5" aria-hidden="true" />
-                        Download resume
+                        {copy.downloadResume}
                       </a>
                     </div>
                   </div>
@@ -229,16 +231,16 @@ export default function ContactPage() {
                         role="status"
                       >
                         <CheckCircle2 className="w-14 h-14 text-emerald-400" aria-hidden="true" />
-                        <h2 className="text-2xl font-semibold">Message sent</h2>
+                        <h2 className="text-2xl font-semibold">{copy.form.successTitle}</h2>
                         <p className="text-neutral-400">
-                          Thanks for reaching out. I'll get back to you soon.
+                          {copy.form.successBody}
                         </p>
                         <button
                           type="button"
                           onClick={() => setStatus('idle')}
                           className="mt-2 text-sm text-neutral-400 underline underline-offset-4 hover:text-white transition-colors"
                         >
-                          Send another message
+                          {copy.form.again}
                         </button>
                       </motion.div>
                     ) : (
@@ -253,7 +255,7 @@ export default function ContactPage() {
                         {/* Honeypot: off-screen rather than display:none, which some
                             bots skip, and hidden from assistive tech. */}
                         <div className="absolute left-[-9999px]" aria-hidden="true">
-                          <label htmlFor="company-website">Leave this field empty</label>
+                          <label htmlFor="company-website">{copy.form.honeypot}</label>
                           <input
                             id="company-website"
                             type="text"
@@ -264,7 +266,7 @@ export default function ContactPage() {
                           />
                         </div>
 
-                        <Field label="Your name" htmlFor={ids.name}>
+                        <Field label={copy.form.name} htmlFor={ids.name}>
                           <input
                             id={ids.name}
                             name="name"
@@ -273,11 +275,11 @@ export default function ContactPage() {
                             value={formState.name}
                             onChange={update('name')}
                             className={inputClass}
-                            placeholder="Jane Doe"
+                            placeholder={copy.form.namePlaceholder}
                           />
                         </Field>
 
-                        <Field label="Your email" htmlFor={ids.email}>
+                        <Field label={copy.form.email} htmlFor={ids.email}>
                           <input
                             id={ids.email}
                             name="email"
@@ -287,11 +289,11 @@ export default function ContactPage() {
                             value={formState.email}
                             onChange={update('email')}
                             className={inputClass}
-                            placeholder="jane@example.com"
+                            placeholder={copy.form.emailPlaceholder}
                           />
                         </Field>
 
-                        <Field label="Project or subject" htmlFor={ids.title}>
+                        <Field label={copy.form.subject} htmlFor={ids.title}>
                           <input
                             id={ids.title}
                             name="title"
@@ -299,11 +301,11 @@ export default function ContactPage() {
                             value={formState.title}
                             onChange={update('title')}
                             className={inputClass}
-                            placeholder="Website redesign, collaboration, a role"
+                            placeholder={copy.form.subjectPlaceholder}
                           />
                         </Field>
 
-                        <Field label="Message" htmlFor={ids.message}>
+                        <Field label={copy.form.message} htmlFor={ids.message}>
                           <textarea
                             id={ids.message}
                             name="message"
@@ -312,7 +314,7 @@ export default function ContactPage() {
                             value={formState.message}
                             onChange={update('message')}
                             className={`${inputClass} resize-none`}
-                            placeholder="Tell me about your project…"
+                            placeholder={copy.form.messagePlaceholder}
                           />
                         </Field>
 
@@ -334,11 +336,11 @@ export default function ContactPage() {
                           {isSending ? (
                             <>
                               <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" />
-                              Sending…
+                              {copy.form.sending}
                             </>
                           ) : (
                             <>
-                              Send message
+                              {copy.form.submit}
                               <Send className="w-4 h-4" aria-hidden="true" />
                             </>
                           )}

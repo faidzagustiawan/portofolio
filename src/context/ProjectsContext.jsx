@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ProjectsContext } from '@/context/projects-context'
 import { PB_URL, mapProjectRecord } from '@/lib/pb'
+import { useLocale } from '@/i18n/locale-context'
 
 const ENDPOINT = `${PB_URL}/api/collections/projects/records?sort=-year&perPage=200`
 
 export function ProjectsProvider({ children, initialProjects = null }) {
+  const { locale } = useLocale()
+
   const hasInitial = Array.isArray(initialProjects) && initialProjects.length > 0
 
   const [projects, setProjects] = useState(() => initialProjects ?? [])
@@ -36,7 +39,7 @@ export function ProjectsProvider({ children, initialProjects = null }) {
           throw new Error(`Project feed responded ${response.status}`)
         }
         const data = await response.json()
-        setProjects((data.items || []).map(mapProjectRecord))
+        setProjects((data.items || []).map((item) => mapProjectRecord(item, locale)))
       } catch (err) {
         if (err.name === 'AbortError') return
         setError(err.message)
@@ -47,7 +50,7 @@ export function ProjectsProvider({ children, initialProjects = null }) {
 
     fetchProjects()
     return () => controller.abort()
-  }, [reloadToken])
+  }, [reloadToken, locale])
 
   // Filter options follow the live data, so a new category or year in
   // PocketBase shows up without a code change and never offers an empty filter.

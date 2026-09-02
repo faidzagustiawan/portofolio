@@ -14,7 +14,8 @@ backed by a PocketBase instance that holds the project case studies.
 | Rendering | Static prerender per route via `react-dom/static`, hydrated in the browser |
 | Styling | Tailwind CSS v4, CSS custom properties for the token layer |
 | Motion | Framer Motion, plus hand-rolled rAF loops for the marquees |
-| Routing | React Router 7, lazy routes |
+| Routing | React Router 7, lazy routes, locale as the router basename |
+| Languages | English at the root, Indonesian under `/id`, both prerendered |
 | Content | PocketBase REST (`/api/collections/projects/records`) |
 | Media | Cloudflare R2 |
 | Mail | EmailJS |
@@ -58,6 +59,8 @@ it to the browser.
 | `pnpm assets:build` | Rebuilds the hero portrait and the site OG card |
 | `pnpm og:projects` | Rebuilds the per-project OG cards (needs a built `dist/`) |
 | `pnpm pb:upload` | Bulk-uploads project media to PocketBase from `media/` |
+| `pnpm pb:content` | Pushes `content/case-studies.json` into PocketBase, both locales |
+| `pnpm pb:schema` | Adds any missing `_id` locale fields to the collection |
 | `pnpm r2:sync` | Uploads local media to the R2 bucket |
 
 ## Rendering
@@ -103,6 +106,31 @@ Notes on the pieces that are easy to break:
 `pnpm preview` mimics the real resolution — exact file, then the directory's
 `index.html`, then the host's fallback. `vite preview` does not, and would serve
 the prerendered home page for every route.
+
+## Languages
+
+English lives at the root, Indonesian under `/id`. Both are prerendered, so a
+shared Indonesian link unfurls in Indonesian and Google indexes each version
+separately, tied together by `hreflang` in the head and in the sitemap.
+
+The locale is read from the URL and nowhere else. That matters: anything stored
+client-side would disagree with the prerendered markup and break hydration.
+`main.jsx` derives it from `location.pathname` and hands the prefix to the
+router as its `basename`, which is what keeps every `<Link to="/work">`
+locale-relative without a single call site knowing a locale exists.
+
+Switching language is a real navigation, not a state change — each locale is a
+different document. `LanguageToggle` is a plain anchor for that reason, so it
+also works without JavaScript and gives crawlers the path between versions.
+
+- `src/i18n/dictionary.js` holds every interface string in both languages.
+  A missing key renders undefined rather than falling back, deliberately: a
+  silent fallback hides the gap until a visitor finds it.
+- Project copy lives in PocketBase, English in the base fields and Indonesian
+  in their `_id` counterparts. `src/lib/pb.js` falls back to English per field,
+  so a half-translated record still renders a complete page.
+- Category names are translated for display only. The raw CMS value stays the
+  filter key, or filtering would break the moment the language changed.
 
 ## Content model
 

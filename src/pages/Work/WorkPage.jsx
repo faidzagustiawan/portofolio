@@ -13,6 +13,7 @@ import { useCursorTracking } from '@/hooks/useCursorTracking'
 import { useHoverIntent } from '@/hooks/useHoverIntent'
 import { useProjectFilter } from '@/hooks/useProjectFilter'
 import SEO from '@/components/SEO'
+import { useCopy } from '@/i18n/locale-context'
 
 function FeedState({ children }) {
   return (
@@ -22,6 +23,7 @@ function FeedState({ children }) {
 
 export default function WorkPage() {
   const { projects, isLoading, error, retry, categories, years } = useProjects()
+  const copy = useCopy().work
   const [activeIndex, setActiveIndex] = useState(null)
   const { show } = usePageTransition()
   const booted = useRef(false)
@@ -50,8 +52,8 @@ export default function WorkPage() {
   return (
     <main className="min-h-screen bg-neutral-950 text-white font-sans selection:bg-white selection:text-neutral-950">
       <SEO
-        title="Selected Work"
-        description="Web and mobile projects by Faidz Agustiawan — full-stack builds, frontend experiments, and the reasoning behind each one."
+        title={copy.seoTitle}
+        description={copy.seoDescription}
         url="/work"
       />
       <WorkHero />
@@ -59,7 +61,7 @@ export default function WorkPage() {
       {isLoading && (
         <FeedState>
           <p className="text-neutral-400" role="status">
-            Loading projects…
+            {copy.loading}
           </p>
         </FeedState>
       )}
@@ -67,14 +69,14 @@ export default function WorkPage() {
       {error && (
         <FeedState>
           <p className="text-neutral-300 mb-6">
-            The project feed did not load. {error}
+            {copy.feedError} {error}
           </p>
           <button
             type="button"
             onClick={retry}
             className="px-6 py-3 bg-white text-black rounded-xl font-medium hover:bg-neutral-200 transition-colors"
           >
-            Try again
+            {copy.retry}
           </button>
         </FeedState>
       )}
@@ -98,9 +100,7 @@ export default function WorkPage() {
           {filteredProjects.length === 0 ? (
             <FeedState>
               <p className="text-neutral-400">
-                {hasActiveFilters
-                  ? 'No projects match those filters yet.'
-                  : 'No projects published yet.'}
+                {hasActiveFilters ? copy.emptyFiltered : copy.emptyAll}
               </p>
             </FeedState>
           ) : (

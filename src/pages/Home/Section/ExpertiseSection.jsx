@@ -12,6 +12,7 @@ import {
   SiFramer,
 } from 'react-icons/si'
 import { LogoLoop } from '@/components/Animation/LogoLoop'
+import { useCopy } from '@/i18n/locale-context'
 
 const techLogos = [
   { node: <SiReact />, title: 'React', href: 'https://react.dev' },
@@ -28,8 +29,10 @@ const techLogos = [
 ]
 
 export function ExpertiseSection() {
+  const copy = useCopy().home
+
   return (
-    <section className="py-10 bg-neutral-950" aria-label="Tools and technologies">
+    <section className="py-10 bg-neutral-950" aria-label={copy.stackAria}>
       <div className="relative h-[120px] overflow-visible">
         <LogoLoop
           logos={techLogos}
@@ -41,7 +44,7 @@ export function ExpertiseSection() {
           scaleOnHover
           fadeOut
           fadeOutColor="#0a0a0a"
-          ariaLabel="Technology stack"
+          ariaLabel={copy.stackAria}
         />
       </div>
     </section>

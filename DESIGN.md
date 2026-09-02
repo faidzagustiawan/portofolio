@@ -79,3 +79,13 @@ Every route ships its own Open Graph card, generated at build time:
 
 Both are 1200×630. When a project eventually has a real `image` in PocketBase,
 that wins over the generated card.
+
+## Two languages
+English at the root, Indonesian under `/id`, both prerendered. The toggle sits
+in the navbar as a quiet `EN / ID` chip — a link, not a control, because each
+locale is a separate document.
+
+Copy is not the same length in both languages, and Indonesian generally runs
+longer. Headings use `text-wrap: balance` and every fixed-width element in the
+chrome was checked against the longer of the two, so nothing clips when the
+language changes.

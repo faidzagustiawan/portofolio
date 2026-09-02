@@ -13,6 +13,9 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import './load-env.js'
+// Plain ESM with no Vite-only syntax, so the build scripts and the app can
+// share one definition of what the locales are.
+import { HTML_LANG, LOCALES, PREFIX } from '../src/i18n/locale.js'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const DIST = path.join(root, 'dist')
@@ -59,7 +62,7 @@ function outputPath(route) {
   return path.join(DIST, route.replace(/^\//, ''), 'index.html')
 }
 
-function buildPage(template, { route, head, html, projects }) {
+function buildPage(template, { route, head, html, projects, lang }) {
   const headStart = template.indexOf(HEAD_MARKER)
   const headEnd = template.indexOf(HEAD_FALLBACK_END)
   if (headStart === -1 || headEnd === -1) {
@@ -80,8 +83,9 @@ function buildPage(template, { route, head, html, projects }) {
   // hands out the prerendered home page for any unknown path, and hydrating
   // that against a different route would tear the tree apart.
   return withHead
-    .replace('<html lang="en">', `<html lang="en" data-prerendered="true" data-route="${route}">`)
-    .replace(LINKS_MARKER, route === '/' ? HERO_PRELOAD : '')
+    .replace('<html lang="en">', `<html lang="${lang}" data-prerendered="true" data-route="${route}">`)
+    // The portrait only appears on a home page, of which there is one per locale.
+    .replace(LINKS_MARKER, route === '/' || route === '/id' ? HERO_PRELOAD : '')
     .replace(APP_MARKER, html)
     .replace('</body>', `  ${dataScript}\n</body>`)
 }
@@ -111,19 +115,31 @@ async function main() {
     console.warn(`[prerender] could not reach PocketBase (${err.message}) — prerendering static routes only`)
   }
 
-  const projects = mapProjects(records)
-  const routes = [...STATIC_ROUTES, ...projects.filter((p) => p.slug).map((p) => `/work/${p.slug}`)]
-
   writeFileSync(path.join(DIST, 'spa.html'), buildShell(template))
 
-  for (const route of routes) {
-    const { html, head } = await render(route, projects)
-    const file = outputPath(route)
-    mkdirSync(path.dirname(file), { recursive: true })
-    writeFileSync(file, buildPage(template, { route, head, html, projects }))
+  let count = 0
+
+  // Each locale gets its own pass: the records are mapped again so the page
+  // embeds that language's copy, and the routes carry the locale's prefix.
+  for (const locale of LOCALES) {
+    const prefix = PREFIX[locale] || ''
+    const projects = mapProjects(records, locale)
+    const slugs = projects.filter((p) => p.slug).map((p) => `/work/${p.slug}`)
+
+    for (const route of [...STATIC_ROUTES, ...slugs]) {
+      const localised = route === '/' ? prefix || '/' : `${prefix}${route}`
+      const { html, head } = await render(localised, projects)
+      const file = outputPath(localised)
+      mkdirSync(path.dirname(file), { recursive: true })
+      writeFileSync(
+        file,
+        buildPage(template, { route: localised, head, html, projects, lang: HTML_LANG[locale] })
+      )
+      count++
+    }
   }
 
-  console.log(`[prerender] ${routes.length} routes written, plus spa.html`)
+  console.log(`[prerender] ${count} routes written across ${LOCALES.length} locales, plus spa.html`)
 }
 
 main().catch((err) => {
