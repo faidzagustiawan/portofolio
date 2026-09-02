@@ -1,77 +1,70 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { ProjectsContext } from '@/context/projects-context'
+import { PB_URL, mapProjectRecord } from '@/lib/pb'
 
-const ProjectsContext = createContext();
+const ENDPOINT = `${PB_URL}/api/collections/projects/records?sort=-year&perPage=200`
 
-export function useProjects() {
-  return useContext(ProjectsContext);
-}
+export function ProjectsProvider({ children, initialProjects = null }) {
+  const hasInitial = Array.isArray(initialProjects) && initialProjects.length > 0
 
-export function ProjectsProvider({ children }) {
-  const [projects, setProjects] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [projects, setProjects] = useState(() => initialProjects ?? [])
+  const [isLoading, setIsLoading] = useState(!hasInitial)
+  const [error, setError] = useState(null)
+  const [reloadToken, setReloadToken] = useState(0)
+
+  // The build bakes the feed into every page, so the first paint after
+  // hydration already has data. Only refetch when there was none, or when
+  // something explicitly asks for a retry.
+  const skipInitialFetch = useRef(hasInitial)
+
+  const retry = useCallback(() => setReloadToken((n) => n + 1), [])
 
   useEffect(() => {
-    async function fetchProjects() {
-      try {
-        const response = await fetch('https://faidz.fun/pb/api/collections/projects/records?sort=-year');
-        if (!response.ok) {
-          throw new Error('Failed to fetch projects');
-        }
-        
-        const data = await response.json();
-        
-        // Map PocketBase data to match previous structure
-        const mappedProjects = data.items.map(item => {
-          const pbBase = 'https://faidz.fun/pb/api/files';
-          
-          return {
-            id: item.id,
-            slug: item.slug,
-            name: item.name,
-            tagline: item.tagline,
-            featured: item.featured,
-            year: item.year ? item.year.toString() : '',
-            category: item.category,
-            // Construct full URLs for images/videos
-            image: item.image ? `${pbBase}/${item.collectionId}/${item.id}/${item.image}` : null,
-            // If they add video/visualDetails later, map them here:
-            // video: item.video ? `${pbBase}/${item.collectionId}/${item.id}/${item.video}` : null,
-            // visualDetails: item.visualDetails?.map(img => `${pbBase}/${item.collectionId}/${item.id}/${img}`) || [],
-            technologies: item.technologies ? (typeof item.technologies === 'string' ? JSON.parse(item.technologies) : item.technologies) : [],
-            overview: item.overview,
-            githubUrl: item.githuburl,
-            // Keep empty fields so components don't break
-            role: item.role || '',
-            client: item.client || '',
-            duration: item.duration || '',
-            color: item.color || 'from-neutral-700 to-neutral-900',
-            team: [],
-            challenge: item.challenge || '',
-            approach: item.approach || '',
-            solution: item.solution || '',
-            contribution: item.contribution || '',
-            outcome: item.outcome || '',
-            liveUrl: item.liveUrl || null,
-            nextProjectSlug: item.nextProjectSlug || null
-          };
-        });
+    if (skipInitialFetch.current) {
+      skipInitialFetch.current = false
+      return
+    }
 
-        setProjects(mappedProjects);
+    const controller = new AbortController()
+
+    async function fetchProjects() {
+      setIsLoading(true)
+      setError(null)
+      try {
+        const response = await fetch(ENDPOINT, { signal: controller.signal })
+        if (!response.ok) {
+          throw new Error(`Project feed responded ${response.status}`)
+        }
+        const data = await response.json()
+        setProjects((data.items || []).map(mapProjectRecord))
       } catch (err) {
-        console.error('Error fetching projects:', err);
-        setError(err.message);
+        if (err.name === 'AbortError') return
+        setError(err.message)
       } finally {
-        setIsLoading(false);
+        if (!controller.signal.aborted) setIsLoading(false)
       }
     }
 
-    fetchProjects();
-  }, []);
+    fetchProjects()
+    return () => controller.abort()
+  }, [reloadToken])
 
-  return (
-    <ProjectsContext.Provider value={{ projects, isLoading, error }}>
-      {children}
-    </ProjectsContext.Provider>
-  );
+  // Filter options follow the live data, so a new category or year in
+  // PocketBase shows up without a code change and never offers an empty filter.
+  const categories = useMemo(
+    () => ['All', ...[...new Set(projects.map((p) => p.category).filter(Boolean))].sort()],
+    [projects]
+  )
+
+  const years = useMemo(
+    () => ['All', ...[...new Set(projects.map((p) => p.year).filter(Boolean))].sort((a, b) => b - a)],
+    [projects]
+  )
+
+  const value = useMemo(
+    () => ({ projects, isLoading, error, retry, categories, years }),
+    [projects, isLoading, error, retry, categories, years]
+  )
+
+  return <ProjectsContext.Provider value={value}>{children}</ProjectsContext.Provider>
 }

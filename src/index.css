@@ -1,69 +1,61 @@
 /* ---------------------------------------------------------
-   GOOGLE FONTS
---------------------------------------------------------- */
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Space+Mono&display=swap");
-
-/* ---------------------------------------------------------
    TAILWIND CORE
+   Fonts are linked from index.html with preconnect — an
+   @import here would block rendering behind a second request.
 --------------------------------------------------------- */
 @import "tailwindcss";
 @import "tw-animate-css";
 
 /* ---------------------------------------------------------
+   DYNAMIC CLASS SOURCE
+   Project accent gradients arrive from PocketBase as strings
+   ("from-blue-600 to-cyan-500"), so Tailwind's scanner cannot
+   see them. Generate the palette they draw from.
+--------------------------------------------------------- */
+@source inline("{from,to}-{blue,cyan,emerald,teal,indigo,violet,purple,pink,rose,amber,orange,slate,zinc,neutral}-{500,600,700,800,900}");
+
+/* ---------------------------------------------------------
    PRIMITIVE TOKENS (RAW COLORS)
-   ❗ JANGAN DIPAKAI LANGSUNG DI JSX
+   Not for direct use in JSX — go through the semantic layer.
 --------------------------------------------------------- */
 :root {
-  /* Neutral */
   --neutral-0: oklch(1 0 0);
   --neutral-50: oklch(0.97 0 0);
-  --neutral-200: oklch(0.922 0 0);
-  --neutral-600: oklch(0.556 0 0);
-  --neutral-900: oklch(0.145 0 0);
+  --neutral-400: oklch(0.708 0 0);
+  --neutral-800: oklch(0.269 0 0);
+  --neutral-900: oklch(0.205 0 0);
+  --neutral-950: oklch(0.145 0 0);
 
-  /* Brand / Accent */
-  --blue-500: oklch(0.646 0.222 264.376);
-  --purple-500: oklch(0.627 0.265 303.9);
-  --red-500: oklch(0.577 0.245 27.325);
-
-  /* Radius base */
   --radius-base: 0.625rem;
 }
 
 /* ---------------------------------------------------------
    SEMANTIC TOKENS (UI LEVEL)
+   The site ships one theme: a dark, monochrome canvas. There
+   is no light mode, so the tokens describe that directly
+   rather than being remapped by a class that is never set.
 --------------------------------------------------------- */
 :root {
-  /* Surfaces */
-  --background: var(--neutral-0);
-  --foreground: var(--neutral-900);
+  color-scheme: dark;
 
-  --surface: var(--neutral-0);
-  --surface-muted: var(--neutral-50);
+  --background: var(--neutral-950);
+  --foreground: var(--neutral-0);
 
-  /* Text */
-  --text-primary: var(--neutral-900);
-  --text-secondary: var(--neutral-600);
+  --surface: var(--neutral-900);
+  --surface-muted: var(--neutral-800);
 
-  /* UI */
-  --border-default: var(--neutral-200);
-  --input-background: var(--neutral-50);
-  --ring-color: var(--neutral-600);
+  --text-primary: var(--neutral-0);
+  --text-secondary: var(--neutral-400);
 
-  /* Accent */
-  --accent: var(--blue-500);
-  --accent-secondary: var(--purple-500);
-  --destructive: var(--red-500);
+  --border-default: oklch(1 0 0 / 12%);
+  --input-background: var(--neutral-900);
+  --ring-color: oklch(1 0 0 / 60%);
 
-  /* Radius */
   --radius-sm: calc(var(--radius-base) - 4px);
   --radius-md: calc(var(--radius-base) - 2px);
   --radius-lg: var(--radius-base);
   --radius-xl: calc(var(--radius-base) + 4px);
 
-  /* Fonts (DESIGN TOKENS) */
   --font-sans: "Space Grotesk", system-ui, -apple-system,
     BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
@@ -75,28 +67,7 @@
 }
 
 /* ---------------------------------------------------------
-   DARK THEME (MAPPING ONLY)
---------------------------------------------------------- */
-.dark {
-  --background: var(--neutral-900);
-  --foreground: var(--neutral-0);
-
-  --surface: oklch(0.205 0 0);
-  --surface-muted: oklch(0.269 0 0);
-
-  --text-primary: var(--neutral-0);
-  --text-secondary: oklch(0.708 0 0);
-
-  --border-default: oklch(1 0 0 / 10%);
-  --input-background: oklch(1 0 0 / 15%);
-  --ring-color: oklch(0.556 0 0);
-
-  --accent: var(--purple-500);
-  --accent-secondary: var(--blue-500);
-}
-
-/* ---------------------------------------------------------
-   TAILWIND ↔ CSS VARIABLE BRIDGE
+   TAILWIND <-> CSS VARIABLE BRIDGE
 --------------------------------------------------------- */
 @theme inline {
   --radius: var(--radius-lg);
@@ -114,56 +85,85 @@
   --color-input: var(--input-background);
   --color-ring: var(--ring-color);
 
-  --color-accent: var(--accent);
-  --color-accent-secondary: var(--accent-secondary);
-  --color-destructive: var(--destructive);
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+  --font-mono: var(--font-mono);
+
+  --breakpoint-3xl: 120rem;
+  --container-8xl: 90rem;
 }
 
 /* ---------------------------------------------------------
-   BASE STYLES (GLOBAL ENVIRONMENT)
+   BASE STYLES
 --------------------------------------------------------- */
 @layer base {
   html,
   body {
-    background-color: hsl(var(--color-background));
-    color: hsl(var(--color-text-primary));
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    cursor: none;
   }
-  
-  /* Hide cursor on all elements globally */
+
+  /* The custom cursor only exists for precise pointers. Touch and
+     keyboard users keep the platform cursor, and so does anyone whose
+     JS fails to run. */
+  @media (hover: hover) and (pointer: fine) {
+    html.has-custom-cursor,
+    html.has-custom-cursor body {
+      cursor: none;
+    }
+
+    html.has-custom-cursor *:not(select):not(option) {
+      cursor: none;
+    }
+  }
+
+  /* Slim rather than absent: the page still tells you where you are. */
   * {
-    cursor: none !important;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-surface-muted) transparent;
   }
 
   ::-webkit-scrollbar {
-    display: none;
+    width: 8px;
+    height: 8px;
   }
 
-  * {
-    border-color: hsl(var(--color-border));
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--color-surface-muted);
+    border-radius: 999px;
+  }
+
+  /* Every interactive element gets a visible keyboard ring, including the
+     ones whose designed state removes the default outline. */
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 3px;
+    border-radius: 4px;
   }
 
   /* -----------------------------------------------------
-     TYPOGRAPHY SYSTEM (AUTO)
+     TYPOGRAPHY
+     Space Grotesk carries structure, Lora carries reading
+     copy, Space Mono carries technical labels.
   ----------------------------------------------------- */
-
-  /* Headings → Space Grotesk */
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-sans);
     font-weight: 600;
+    text-wrap: balance;
   }
 
-  /* Body copy → Lora */
   p {
     font-family: var(--font-serif);
+    text-wrap: pretty;
   }
 
-  /* Caption / meta / technical */
   small,
   code,
   pre,
@@ -172,7 +172,6 @@
     font-family: var(--font-mono);
   }
 
-  /* Quote / editorial */
   blockquote p {
     font-family: var(--font-serif);
     font-style: italic;
@@ -180,11 +179,17 @@
 }
 
 /* ---------------------------------------------------------
-   ⚠️ IMPORTANT RULES (DO NOT BREAK)
+   REDUCED MOTION
+   This site leans hard on movement. Anyone who has asked the
+   OS for less gets a static version rather than a diluted one.
 --------------------------------------------------------- */
-/*
-1. ❌ Jangan pakai bg-white / text-black di JSX
-2. ❌ Jangan pakai dark: variant di komponen
-3. ✅ Pakai semantic token (background, foreground, accent)
-4. ✅ Theme hanya berubah lewat class .dark di root
-*/
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

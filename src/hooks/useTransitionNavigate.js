@@ -1,18 +1,29 @@
-// src/hooks/useTransitionNavigate.js
-import { useNavigate } from "react-router-dom"
-import { usePageTransition } from "@/context/PageTransitionContext"
+import { useCallback, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { usePageTransition } from '@/context/page-transition-context'
+
+// Slightly longer than the 0.8s cover animation in PageTransition.
+const COVER_DURATION = 900
 
 export function useTransitionNavigate() {
   const navigate = useNavigate()
   const { show } = usePageTransition()
+  const timerRef = useRef(null)
 
-  return (to, title) => {
-    // 1. tampilkan animasi dulu
-    show([title])
+  useEffect(() => () => clearTimeout(timerRef.current), [])
 
-    // 2. tunggu animasi masuk selesai
-    setTimeout(() => {
-      navigate(to)
-    }, 900) // > duration enter (0.8s)
-  }
+  return useCallback(
+    (to, title) => {
+      const skipAnimation = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      if (skipAnimation) {
+        navigate(to)
+        return
+      }
+
+      show([title])
+      clearTimeout(timerRef.current)
+      timerRef.current = setTimeout(() => navigate(to), COVER_DURATION)
+    },
+    [navigate, show]
+  )
 }

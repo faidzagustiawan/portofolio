@@ -5,7 +5,7 @@ import { Link } from "react-router-dom"
 
 const FinalCTASection = () => {
   return (
-    <section className="min-h-[80vh] flex flex-col items-center justify-center bg-black px-6 md:px-16 pb-20">
+    <section className="min-h-[80vh] flex flex-col items-center justify-center bg-neutral-950 px-6 md:px-16 pb-20">
       <div className="flex flex-col items-center gap-16">
 
         <ScrollFloat

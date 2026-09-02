@@ -1,40 +1,19 @@
-import { createContext, useContext, useState } from "react"
-
-const PageTransitionContext = createContext(null)
+import { useCallback, useMemo, useState } from 'react'
+import { PageTransitionContext } from '@/context/page-transition-context'
 
 export function PageTransitionProvider({ children }) {
   const [isActive, setIsActive] = useState(false)
   const [words, setWords] = useState([])
 
-  const show = (newWords) => {
+  const show = useCallback((newWords) => {
     setWords(newWords)
     setIsActive(true)
-  }
+  }, [])
 
-  const showHelloOnce = (helloWords) => {
-  if (window.__HELLO_SHOWN__) return
+  const hide = useCallback(() => setIsActive(false), [])
 
-  window.__HELLO_SHOWN__ = true
-  setWords(helloWords)
-  setIsActive(true)
+  // Memoised so consumers can safely list `show`/`hide` as effect dependencies.
+  const value = useMemo(() => ({ isActive, words, show, hide }), [isActive, words, show, hide])
 
-  }
-
-  const hide = () => setIsActive(false)
-
-  return (
-    <PageTransitionContext.Provider
-      value={{
-        isActive,
-        words,
-        show,
-        showHelloOnce,
-        hide,
-      }}
-    >
-      {children}
-    </PageTransitionContext.Provider>
-  )
+  return <PageTransitionContext.Provider value={value}>{children}</PageTransitionContext.Provider>
 }
-
-export const usePageTransition = () => useContext(PageTransitionContext)

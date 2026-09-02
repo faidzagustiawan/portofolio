@@ -1,38 +1,61 @@
-
-import { X, ArrowRight, Mail } from 'lucide-react'
+import { useEffect, useId, useRef } from 'react'
+import { X, ArrowRight, Mail, Lock } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useEffect } from 'react'
+
+const FOCUSABLE = 'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
 
 export function NoLiveUrlModal({ isOpen, onClose, projectName }) {
-  // Prevent body scroll when modal is open
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'unset'
-    }
-    return () => {
-      document.body.style.overflow = 'unset'
-    }
-  }, [isOpen])
+  const panelRef = useRef(null)
+  const restoreFocusRef = useRef(null)
+  const titleId = useId()
 
-  // Close on Escape key
   useEffect(() => {
-    const handleEscape = (e) => {
-      if (e.key === 'Escape') onClose()
+    if (!isOpen) return
+
+    restoreFocusRef.current = document.activeElement
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+
+    const panel = panelRef.current
+    panel?.querySelector(FOCUSABLE)?.focus()
+
+    // Keep Tab inside the dialog: a modal that leaks focus to the page behind
+    // it is unusable with a keyboard or a screen reader.
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        onClose()
+        return
+      }
+      if (e.key !== 'Tab' || !panel) return
+
+      const focusable = [...panel.querySelectorAll(FOCUSABLE)]
+      if (focusable.length === 0) return
+
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault()
+        last.focus()
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault()
+        first.focus()
+      }
     }
-    if (isOpen) {
-      window.addEventListener('keydown', handleEscape)
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+      document.body.style.overflow = previousOverflow
+      restoreFocusRef.current?.focus?.()
     }
-    return () => window.removeEventListener('keydown', handleEscape)
   }, [isOpen, onClose])
 
   return (
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -41,65 +64,67 @@ export function NoLiveUrlModal({ isOpen, onClose, projectName }) {
             className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
           />
 
-          {/* Modal */}
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
             <motion.div
+              ref={panelRef}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby={titleId}
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ duration: 0.2, ease: 'easeOut' }}
-              className="bg-neutral-900 border border-neutral-800 rounded-2xl p-8 md:p-12 max-w-lg w-full relative shadow-2xl"
+              className="bg-neutral-900 border border-neutral-800 rounded-2xl p-8 md:p-12 max-w-lg w-full relative shadow-2xl pointer-events-auto"
             >
-              {/* Close Button */}
               <button
+                type="button"
                 onClick={onClose}
                 className="absolute top-6 right-6 text-neutral-400 hover:text-white transition-colors"
-                aria-label="Close modal"
+                aria-label="Close dialog"
               >
-                <X className="w-6 h-6" />
+                <X className="w-6 h-6" aria-hidden="true" />
               </button>
 
-              {/* Icon */}
-              <div className="w-16 h-16 bg-neutral-800 rounded-full flex items-center justify-center mb-6">
-                <span className="text-3xl">🔒</span>
+              <div
+                aria-hidden="true"
+                className="w-16 h-16 bg-neutral-800 rounded-full flex items-center justify-center mb-6"
+              >
+                <Lock className="w-7 h-7 text-neutral-300" />
               </div>
 
-              {/* Content */}
-              <h3 className="text-2xl md:text-3xl font-bold mb-4 text-white">
-                Project Under NDA
-              </h3>
-              
+              <h2 id={titleId} className="text-2xl md:text-3xl font-bold mb-4 text-white">
+                No public deployment
+              </h2>
+
               <p className="text-lg text-neutral-400 mb-8 leading-relaxed">
-                Unfortunately, <span className="text-white font-medium">{projectName}</span> is currently under a non-disclosure agreement 
-                and the live version is not publicly accessible.
+                <span className="text-white font-medium">{projectName}</span> is not hosted at a
+                public URL right now. I can walk you through it directly, or share access on request.
               </p>
 
               <div className="space-y-3">
-                {/* Contact CTA */}
                 <Link
                   to="/contact"
                   onClick={onClose}
-                  className="group w-full flex items-center justify-between px-6 py-4 bg-white text-neutral-950 rounded-lg hover:bg-neutral-200 transition-all duration-300"
+                  className="group w-full flex items-center justify-between px-6 py-4 bg-white text-neutral-950 rounded-xl hover:bg-neutral-200 transition-colors duration-300"
                 >
                   <span className="flex items-center gap-3 font-medium">
-                    <Mail className="w-5 h-5" />
-                    Get in Touch for Details
+                    <Mail className="w-5 h-5" aria-hidden="true" />
+                    Ask me about it
                   </span>
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight
+                    aria-hidden="true"
+                    className="w-5 h-5 group-hover:translate-x-1 transition-transform"
+                  />
                 </Link>
 
-                {/* Continue Browsing */}
                 <button
+                  type="button"
                   onClick={onClose}
-                  className="w-full px-6 py-4 border border-neutral-700 text-white rounded-lg hover:bg-neutral-800 transition-all duration-300 font-medium"
+                  className="w-full px-6 py-4 border border-neutral-700 text-white rounded-xl hover:bg-neutral-800 transition-colors duration-300 font-medium"
                 >
-                  Continue Browsing Projects
+                  Keep browsing
                 </button>
               </div>
-
-              <p className="mt-6 text-sm text-neutral-400 text-center">
-                I'd be happy to discuss this project in detail over a call or meeting.
-              </p>
             </motion.div>
           </div>
         </>

@@ -1,5 +1,12 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react'
 
+/**
+ * Pulls its children toward the pointer when it comes within `padding`.
+ *
+ * Writes the transform straight to the node inside a rAF rather than through
+ * state: a magnet updating on every mousemove would otherwise re-render its
+ * whole subtree at pointer frequency.
+ */
 const Magnet = ({
   children,
   padding = 100,
@@ -11,63 +18,82 @@ const Magnet = ({
   innerClassName = '',
   ...props
 }) => {
-  const [isActive, setIsActive] = useState(false);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const magnetRef = useRef(null);
+  const wrapperRef = useRef(null)
+  const innerRef = useRef(null)
 
   useEffect(() => {
-    if (disabled) {
-      setPosition({ x: 0, y: 0 });
-      return;
+    const inner = innerRef.current
+    const wrapper = wrapperRef.current
+    if (!inner || !wrapper) return
+
+    const reset = () => {
+      inner.style.transition = inactiveTransition
+      inner.style.transform = 'translate3d(0, 0, 0)'
     }
 
-    const handleMouseMove = e => {
-      if (!magnetRef.current) return;
+    const canMagnetise =
+      window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-      const { left, top, width, height } = magnetRef.current.getBoundingClientRect();
-      const centerX = left + width / 2;
-      const centerY = top + height / 2;
+    if (disabled || !canMagnetise) {
+      reset()
+      return
+    }
 
-      const distX = Math.abs(centerX - e.clientX);
-      const distY = Math.abs(centerY - e.clientY);
+    let frame = 0
+    let wasActive = false
 
-      if (distX < width / 2 + padding && distY < height / 2 + padding) {
-        setIsActive(true);
+    const handleMouseMove = (e) => {
+      if (frame) return
+      frame = requestAnimationFrame(() => {
+        frame = 0
+        const { left, top, width, height } = wrapper.getBoundingClientRect()
+        const centerX = left + width / 2
+        const centerY = top + height / 2
 
-        const offsetX = (e.clientX - centerX) / magnetStrength;
-        const offsetY = (e.clientY - centerY) / magnetStrength;
-        setPosition({ x: offsetX, y: offsetY });
-      } else {
-        setIsActive(false);
-        setPosition({ x: 0, y: 0 });
-      }
-    };
+        const withinRange =
+          Math.abs(centerX - e.clientX) < width / 2 + padding &&
+          Math.abs(centerY - e.clientY) < height / 2 + padding
 
-    window.addEventListener('mousemove', handleMouseMove);
+        if (withinRange) {
+          if (!wasActive) {
+            inner.style.transition = activeTransition
+            wasActive = true
+          }
+          const offsetX = (e.clientX - centerX) / magnetStrength
+          const offsetY = (e.clientY - centerY) / magnetStrength
+          inner.style.transform = `translate3d(${offsetX}px, ${offsetY}px, 0)`
+        } else if (wasActive) {
+          wasActive = false
+          reset()
+        }
+      })
+    }
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true })
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, [padding, disabled, magnetStrength]);
-
-  const transitionStyle = isActive ? activeTransition : inactiveTransition;
+      if (frame) cancelAnimationFrame(frame)
+      window.removeEventListener('mousemove', handleMouseMove)
+      reset()
+    }
+  }, [padding, disabled, magnetStrength, activeTransition, inactiveTransition])
 
   return (
     <div
-      ref={magnetRef}
+      ref={wrapperRef}
       className={wrapperClassName}
       style={{ position: 'relative', display: 'inline-block' }}
-      {...props}>
+      {...props}
+    >
       <div
+        ref={innerRef}
         className={innerClassName}
-        style={{
-          transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
-          transition: transitionStyle,
-          willChange: 'transform'
-        }}>
+        style={{ transform: 'translate3d(0, 0, 0)', willChange: 'transform' }}
+      >
         {children}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Magnet;
+export default Magnet

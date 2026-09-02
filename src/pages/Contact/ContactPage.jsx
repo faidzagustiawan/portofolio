@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { useEffect, useId, useRef, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   MapPin,
   Send,
@@ -9,15 +9,20 @@ import {
   Github,
   Linkedin,
   Mail,
-  Download
+  Download,
 } from 'lucide-react'
 import emailjs from '@emailjs/browser'
-import toast from 'react-hot-toast'
-import SEO from "@/components/SEO"
+import SEO from '@/components/SEO'
 
-/* =====================
-   ANIMATION
-===================== */
+const EMAILJS = {
+  serviceId: import.meta.env.VITE_EMAILJS_SERVICE_ID,
+  ownerTemplate: import.meta.env.VITE_EMAILJS_TEMPLATE_OWNER,
+  autoReplyTemplate: import.meta.env.VITE_EMAILJS_TEMPLATE_AUTOREPLY,
+  publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
+}
+
+const EMPTY_FORM = { name: '', email: '', title: '', message: '' }
+
 const FadeUp = ({ children, delay = 0 }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
@@ -29,223 +34,179 @@ const FadeUp = ({ children, delay = 0 }) => (
   </motion.div>
 )
 
+const inputClass =
+  'w-full bg-neutral-900 border border-neutral-800 rounded-lg px-4 py-3 text-white placeholder:text-neutral-500 focus:border-white/30 transition-colors'
 
-const lockPage = () => {
-  document.body.style.overflow = 'hidden'
-  document.body.style.pointerEvents = 'none'
-}
-
-const unlockPage = () => {
-  document.body.style.overflow = ''
-  document.body.style.pointerEvents = ''
-}
-
-const fullscreenToast = (type, message) =>
-  toast.custom(
-    (t) => (
-      <div
-        className={`fixed inset-0 z-[9999] flex items-center justify-center
-        bg-neutral-950/90 backdrop-blur-md transition-opacity
-        ${t.visible ? 'opacity-100' : 'opacity-0'}`}
+function Field({ label, htmlFor, children }) {
+  return (
+    <div className="space-y-2">
+      <label
+        htmlFor={htmlFor}
+        className="block text-sm font-mono uppercase tracking-widest text-neutral-400"
       >
-        <div className="flex flex-col items-center gap-6 text-center text-white">
-          {type === 'loading' && (
-            <>
-              <Loader2 className="w-12 h-12 animate-spin" />
-              <p className="text-2xl md:text-3xl font-medium tracking-tight">
-                Sending your message…
-              </p>
-            </>
-          )}
-
-
-          {type === 'success' && (
-            <>
-              <CheckCircle2 className="w-16 h-16 text-green-400" />
-
-              <div className="flex flex-col gap-2">
-                <p className="text-3xl md:text-4xl font-semibold tracking-tight">
-                  Message Sent
-                </p>
-                <p className="text-neutral-400 text-base md:text-lg">
-                  Thanks for reaching out. I’ll get back to you soon.
-                </p>
-              </div>
-            </>
-          )}
-
-
-          {type === 'error' && (
-            <>
-              <XCircle className="w-12 h-12 text-red-400" />
-              <p className="text-xl font-medium">{message}</p>
-            </>
-          )}
-        </div>
-      </div>
-    ),
-    { duration: Infinity }
+        {label}
+      </label>
+      {children}
+    </div>
   )
+}
 
-
-/* =====================
-   CONTACT PAGE
-===================== */
-export default function ContactPage() {
-
-
-  
-  const [formState, setFormState] = useState({
-    name: '',
-    email: '',
-    title: '',
-    message: '',
-  })
-
-  const [botField, setBotField] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSuccess, setIsSuccess] = useState(false)
-
-  /* ===== Local Time ===== */
+/** Faidz's local time, not the visitor's — the label next to it says Malang. */
+function useLocalTime() {
   const [time, setTime] = useState('')
+
   useEffect(() => {
-    const updateTime = () => {
-      const now = new Date()
+    const update = () =>
       setTime(
-        now.toLocaleTimeString('en-ID', {
+        new Intl.DateTimeFormat('en-GB', {
           hour: '2-digit',
           minute: '2-digit',
-          timeZoneName: 'short',
-        })
+          timeZone: 'Asia/Jakarta',
+        }).format(new Date())
       )
-    }
-    updateTime()
-    const interval = setInterval(updateTime, 60000)
+
+    update()
+    const interval = setInterval(update, 30_000)
     return () => clearInterval(interval)
   }, [])
 
-  /* =====================
-     SUBMIT HANDLER
-  ===================== */
+  return time
+}
+
+export default function ContactPage() {
+  const [formState, setFormState] = useState(EMPTY_FORM)
+  const [botField, setBotField] = useState('')
+  const [status, setStatus] = useState('idle') // idle | sending | success | error
+  const [errorMessage, setErrorMessage] = useState('')
+  const isMounted = useRef(true)
+
+  const time = useLocalTime()
+  const ids = {
+    name: useId(),
+    email: useId(),
+    title: useId(),
+    message: useId(),
+  }
+
+  useEffect(() => () => {
+    isMounted.current = false
+  }, [])
+
+  const update = (key) => (e) => setFormState((prev) => ({ ...prev, [key]: e.target.value }))
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (botField) return
+    if (status === 'sending') return
 
-    setIsSubmitting(true)
-    lockPage()
+    const configured = Object.values(EMAILJS).every(Boolean)
+    if (!configured) {
+      setStatus('error')
+      setErrorMessage('The contact form is not configured. Please email me directly.')
+      return
+    }
 
-    const toastId = fullscreenToast('loading', 'Sending your message…')
+    setStatus('sending')
+    setErrorMessage('')
+
+    const payload = { ...formState }
 
     try {
-      await emailjs.send(
-        'service_gn4iko8',
-        'template_0s4xa5r',
-        {
-          name: formState.name,
-          email: formState.email,
-          title: formState.title,
-          message: formState.message,
-        },
-        'iItwsyPtsQCulJJHD'
-      )
+      await emailjs.send(EMAILJS.serviceId, EMAILJS.ownerTemplate, payload, EMAILJS.publicKey)
 
-      await emailjs.send(
-        'service_gn4iko8',
-        'template_onqzfb3',
-        {
-          name: formState.name,
-          email: formState.email,
-          title: formState.title,
-          message: formState.message,
-        },
-        'iItwsyPtsQCulJJHD'
-      )
+      // The auto-reply is a courtesy. If it fails the message still reached me,
+      // so it must not turn a delivered enquiry into a visible failure.
+      emailjs
+        .send(EMAILJS.serviceId, EMAILJS.autoReplyTemplate, payload, EMAILJS.publicKey)
+        .catch(() => {})
 
-      toast.dismiss(toastId)
-      fullscreenToast('success', 'Message sent successfully 🚀')
-
-      setFormState({
-        name: '',
-        email: '',
-        title: '',
-        message: '',
-      })
-
-      setTimeout(() => {
-        toast.dismiss()
-        unlockPage()
-      }, 1800)
-
+      if (!isMounted.current) return
+      setStatus('success')
+      setFormState(EMPTY_FORM)
     } catch (err) {
-      console.error(err)
-
-      toast.dismiss(toastId)
-      fullscreenToast('error', 'Failed to send message')
-
-      setTimeout(() => {
-        toast.dismiss()
-        unlockPage()
-      }, 2000)
-    } finally {
-      setIsSubmitting(false)
+      if (!isMounted.current) return
+      setStatus('error')
+      setErrorMessage(err?.text || 'Something went wrong sending that. Please email me directly.')
     }
   }
 
+  const isSending = status === 'sending'
 
   return (
     <main className="min-h-screen bg-neutral-950 text-white selection:bg-white selection:text-neutral-950">
-      <SEO title="Contact" description="Get in touch. Let's discuss your next project." url="/contact" />
-      {/* --- HEADER & FORM SECTION --- */}
+      <SEO
+        title="Contact"
+        description="Get in touch with Faidz Agustiawan about freelance work, collaborations, or a role."
+        url="/contact"
+      />
+
       <div className="pt-32 lg:pt-60 pb-20 px-6 md:px-12 lg:px-16">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 mb-24">
-            {/* ===== LEFT CONTENT ===== */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
+            {/* ===== LEFT ===== */}
             <div>
               <FadeUp>
                 <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-8">
-                  Let's start a <br className="hidden lg:block" /> project together
+                  Let's build <br className="hidden lg:block" /> something together
                 </h1>
               </FadeUp>
 
               <FadeUp delay={0.1}>
                 <div className="flex flex-col gap-6 text-neutral-400 text-lg md:text-xl max-w-md">
                   <p>
-                    Interested in working together? Fill out the form or send me
-                    an email. I'm currently{' '}
-                    <span className="text-green-400 font-medium">
-                      available
-                    </span>{' '}
-                    for freelance work.
+                    Interested in working together? Use the form or email me directly. I'm currently{' '}
+                    <span className="text-emerald-400 font-medium">available</span> for freelance
+                    work.
                   </p>
 
                   <div className="flex items-center gap-6 text-sm font-mono uppercase tracking-widest mt-4">
-                    <div className="flex items-center gap-2">
-                      <MapPin className="w-4 h-4" />
-                      <span>Malang, ID</span>
-                    </div>
-                    <div>{time}</div>
+                    <span className="flex items-center gap-2">
+                      <MapPin className="w-4 h-4" aria-hidden="true" />
+                      Malang, ID
+                    </span>
+                    <span>{time} local</span>
                   </div>
 
                   <div className="flex flex-col gap-4 mt-8 pt-8 border-t border-neutral-800">
-                    <span className="text-sm font-mono uppercase tracking-widest text-neutral-400">Connect</span>
+                    <span className="text-sm font-mono uppercase tracking-widest text-neutral-400">
+                      Connect
+                    </span>
                     <div className="flex flex-wrap gap-4">
-                      <a href="mailto:faidzagustiawan@gmail.com" className="flex items-center gap-2 px-4 py-2 bg-neutral-900 border border-neutral-800 rounded-xl text-sm font-medium hover:bg-white hover:text-black hover:border-white transition-all group">
+                      <a
+                        href="mailto:faidzagustiawan@gmail.com"
+                        className="flex items-center gap-2 px-4 py-2 bg-neutral-900 border border-neutral-800 rounded-xl text-sm font-medium hover:bg-white hover:text-black hover:border-white transition-all group"
+                      >
                         <Mail className="w-4 h-4 transition-transform group-hover:scale-110" aria-hidden="true" />
                         Email
                       </a>
-                      <a href="https://www.linkedin.com/in/muhammad-faidz-agustiawan-8692821bb" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 bg-neutral-900 border border-neutral-800 rounded-xl text-sm font-medium hover:bg-white hover:text-black hover:border-white transition-all group">
+                      <a
+                        href="https://www.linkedin.com/in/muhammad-faidz-agustiawan-8692821bb"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-4 py-2 bg-neutral-900 border border-neutral-800 rounded-xl text-sm font-medium hover:bg-white hover:text-black hover:border-white transition-all group"
+                      >
                         <Linkedin className="w-4 h-4 transition-transform group-hover:scale-110" aria-hidden="true" />
                         LinkedIn
                       </a>
-                      <a href="https://github.com/faidzagustiawan" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 bg-neutral-900 border border-neutral-800 rounded-xl text-sm font-medium hover:bg-white hover:text-black hover:border-white transition-all group">
+                      <a
+                        href="https://github.com/faidzagustiawan"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-4 py-2 bg-neutral-900 border border-neutral-800 rounded-xl text-sm font-medium hover:bg-white hover:text-black hover:border-white transition-all group"
+                      >
                         <Github className="w-4 h-4 transition-transform group-hover:scale-110" aria-hidden="true" />
                         GitHub
                       </a>
                     </div>
+
                     <div className="mt-2">
-                      <a href="/CV-Muhammad%20Faidz%20Agustiawan.pdf" target="_blank" rel="noopener noreferrer" download className="inline-flex items-center gap-2 px-6 py-3 bg-neutral-800 border border-neutral-700 text-white rounded-xl text-sm font-medium hover:bg-white hover:text-black transition-all group">
-                        <Download className="w-4 h-4 transition-transform group-hover:-translate-y-0.5" />
-                        Download Resume
+                      <a
+                        href="/CV-Muhammad-Faidz-Agustiawan.pdf"
+                        download
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-neutral-800 border border-neutral-700 text-white rounded-xl text-sm font-medium hover:bg-white hover:text-black transition-all group"
+                      >
+                        <Download className="w-4 h-4 transition-transform group-hover:-translate-y-0.5" aria-hidden="true" />
+                        Download resume
                       </a>
                     </div>
                   </div>
@@ -255,129 +216,136 @@ export default function ContactPage() {
 
             {/* ===== FORM ===== */}
             <div className="relative">
-              <div
-                className={`bg-neutral-900/30 p-8 rounded-2xl border border-neutral-800 transition-all ${isSubmitting
-                  ? 'blur-sm pointer-events-none opacity-60'
-                  : ''
-                  }`}
-              >
+              <div className="bg-neutral-900/30 p-8 rounded-2xl border border-neutral-800">
                 <FadeUp delay={0.2}>
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    {/* Honeypot */}
-                    <input
-                      type="text"
-                      tabIndex="-1"
-                      autoComplete="off"
-                      className="hidden"
-                      value={botField}
-                      onChange={(e) => setBotField(e.target.value)}
-                    />
+                  <AnimatePresence mode="wait">
+                    {status === 'success' ? (
+                      <motion.div
+                        key="success"
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0 }}
+                        className="flex flex-col items-center text-center gap-4 py-12"
+                        role="status"
+                      >
+                        <CheckCircle2 className="w-14 h-14 text-emerald-400" aria-hidden="true" />
+                        <h2 className="text-2xl font-semibold">Message sent</h2>
+                        <p className="text-neutral-400">
+                          Thanks for reaching out. I'll get back to you soon.
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => setStatus('idle')}
+                          className="mt-2 text-sm text-neutral-400 underline underline-offset-4 hover:text-white transition-colors"
+                        >
+                          Send another message
+                        </button>
+                      </motion.div>
+                    ) : (
+                      <motion.form
+                        key="form"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        onSubmit={handleSubmit}
+                        className="space-y-6"
+                        noValidate={false}
+                      >
+                        {/* Honeypot: off-screen rather than display:none, which some
+                            bots skip, and hidden from assistive tech. */}
+                        <div className="absolute left-[-9999px]" aria-hidden="true">
+                          <label htmlFor="company-website">Leave this field empty</label>
+                          <input
+                            id="company-website"
+                            type="text"
+                            tabIndex={-1}
+                            autoComplete="off"
+                            value={botField}
+                            onChange={(e) => setBotField(e.target.value)}
+                          />
+                        </div>
 
-                    {/* Name */}
-                    <div className="space-y-2">
-                      <label className="text-sm font-mono uppercase tracking-widest text-neutral-400">
-                        Your Name
-                      </label>
-                      <input
-                        required
-                        value={formState.name}
-                        onChange={(e) =>
-                          setFormState({
-                            ...formState,
-                            name: e.target.value,
-                          })
-                        }
-                        className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-4 py-3"
-                        placeholder="John Doe"
-                      />
-                    </div>
+                        <Field label="Your name" htmlFor={ids.name}>
+                          <input
+                            id={ids.name}
+                            name="name"
+                            required
+                            autoComplete="name"
+                            value={formState.name}
+                            onChange={update('name')}
+                            className={inputClass}
+                            placeholder="Jane Doe"
+                          />
+                        </Field>
 
-                    {/* Email */}
-                    <div className="space-y-2">
-                      <label className="text-sm font-mono uppercase tracking-widest text-neutral-400">
-                       Your Email
-                      </label>
-                      <input
-                        type="email"
-                        required
-                        value={formState.email}
-                        onChange={(e) =>
-                          setFormState({
-                            ...formState,
-                            email: e.target.value,
-                          })
-                        }
-                        className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-4 py-3"
-                        placeholder="john@example.com"
-                      />
-                    </div>
+                        <Field label="Your email" htmlFor={ids.email}>
+                          <input
+                            id={ids.email}
+                            name="email"
+                            type="email"
+                            required
+                            autoComplete="email"
+                            value={formState.email}
+                            onChange={update('email')}
+                            className={inputClass}
+                            placeholder="jane@example.com"
+                          />
+                        </Field>
 
-                    {/* Title */}
-                    <div className="space-y-2">
-                      <label className="text-sm font-mono uppercase tracking-widest text-neutral-400">
-                        Project / Subject
-                      </label>
-                      <input
-                        required
-                        value={formState.title}
-                        onChange={(e) =>
-                          setFormState({
-                            ...formState,
-                            title: e.target.value,
-                          })
-                        }
-                        className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-4 py-3"
-                        placeholder="Website redesign, collaboration, etc."
-                      />
-                    </div>
+                        <Field label="Project or subject" htmlFor={ids.title}>
+                          <input
+                            id={ids.title}
+                            name="title"
+                            required
+                            value={formState.title}
+                            onChange={update('title')}
+                            className={inputClass}
+                            placeholder="Website redesign, collaboration, a role"
+                          />
+                        </Field>
 
-                    {/* Message */}
-                    <div className="space-y-2">
-                      <label className="text-sm font-mono uppercase tracking-widest text-neutral-400">
-                        Message
-                      </label>
-                      <textarea
-                        rows={4}
-                        required
-                        value={formState.message}
-                        onChange={(e) =>
-                          setFormState({
-                            ...formState,
-                            message: e.target.value,
-                          })
-                        }
-                        className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-4 py-3 resize-none"
-                        placeholder="Tell me about your project..."
-                      />
-                    </div>
+                        <Field label="Message" htmlFor={ids.message}>
+                          <textarea
+                            id={ids.message}
+                            name="message"
+                            rows={4}
+                            required
+                            value={formState.message}
+                            onChange={update('message')}
+                            className={`${inputClass} resize-none`}
+                            placeholder="Tell me about your project…"
+                          />
+                        </Field>
 
-                    {/* Submit */}
-                    <button
-                      type="submit"
-                      disabled={isSubmitting || isSuccess}
-                      className={`w-full py-4 rounded-xl font-medium transition-all flex items-center justify-center gap-2 ${isSuccess
-                        ? 'bg-green-500 text-white'
-                        : 'bg-white text-black hover:bg-neutral-200'
-                        }`}
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <Loader2 className="w-5 h-5 animate-spin" />
-                          Sending...
-                        </>
-                      ) : isSuccess ? (
-                        <>
-                          <CheckCircle2 className="w-5 h-5" />
-                          Message Sent!
-                        </>
-                      ) : (
-                        <>
-                          Send Message
-                          <Send className="w-4 h-4" />
-                        </>
-                      )}
-                    </button>
-                  </form>
+                        {status === 'error' && (
+                          <p
+                            role="alert"
+                            className="flex items-start gap-2 text-sm text-red-300 bg-red-950/40 border border-red-900/60 rounded-lg px-4 py-3"
+                          >
+                            <XCircle className="w-4 h-4 mt-0.5 shrink-0" aria-hidden="true" />
+                            {errorMessage}
+                          </p>
+                        )}
+
+                        <button
+                          type="submit"
+                          disabled={isSending}
+                          className="w-full py-4 rounded-xl font-medium transition-colors flex items-center justify-center gap-2 bg-white text-black hover:bg-neutral-200 disabled:opacity-60 disabled:cursor-not-allowed"
+                        >
+                          {isSending ? (
+                            <>
+                              <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" />
+                              Sending…
+                            </>
+                          ) : (
+                            <>
+                              Send message
+                              <Send className="w-4 h-4" aria-hidden="true" />
+                            </>
+                          )}
+                        </button>
+                      </motion.form>
+                    )}
+                  </AnimatePresence>
                 </FadeUp>
               </div>
             </div>

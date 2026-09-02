@@ -3,22 +3,78 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0a0a0a" />
-  <title>Faidz Agustiawan | Frontend Developer</title>
-  <meta name="description" content="Portfolio of Faidz Agustiawan, a frontend developer focused on motion, interaction, and performance." />
-  <meta name="keywords" content="Faidz Agustiawan, Frontend Developer, Web Developer, React Developer, Portfolio, Malang, Indonesia" />
+  <meta name="color-scheme" content="dark" />
   <meta name="author" content="Faidz Agustiawan" />
-  <meta property="og:title" content="Faidz Agustiawan | Frontend Developer" />
-  <meta property="og:description" content="Portfolio of Faidz Agustiawan, a frontend developer focused on motion, interaction, and performance." />
-  <meta property="og:type" content="website" />
-  <link rel="preload" href="/FotoFaidz.svg" as="image" type="image/svg+xml" fetchpriority="high" />
+  <meta property="og:site_name" content="Faidz Agustiawan" />
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" href="/favicon.svg" />
+
+  <!-- Per-page title, description, canonical, Open Graph and JSON-LD are
+       written here at build time by scripts/prerender.js. The fallback below
+       covers the SPA shell that serves routes added after the last build. -->
+  <!--app-head-->
+  <title data-static-seo>Faidz Agustiawan | Full-Stack Developer</title>
+  <meta data-static-seo name="description"
+    content="Faidz Agustiawan is a full-stack developer in Malang, Indonesia, building web and mobile products end to end with a frontend obsession for motion, interaction, and performance." />
+  <meta data-static-seo property="og:type" content="website" />
+  <meta data-static-seo property="og:url" content="https://faidzagustiawan.com/" />
+  <meta data-static-seo property="og:title" content="Faidz Agustiawan | Full-Stack Developer" />
+  <meta data-static-seo property="og:image" content="https://faidzagustiawan.com/og-cover.jpg" />
+  <meta data-static-seo name="twitter:card" content="summary_large_image" />
+  <!--/app-head-fallback-->
+
+  <!-- Fonts: preconnect first so the stylesheet and its faces overlap. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400..700&family=Lora:wght@400..600&family=Space+Mono&display=swap" />
+
+  <!-- Route-specific hints: the hero preload only on the page that shows it,
+       the PocketBase preconnect only on the shell that has to fetch. -->
+  <!--app-links-->
+
+  <style>
+    /* Backdrop for the intro. Pages are prerendered, so without something
+       painted before React mounts, the visitor would see the real page for a
+       frame and then have it covered. */
+    html[data-preloader="on"]::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 99998;
+      background: #0a0a0a;
+    }
+  </style>
+  <script>
+    // Runs before first paint: only synchronous script can read localStorage
+    // early enough to decide whether the intro plays. React reads the result.
+    (function () {
+      try {
+        var ua = navigator.userAgent;
+        if (navigator.webdriver || /bot|googlebot|crawler|spider|robot|crawling|lighthouse/i.test(ua)) return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var last = localStorage.getItem('preloaderLastShown');
+        if (last && Date.now() - parseInt(last, 10) < 600000) return;
+        document.documentElement.dataset.preloader = 'on';
+      } catch (e) {
+        /* Storage unavailable: skip the intro rather than risk covering the page. */
+      }
+    })();
+  </script>
 </head>
 
-<body style="background-color: #0a0a0a; color: #ffffff;">
-  <div id="root"></div>
+<body>
+  <div id="root"><!--app-html--></div>
+  <noscript>
+    <p style="padding:1rem 2rem;font-family:system-ui,sans-serif;color:#a3a3a3;background:#0a0a0a;margin:0">
+      This site animates with JavaScript, but every page is readable without it.
+      Reach me at <a style="color:#fff" href="mailto:faidzagustiawan@gmail.com">faidzagustiawan@gmail.com</a>.
+    </p>
+  </noscript>
   <script type="module" src="/src/main.jsx"></script>
 </body>
 
-</html>
+</html>
