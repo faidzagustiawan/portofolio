@@ -32,7 +32,7 @@ dist-ssr
 # Build analysis / scratch output
 stats.html
 repos.json
-scripts/.pb-schema-backup-*.json
+scripts/.pb-*.json
 
 # Local media staging for r2:sync
 r2-assets/

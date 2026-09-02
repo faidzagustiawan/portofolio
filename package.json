@@ -18,7 +18,8 @@
     "prerender": "node scripts/prerender.js",
     "og:projects": "node scripts/build-project-cards.js",
     "deploy": "wrangler deploy",
-    "pb:upload": "node scripts/upload-project-media.js"
+    "pb:upload": "node scripts/upload-project-media.js",
+    "pb:content": "node scripts/push-case-studies.js"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
