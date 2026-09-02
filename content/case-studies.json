@@ -1,102 +1,233 @@
 {
   "_readme": [
-    "Naskah studi kasus untuk koleksi `projects` di PocketBase.",
+    "Naskah studi kasus dua bahasa untuk koleksi `projects` di PocketBase.",
+    "",
+    "  shared.*  -> field dasar (tidak diterjemahkan: technologies, githuburl)",
+    "  en.*      -> field dasar (tagline, overview, challenge, ...)",
+    "  id.*      -> field bersuffix _id (tagline_id, overview_id, ...)",
     "",
     "Kirim dengan: pnpm pb:content -- --dry-run   (lalu tanpa --dry-run)",
     "",
-    "Nilai apa pun yang masih memuat '[ISI' DILEWATI oleh pengirim — tanda kurung itu",
-    "tidak akan pernah tayang di situs. Isi sendiri, jalankan lagi, dan hanya field",
-    "yang sudah lengkap yang terkirim. Aman diulang berapa kali pun.",
+    "Nilai apa pun yang masih memuat '[ISI' DILEWATI oleh pengirim, jadi tanda",
+    "kurung itu tidak akan pernah tayang. Isi sendiri, jalankan lagi, dan hanya",
+    "field yang sudah lengkap yang terkirim. Aman diulang berapa kali pun.",
     "",
-    "Setiap isian berasal dari pembacaan repo, bukan dari catatan. Kalau ada yang",
-    "keliru, perbaiki di sini — file ini yang jadi sumber kebenarannya."
+    "Isi bahasa Indonesia disusun dari pembacaan repo, bukan dari catatan. Versi",
+    "Inggrisnya adalah terjemahan dari isi yang sama. Kalau ada yang keliru,",
+    "perbaiki di sini — file ini yang jadi sumber kebenarannya."
   ],
-  "exhibitly": {
-    "technologies": [
-      "React",
-      "Supabase",
-      "Cloudinary",
-      "Tailwind CSS",
-      "Framer Motion"
-    ],
-    "overview": "Galeri seni digital tempat seniman mengunggah karya dan pengunjung memberi apresiasi lewat like dan komentar. Dibangun tanpa server sendiri: Supabase memegang data dan autentikasi, Cloudinary memegang berkas gambarnya.",
-    "challenge": "Karya seni diunggah dalam resolusi tinggi, dan menyimpannya sebagai blob di Supabase akan menghabiskan kuota storage jauh sebelum galerinya terisi. Aplikasi ini juga tidak punya backend sendiri, jadi tidak ada tempat untuk memproses atau mengompresi gambar di antara browser dan database.",
-    "approach": "Memisahkan berkas dari metadata alih-alih menyimpan keduanya di satu tempat. Cloudinary menerima unggahan langsung dari browser dan mengembalikan URL; Supabase hanya menyimpan URL itu beserta data karya, like, dan komentar. Konsekuensinya tidak ada backend perantara yang perlu ditulis, di-deploy, atau dibayar.",
-    "solution": "React Router dengan komponen ProtectedRoute yang memisahkan halaman publik dari halaman yang butuh sesi, dipakai dua arah — pengguna yang sudah login juga dicegah membuka halaman login. AuthContext memusatkan sesi Supabase supaya tidak ada state autentikasi yang tercecer di tiap halaman. Alur reset kata sandi lengkap, dari permintaan sampai halaman pembaruan.",
-    "contribution": "[ISI: solo atau tim? Kalau tim, sebut bagian yang bukan kamu.] Membangun seluruh frontend: routing dan guard sesi, integrasi Supabase Auth, alur unggah ke Cloudinary, serta fitur like dan komentar per karya.",
-    "outcome": "[ISI: kalau belum dipakai orang lain, tulis apa adanya — itu tetap lebih kuat daripada klaim kosong. Contoh bentuk: Berjalan di <URL>, dengan <berapa> karya terunggah selama <periode>. Biaya penyimpanan tetap nol karena seluruh berkas dilayani dari tier gratis Cloudinary.]"
-  },
-  "spk-property-backend": {
-    "overview": "REST API untuk sistem pendukung keputusan pemilihan properti. Pengguna menyusun kriteria, menetapkan bobot lewat perbandingan berpasangan AHP, lalu memeringkat alternatif dengan empat metode sekaligus untuk membandingkan hasilnya.",
-    "challenge": "SAW, SMART, WP, dan TOPSIS menormalisasi data dengan cara yang berbeda-beda, tapi keempatnya harus memakai satu sumber bobot dari AHP dan satu struktur data yang sama. Menempelkan keempatnya ke satu controller berarti setiap penambahan metode kelima membongkar kode yang sudah berjalan.",
-    "approach": "Memisahkan tanggung jawab per lapisan alih-alih per fitur: controller hanya menerjemahkan HTTP, service memegang matematikanya, repository memegang query. Tiap metode perankingan berdiri sebagai service sendiri, jadi AHP menghitung bobot satu kali dan keempat metode mengonsumsinya lewat antarmuka yang sama.",
-    "solution": "Express di atas PostgreSQL, dijalankan lewat Docker Compose. AHP menurunkan bobot dari matriks perbandingan berpasangan; SAW, SMART, WP, dan TOPSIS memeringkat alternatif memakai bobot tersebut. Endpoint Dataset Generator mem-pivot data relasional menjadi tabular agar bisa langsung dikonsumsi model scikit-learn di layanan FastAPI terpisah. Otentikasi JWT dengan bcrypt, seluruh endpoint terdokumentasi di Swagger OpenAPI 3.0.",
-    "contribution": "Membangun sisi sistem pendukung keputusannya: skema basis data, arsitektur berlapis controller-service-repository, pembobotan AHP, keempat metode perankingan, dan otentikasi JWT. Lapisan machine learning — endpoint, service, dan integrasinya — dikerjakan [ISI: nama lengkap rekan tim, handle GitHub-nya nabil142] sebagai bagian terpisah.",
-    "outcome": "Selesai sebagai proyek akademik dalam waktu sekitar dua bulan. Seluruh endpoint terdokumentasi di Swagger OpenAPI dan lingkungannya dapat direproduksi lewat Docker Compose, sehingga penguji bisa menjalankannya tanpa menyiapkan basis data secara manual. [ISI: hasil AHP pernah divalidasi? Sebutkan consistency ratio, perbandingan dengan hitungan manual, atau data uji. Kalau belum, ganti kalimat ini dengan: \"Peringkat keempat metode belum divalidasi terhadap data nyata.\"]"
-  },
-  "finote": {
-    "technologies": [
-      "Kotlin",
-      "Jetpack Compose",
-      "CameraX",
-      "ML Kit",
-      "Supabase"
-    ],
-    "overview": "Aplikasi Android pencatat keuangan pribadi dengan pelacak target tabungan. Selain input manual, pengguna bisa memotret struk belanja dan nominalnya dibaca otomatis lewat OCR.",
-    "challenge": "Alasan utama orang berhenti mencatat keuangan adalah mengetik ulang tiap transaksi. Tapi struk belanja tidak punya tata letak baku — posisi nominal total berbeda di tiap toko, jadi tidak ada koordinat tetap yang bisa dijadikan patokan pembacaan.",
-    "approach": "Menjadikan kamera sebagai jalur masuk utama, bukan fitur tambahan. Hasil OCR sengaja tidak langsung disimpan: nominal yang terbaca ditampilkan lebih dulu di form yang bisa dikoreksi, karena satu pembacaan salah yang diam-diam tersimpan merusak kepercayaan lebih parah daripada mengetik manual.",
-    "solution": "Antarmuka Jetpack Compose dengan Navigation dan bottom bar. CameraX mengambil gambar struk dan ML Kit membaca teksnya di perangkat, tanpa mengirim foto ke server. Data transaksi dan target tabungan disimpan di Supabase sehingga tersinkron antar perangkat, dengan login lewat Supabase Auth dan Google Credential Manager.",
-    "contribution": "[ISI: tim bertiga bersama Yehezkiel dan Erza, ketiganya Android Developer. Sebutkan pembagiannya — bagian mana yang kamu pegang, bagian mana yang bukan. Ini menaikkan kredibilitas, bukan menurunkannya.]",
-    "outcome": "[ISI: angka paling relevan di sini adalah akurasi OCR. Contoh bentuk: Pembacaan struk berhasil pada <berapa> dari <berapa> struk uji dari <berapa> toko berbeda. Kalau belum diuji sistematis, tulis begitu — itu jujur dan tetap informatif.]"
-  },
-  "travel-backend": {
-    "technologies": [
-      "Laravel",
-      "PHP",
-      "MySQL",
-      "Laravel Sanctum",
-      "Xendit",
-      "Midtrans",
-      "Cloudinary"
-    ],
-    "overview": "REST API untuk platform pemesanan wisata: destinasi, paket perjalanan, pemesanan, dan pembayaran. Dibangun sebagai backend yang dikonsumsi klien web maupun mobile.",
-    "challenge": "Pembayaran menentukan status pemesanan, tapi konfirmasinya datang belakangan dan dari luar — lewat webhook penyedia, bukan dari permintaan pengguna. Pemesanan harus punya keadaan yang jelas selama menunggu, dan tidak boleh berubah dua kali kalau webhook yang sama terkirim ulang.",
-    "approach": "[ISI: kenapa dua gateway — Xendit dan Midtrans? Cadangan, beda metode bayar, atau permintaan klien? Alasannya justru bagian menariknya.] Pemanggilan gateway dipisahkan ke service tersendiri, bukan ditaruh di controller, supaya penyedia bisa ditukar tanpa menyentuh alur pemesanan.",
-    "solution": "Laravel dengan Sanctum sebagai otentikasi berbasis token, sehingga API bisa dipakai klien web maupun mobile tanpa sesi. Relasi destinasi–paket–pemesanan ditata lewat Eloquent dan migrasi. XenditService membungkus komunikasi ke penyedia pembayaran, dan berkas media dilayani dari Cloudinary alih-alih disimpan di server aplikasi.",
-    "contribution": "Seluruh backend dikerjakan sendiri: skema basis data dan migrasi, lapisan API dari rute sampai controller, otentikasi token dengan Sanctum, serta penyambungan ke kedua penyedia pembayaran.",
-    "outcome": "Proyek mandiri yang selesai dalam waktu sekitar satu bulan, dengan seluruh endpoint terdokumentasi lewat OpenAPI dan bisa dijelajahi di Swagger UI. Belum dipakai klien nyata. [ISI: alur pembayaran sudah diuji lewat sandbox Xendit/Midtrans, atau berhenti di tahap implementasi? Tulis yang benar.]"
-  },
-  "re-enviro": {
-    "overview": "Platform aksi lingkungan dengan dua program: EcoAct untuk mendaftar kegiatan relawan seperti penanaman pohon dan bersih pantai, dan Dana Hijau untuk mendanai proyek lingkungan lewat donasi terbuka.",
-    "challenge": "Dua program dengan alur yang berbeda — mendaftar kegiatan dan menyumbang dana — harus tinggal di satu aplikasi tanpa membuat penggunanya bingung berada di mana. Keduanya juga perlu riwayat kontribusi yang sama, padahal yang dicatat berbeda bentuk: kehadiran versus nominal.",
-    "approach": "Menyatukan keduanya di satu halaman riwayat alih-alih memisahkan dua dasbor, sehingga kontribusi pengguna terbaca sebagai satu cerita. Peran admin dipisahkan lewat layout dan guard rute tersendiri, bukan lewat pengecekan kondisi yang tersebar di tiap halaman.",
-    "solution": "React Router dengan ProtectedRoute dan AdminLayout terpisah. Supabase menangani autentikasi sekaligus basis data untuk kegiatan, donasi, dan riwayat. Dasbor statistik merangkum kontribusi per pengguna, dan seluruh antarmuka mendukung mode terang dan gelap lewat ThemeContext.",
-    "contribution": "[ISI: tim berempat — kamu Frontend Developer, dengan Gerard (PM), Katherine (Backend), Tia (UI/UX). Sebutkan batas peranmu: bagian frontend mana yang kamu kerjakan, dan skema Supabase-nya kamu atau Katherine.]",
-    "outcome": "[ISI: contoh bentuk — Dikerjakan untuk <lomba / mata kuliah / komunitas apa>, dengan hasil <peringkat, nilai, atau status>. Kalau ada yang benar-benar memakai: berapa kegiatan atau donasi yang tercatat.]"
-  },
-  "pantausam": {
-    "githuburl": "https://github.com/faidzagustiawan/PantauSAM",
-    "overview": "Platform pelaporan infrastruktur publik. Warga mengirim laporan kerusakan lengkap dengan lokasi dan foto, admin memverifikasinya, lalu laporan yang lolos tampil di peta interaktif beserta status pengerjaannya.",
-    "challenge": "Pelaporan harus semudah mungkin supaya warga awam mau memakainya, tapi laporan yang masuk tanpa saringan akan penuh duplikat dan kiriman iseng — dan begitu peta publik terisi sampah, kredibilitas platformnya habis. Mengetik alamat manual juga rawan salah dan melelahkan di ponsel.",
-    "approach": "Menaruh verifikasi admin sebagai gerbang antara pengiriman dan publikasi, sehingga pelaporan tetap terbuka tanpa mengorbankan isi peta. Untuk lokasi, pengguna menandai titik di peta alih-alih mengetik alamat, jadi koordinatnya akurat dan usaha pengisiannya jauh lebih ringan.",
-    "solution": "Laravel 11 dengan Blade dan MySQL. Tiga tingkat peran dipisahkan lewat middleware terpisah — pengguna, admin, dan super admin — sehingga aturan aksesnya terbaca di satu tempat, bukan tersebar di controller. Laporan yang terverifikasi dirender di peta interaktif, dan pelapor bisa memantau status pengerjaannya.",
-    "contribution": "[ISI: tim berempat — kamu Fullstack Developer, dengan Fikri (UI Designer), Dama (PM), Radit (Document Manager). Karena kamu satu-satunya yang menulis kode, tulis itu terang-terangan: klaim itu kuat dan mudah diverifikasi lewat riwayat commit.]",
-    "outcome": "[ISI: contoh bentuk — Dikerjakan sebagai <proyek akademik apa> selama lima bulan, dengan hasil <nilai / status / penilaian>. Kalau pernah diuji ke pengguna nyata, berapa laporan yang masuk.]"
-  },
-  "kalkulator-sdmk": {
-    "overview": "Kalkulator kebutuhan tenaga kesehatan menurut metode beban kerja Kemenkes. Frontend Next.js yang dipasang di atas backend Google Apps Script dan Spreadsheet yang sudah berjalan dan tidak bisa diganti.",
-    "challenge": "[ISI: ganti <klien/instansi> dengan yang sebenarnya.] Data dan otentikasi sudah tinggal di Google Apps Script dengan Spreadsheet sebagai basis data, dan <klien/instansi> tidak bisa pindah dari sana. Apps Script juga tidak melayani preflight CORS dengan benar, jadi permintaan JSON biasa dari origin frontend terpisah gagal sebelum sampai ke script.",
-    "approach": "Menerima Apps Script apa adanya alih-alih menulis ulang backend. Permintaan dikirim tanpa header Content-Type supaya browser memperlakukannya sebagai simple request dan melewati preflight yang tidak bisa dijawab Apps Script. Perhitungan dipindah ke browser, bukan bolak-balik ke server tiap langkah, supaya formulir tetap responsif di koneksi lambat.",
-    "solution": "Formulir empat langkah — WKT, tugas pokok, tugas penunjang, review — di atas Next.js App Router. sdmk-engine.js menjalankan seluruh rumus di klien, termasuk mode custom yang mengonversi durasi bulan ke minggu dengan faktor 4,33 untuk jadwal shift tak beraturan. Seluruh antarmuka ditulis tanpa pustaka UI: modal, toast, loader, ikon, dan sidebar dibangun sendiri di atas React.",
-    "contribution": "[ISI: solo atau tim?] Seluruh frontend: arsitektur App Router, komponen UI tanpa pustaka pihak ketiga, lapisan auth berbasis token di localStorage, dan port rumus perhitungan dari sistem lama ke sdmk-engine.js. Backend Apps Script tidak saya sentuh.",
-    "outcome": "[ISI: contoh bentuk — Menggantikan <antarmuka lama> untuk <berapa> fasilitas kesehatan. Biaya infrastruktur tetap nol karena backend Spreadsheet tidak berubah. Hasil perhitungan divalidasi terhadap <pembanding apa>.]"
-  },
-  "engineer-coffee": {
-    "overview": "Landing page satu halaman untuk kedai kopi Engineer Coffee: profil brand, menu, lokasi, dan kontak. Dibangun tanpa framework dan tanpa build step, cukup dibuka langsung di browser.",
-    "challenge": "[ISI: apa batasan nyatanya? Kemungkinan: kedai belum punya anggaran hosting, atau pemiliknya harus bisa mengubah teks sendiri tanpa developer. Tulis yang benar — batasan kecil yang jujur lebih bernilai daripada tantangan besar yang dikarang.]",
-    "approach": "Memilih HTML statis dengan Tailwind lewat CDN alih-alih menyiapkan React dan pipeline build. Untuk satu halaman tanpa data dinamis, build step hanya menambah hal yang bisa rusak dan menyulitkan siapa pun yang nanti perlu mengubah isinya.",
-    "solution": "Tata letak mobile-first dengan navigasi smooth-scroll, hero beserta ajakan bertindak, bagian menu, informasi lokasi, dan footer tautan sosial. Seluruh interaksi ditangani JavaScript biasa dalam satu berkas.",
-    "contribution": "[ISI: solo? desainnya kamu juga atau mengikuti materi dari kliennya?] Membangun seluruh halaman dari markup sampai interaksi dan men-deploy-nya ke Vercel.",
-    "outcome": "[ISI: contoh bentuk — Tayang di engineer-coffee.vercel.app sebagai kehadiran daring pertama kedai ini. Kalau ini latihan pribadi dan bukan untuk klien nyata, tulis begitu — itu tetap sah.]"
+
+  "projects": {
+    "exhibitly": {
+      "shared": {
+        "technologies": ["React", "Supabase", "Cloudinary", "Tailwind CSS", "Framer Motion"]
+      },
+      "en": {
+        "tagline": "Online Art Gallery with Uploads, Likes and Comments",
+        "client": "Personal Experimental Project",
+        "duration": "2 Weeks",
+        "overview": "A digital art gallery where artists upload work and visitors respond with likes and comments. Built with no server of its own: Supabase holds the data and authentication, Cloudinary holds the image files.",
+        "challenge": "Artwork is uploaded at high resolution, and storing it as blobs in Supabase would exhaust the storage quota long before the gallery filled up. The app also has no backend of its own, so there was nowhere to process or compress an image between the browser and the database.",
+        "approach": "Separating the files from the metadata rather than keeping both in one place. Cloudinary accepts uploads straight from the browser and returns a URL; Supabase stores only that URL alongside the artwork, likes and comments. The consequence is that no intermediary backend has to be written, deployed or paid for.",
+        "solution": "React Router with a ProtectedRoute component separating public pages from those that need a session, applied in both directions — a signed-in visitor is also kept out of the login page. AuthContext centralises the Supabase session so no authentication state is scattered across pages. A complete password reset flow, from request through to the update page.",
+        "contribution": "[FILL: solo or a team? If a team, name the parts that were not yours.] Built the entire frontend: routing and session guards, the Supabase Auth integration, the Cloudinary upload flow, and the per-artwork likes and comments.",
+        "outcome": "[FILL: if nobody else has used it, say so plainly — that still reads stronger than an empty claim. Shape: Running at <URL>, with <how many> works uploaded over <period>. Storage costs nothing because every file is served from Cloudinary's free tier.]"
+      },
+      "id": {
+        "tagline": "Galeri Seni Daring dengan Unggahan, Like, dan Komentar",
+        "client": "Proyek Eksperimen Pribadi",
+        "duration": "2 Minggu",
+        "overview": "Galeri seni digital tempat seniman mengunggah karya dan pengunjung memberi apresiasi lewat like dan komentar. Dibangun tanpa server sendiri: Supabase memegang data dan autentikasi, Cloudinary memegang berkas gambarnya.",
+        "challenge": "Karya seni diunggah dalam resolusi tinggi, dan menyimpannya sebagai blob di Supabase akan menghabiskan kuota storage jauh sebelum galerinya terisi. Aplikasi ini juga tidak punya backend sendiri, jadi tidak ada tempat untuk memproses atau mengompresi gambar di antara browser dan database.",
+        "approach": "Memisahkan berkas dari metadata alih-alih menyimpan keduanya di satu tempat. Cloudinary menerima unggahan langsung dari browser dan mengembalikan URL; Supabase hanya menyimpan URL itu beserta data karya, like, dan komentar. Konsekuensinya tidak ada backend perantara yang perlu ditulis, di-deploy, atau dibayar.",
+        "solution": "React Router dengan komponen ProtectedRoute yang memisahkan halaman publik dari halaman yang butuh sesi, dipakai dua arah — pengguna yang sudah login juga dicegah membuka halaman login. AuthContext memusatkan sesi Supabase supaya tidak ada state autentikasi yang tercecer di tiap halaman. Alur reset kata sandi lengkap, dari permintaan sampai halaman pembaruan.",
+        "contribution": "[ISI: solo atau tim? Kalau tim, sebut bagian yang bukan kamu.] Membangun seluruh frontend: routing dan guard sesi, integrasi Supabase Auth, alur unggah ke Cloudinary, serta fitur like dan komentar per karya.",
+        "outcome": "[ISI: kalau belum dipakai orang lain, tulis apa adanya — itu tetap lebih kuat daripada klaim kosong. Contoh bentuk: Berjalan di <URL>, dengan <berapa> karya terunggah selama <periode>. Biaya penyimpanan tetap nol karena seluruh berkas dilayani dari tier gratis Cloudinary.]"
+      }
+    },
+
+    "spk-property-backend": {
+      "en": {
+        "tagline": "Decision Support API: AHP Weighting with Four Ranking Methods",
+        "client": "Academic / Independent",
+        "duration": "±2 Months",
+        "overview": "A REST API for a property selection decision support system. Users define criteria, set weights through AHP pairwise comparison, then rank alternatives with four methods at once so the results can be compared.",
+        "challenge": "SAW, SMART, WP and TOPSIS each normalise data differently, yet all four have to draw on one set of AHP weights and one shared data structure. Bolting all four onto a single controller would mean that adding a fifth method later takes apart code that already works.",
+        "approach": "Splitting responsibility by layer rather than by feature: controllers only translate HTTP, services hold the mathematics, repositories hold the queries. Each ranking method stands as its own service, so AHP computes the weights once and all four consume them through the same interface.",
+        "solution": "Express over PostgreSQL, run through Docker Compose. AHP derives weights from a pairwise comparison matrix; SAW, SMART, WP and TOPSIS rank the alternatives using them. A Dataset Generator endpoint pivots the relational data into tabular form so a scikit-learn model in a separate FastAPI service can consume it directly. JWT authentication with bcrypt, and every endpoint documented in Swagger OpenAPI 3.0.",
+        "contribution": "Built the decision support side: the database schema, the layered controller-service-repository architecture, AHP weighting, all four ranking methods, and JWT authentication. The machine learning layer — its endpoint, service and integration — was written by [FILL: teammate's full name; their GitHub handle is nabil142] as a separate piece.",
+        "outcome": "Completed as an academic project over roughly two months. Every endpoint is documented in Swagger OpenAPI and the environment is reproducible through Docker Compose, so a reviewer can run it without setting up a database by hand. [FILL: were the AHP results ever validated? Give the consistency ratio, a comparison against manual calculation, or a test dataset. If not, replace this sentence with: \"The four methods' rankings have not been validated against real data.\"]"
+      },
+      "id": {
+        "tagline": "API Pendukung Keputusan: Pembobotan AHP dengan Empat Metode Perankingan",
+        "client": "Akademik / Mandiri",
+        "duration": "±2 Bulan",
+        "overview": "REST API untuk sistem pendukung keputusan pemilihan properti. Pengguna menyusun kriteria, menetapkan bobot lewat perbandingan berpasangan AHP, lalu memeringkat alternatif dengan empat metode sekaligus untuk membandingkan hasilnya.",
+        "challenge": "SAW, SMART, WP, dan TOPSIS menormalisasi data dengan cara yang berbeda-beda, tapi keempatnya harus memakai satu sumber bobot dari AHP dan satu struktur data yang sama. Menempelkan keempatnya ke satu controller berarti setiap penambahan metode kelima membongkar kode yang sudah berjalan.",
+        "approach": "Memisahkan tanggung jawab per lapisan alih-alih per fitur: controller hanya menerjemahkan HTTP, service memegang matematikanya, repository memegang query. Tiap metode perankingan berdiri sebagai service sendiri, jadi AHP menghitung bobot satu kali dan keempat metode mengonsumsinya lewat antarmuka yang sama.",
+        "solution": "Express di atas PostgreSQL, dijalankan lewat Docker Compose. AHP menurunkan bobot dari matriks perbandingan berpasangan; SAW, SMART, WP, dan TOPSIS memeringkat alternatif memakai bobot tersebut. Endpoint Dataset Generator mem-pivot data relasional menjadi tabular agar bisa langsung dikonsumsi model scikit-learn di layanan FastAPI terpisah. Otentikasi JWT dengan bcrypt, seluruh endpoint terdokumentasi di Swagger OpenAPI 3.0.",
+        "contribution": "Membangun sisi sistem pendukung keputusannya: skema basis data, arsitektur berlapis controller-service-repository, pembobotan AHP, keempat metode perankingan, dan otentikasi JWT. Lapisan machine learning — endpoint, service, dan integrasinya — dikerjakan [ISI: nama lengkap rekan tim, handle GitHub-nya nabil142] sebagai bagian terpisah.",
+        "outcome": "Selesai sebagai proyek akademik dalam waktu sekitar dua bulan. Seluruh endpoint terdokumentasi di Swagger OpenAPI dan lingkungannya dapat direproduksi lewat Docker Compose, sehingga penguji bisa menjalankannya tanpa menyiapkan basis data secara manual. [ISI: hasil AHP pernah divalidasi? Sebutkan consistency ratio, perbandingan dengan hitungan manual, atau data uji. Kalau belum, ganti kalimat ini dengan: \"Peringkat keempat metode belum divalidasi terhadap data nyata.\"]"
+      }
+    },
+
+    "finote": {
+      "shared": {
+        "technologies": ["Kotlin", "Jetpack Compose", "CameraX", "ML Kit", "Supabase"]
+      },
+      "en": {
+        "tagline": "Personal Finance App with Receipt Scanning",
+        "client": "Personal Project",
+        "duration": "±3 Months",
+        "overview": "An Android personal finance app with a savings goal tracker. Beyond manual entry, users can photograph a shopping receipt and have the amount read automatically by OCR.",
+        "challenge": "The main reason people stop tracking their finances is retyping every transaction. But receipts have no standard layout — the total sits in a different place at every shop, so there is no fixed coordinate to read from.",
+        "approach": "Making the camera the primary way in rather than an extra feature. OCR results are deliberately not saved straight away: the amount that was read is shown first in a form that can be corrected, because one wrong reading saved silently damages trust far more than typing it by hand.",
+        "solution": "A Jetpack Compose interface with Navigation and a bottom bar. CameraX captures the receipt and ML Kit reads the text on-device, without sending the photo to a server. Transactions and savings goals live in Supabase so they sync across devices, with sign-in through Supabase Auth and Google Credential Manager.",
+        "contribution": "[FILL: a team of three with Yehezkiel and Erza, all Android Developers. Name the split — which parts were yours, which were not. This raises credibility rather than lowering it.]",
+        "outcome": "[FILL: the number that matters most here is OCR accuracy. Shape: Receipts were read correctly in <how many> of <how many> test receipts from <how many> different shops. If it was never tested systematically, say so — that is honest and still informative.]"
+      },
+      "id": {
+        "tagline": "Aplikasi Keuangan Pribadi dengan Pemindaian Struk",
+        "client": "Proyek Pribadi",
+        "duration": "±3 Bulan",
+        "overview": "Aplikasi Android pencatat keuangan pribadi dengan pelacak target tabungan. Selain input manual, pengguna bisa memotret struk belanja dan nominalnya dibaca otomatis lewat OCR.",
+        "challenge": "Alasan utama orang berhenti mencatat keuangan adalah mengetik ulang tiap transaksi. Tapi struk belanja tidak punya tata letak baku — posisi nominal total berbeda di tiap toko, jadi tidak ada koordinat tetap yang bisa dijadikan patokan pembacaan.",
+        "approach": "Menjadikan kamera sebagai jalur masuk utama, bukan fitur tambahan. Hasil OCR sengaja tidak langsung disimpan: nominal yang terbaca ditampilkan lebih dulu di form yang bisa dikoreksi, karena satu pembacaan salah yang diam-diam tersimpan merusak kepercayaan lebih parah daripada mengetik manual.",
+        "solution": "Antarmuka Jetpack Compose dengan Navigation dan bottom bar. CameraX mengambil gambar struk dan ML Kit membaca teksnya di perangkat, tanpa mengirim foto ke server. Data transaksi dan target tabungan disimpan di Supabase sehingga tersinkron antar perangkat, dengan login lewat Supabase Auth dan Google Credential Manager.",
+        "contribution": "[ISI: tim bertiga bersama Yehezkiel dan Erza, ketiganya Android Developer. Sebutkan pembagiannya — bagian mana yang kamu pegang, bagian mana yang bukan. Ini menaikkan kredibilitas, bukan menurunkannya.]",
+        "outcome": "[ISI: angka paling relevan di sini adalah akurasi OCR. Contoh bentuk: Pembacaan struk berhasil pada <berapa> dari <berapa> struk uji dari <berapa> toko berbeda. Kalau belum diuji sistematis, tulis begitu — itu jujur dan tetap informatif.]"
+      }
+    },
+
+    "travel-backend": {
+      "shared": {
+        "technologies": ["Laravel", "PHP", "MySQL", "Laravel Sanctum", "Xendit", "Midtrans", "Cloudinary"]
+      },
+      "en": {
+        "tagline": "Travel Booking API with Dual Payment Gateways",
+        "client": "Independent Project",
+        "duration": "±1 Month",
+        "overview": "A REST API for a travel booking platform: destinations, trip packages, bookings and payments. Built as a backend for web and mobile clients to consume.",
+        "challenge": "Payment determines a booking's status, but confirmation arrives later and from outside — through the provider's webhook, not the user's request. A booking needs a clear state while it waits, and must not change twice if the same webhook is delivered again.",
+        "approach": "[FILL: why two gateways, Xendit and Midtrans? A fallback, different payment methods, or a client requirement? The reason is the interesting part.] Gateway calls are isolated in their own service rather than sitting in a controller, so a provider can be swapped without touching the booking flow.",
+        "solution": "Laravel with Sanctum for token authentication, so the API serves web and mobile clients without sessions. The destination-package-booking relationships are laid out through Eloquent and migrations. XenditService wraps communication with the payment provider, and media files are served from Cloudinary rather than the application server.",
+        "contribution": "The whole backend was built solo: the database schema and migrations, the API layer from routes through controllers, token authentication with Sanctum, and the wiring to both payment providers.",
+        "outcome": "An independent project finished in roughly a month, with every endpoint documented through OpenAPI and browsable in Swagger UI. It has not been used by a real client. [FILL: was the payment flow exercised against the Xendit/Midtrans sandbox, or did it stop at implementation? Say which.]"
+      },
+      "id": {
+        "tagline": "API Pemesanan Wisata dengan Dua Gerbang Pembayaran",
+        "client": "Proyek Mandiri",
+        "duration": "±1 Bulan",
+        "overview": "REST API untuk platform pemesanan wisata: destinasi, paket perjalanan, pemesanan, dan pembayaran. Dibangun sebagai backend yang dikonsumsi klien web maupun mobile.",
+        "challenge": "Pembayaran menentukan status pemesanan, tapi konfirmasinya datang belakangan dan dari luar — lewat webhook penyedia, bukan dari permintaan pengguna. Pemesanan harus punya keadaan yang jelas selama menunggu, dan tidak boleh berubah dua kali kalau webhook yang sama terkirim ulang.",
+        "approach": "[ISI: kenapa dua gateway — Xendit dan Midtrans? Cadangan, beda metode bayar, atau permintaan klien? Alasannya justru bagian menariknya.] Pemanggilan gateway dipisahkan ke service tersendiri, bukan ditaruh di controller, supaya penyedia bisa ditukar tanpa menyentuh alur pemesanan.",
+        "solution": "Laravel dengan Sanctum sebagai otentikasi berbasis token, sehingga API bisa dipakai klien web maupun mobile tanpa sesi. Relasi destinasi–paket–pemesanan ditata lewat Eloquent dan migrasi. XenditService membungkus komunikasi ke penyedia pembayaran, dan berkas media dilayani dari Cloudinary alih-alih disimpan di server aplikasi.",
+        "contribution": "Seluruh backend dikerjakan sendiri: skema basis data dan migrasi, lapisan API dari rute sampai controller, otentikasi token dengan Sanctum, serta penyambungan ke kedua penyedia pembayaran.",
+        "outcome": "Proyek mandiri yang selesai dalam waktu sekitar satu bulan, dengan seluruh endpoint terdokumentasi lewat OpenAPI dan bisa dijelajahi di Swagger UI. Belum dipakai klien nyata. [ISI: alur pembayaran sudah diuji lewat sandbox Xendit/Midtrans, atau berhenti di tahap implementasi? Tulis yang benar.]"
+      }
+    },
+
+    "re-enviro": {
+      "en": {
+        "tagline": "Volunteering and Green Funding Platform",
+        "client": "ASCEND Team Project",
+        "duration": "1 Month",
+        "overview": "An environmental action platform with two programmes: EcoAct for signing up to volunteer activities such as tree planting and beach clean-ups, and Dana Hijau for funding environmental projects through open donations.",
+        "challenge": "Two programmes with different flows — joining an activity and giving money — had to live in one application without leaving people unsure where they were. Both also needed the same contribution history, even though what gets recorded differs in kind: attendance versus an amount.",
+        "approach": "Bringing both into a single history page rather than splitting them across two dashboards, so a person's contribution reads as one story. The admin role is separated by its own layout and route guard rather than by conditional checks scattered through every page.",
+        "solution": "React Router with ProtectedRoute and a separate AdminLayout. Supabase handles authentication as well as the database for activities, donations and history. A statistics dashboard summarises contributions per user, and the whole interface supports light and dark through ThemeContext.",
+        "contribution": "[FILL: a team of four — you as Frontend Developer, with Gerard (PM), Katherine (Backend), Tia (UI/UX). State the boundary of your role: which parts of the frontend you built, and whether the Supabase schema was yours or Katherine's.]",
+        "outcome": "[FILL: shape — Built for <which competition / course / community>, with <placing, grade, or status> as the result. If anyone actually used it: how many activities or donations were recorded.]"
+      },
+      "id": {
+        "tagline": "Platform Relawan dan Pendanaan Hijau",
+        "client": "Proyek Tim ASCEND",
+        "duration": "1 Bulan",
+        "overview": "Platform aksi lingkungan dengan dua program: EcoAct untuk mendaftar kegiatan relawan seperti penanaman pohon dan bersih pantai, dan Dana Hijau untuk mendanai proyek lingkungan lewat donasi terbuka.",
+        "challenge": "Dua program dengan alur yang berbeda — mendaftar kegiatan dan menyumbang dana — harus tinggal di satu aplikasi tanpa membuat penggunanya bingung berada di mana. Keduanya juga perlu riwayat kontribusi yang sama, padahal yang dicatat berbeda bentuk: kehadiran versus nominal.",
+        "approach": "Menyatukan keduanya di satu halaman riwayat alih-alih memisahkan dua dasbor, sehingga kontribusi pengguna terbaca sebagai satu cerita. Peran admin dipisahkan lewat layout dan guard rute tersendiri, bukan lewat pengecekan kondisi yang tersebar di tiap halaman.",
+        "solution": "React Router dengan ProtectedRoute dan AdminLayout terpisah. Supabase menangani autentikasi sekaligus basis data untuk kegiatan, donasi, dan riwayat. Dasbor statistik merangkum kontribusi per pengguna, dan seluruh antarmuka mendukung mode terang dan gelap lewat ThemeContext.",
+        "contribution": "[ISI: tim berempat — kamu Frontend Developer, dengan Gerard (PM), Katherine (Backend), Tia (UI/UX). Sebutkan batas peranmu: bagian frontend mana yang kamu kerjakan, dan skema Supabase-nya kamu atau Katherine.]",
+        "outcome": "[ISI: contoh bentuk — Dikerjakan untuk <lomba / mata kuliah / komunitas apa>, dengan hasil <peringkat, nilai, atau status>. Kalau ada yang benar-benar memakai: berapa kegiatan atau donasi yang tercatat.]"
+      }
+    },
+
+    "pantausam": {
+      "shared": {
+        "githuburl": "https://github.com/faidzagustiawan/PantauSAM"
+      },
+      "en": {
+        "tagline": "Community Infrastructure Reporting with Admin Verification",
+        "client": "Academic Project",
+        "duration": "±5 Months",
+        "overview": "A public infrastructure reporting platform. Residents submit damage reports with a location and photo, an admin verifies them, and the ones that pass appear on an interactive map along with their repair status.",
+        "challenge": "Reporting has to be as easy as possible for ordinary residents to bother using, but reports arriving unfiltered fill up with duplicates and pranks — and once a public map fills with noise, the platform's credibility is gone. Typing an address by hand is also error-prone and tedious on a phone.",
+        "approach": "Placing admin verification as a gate between submission and publication, so reporting stays open without sacrificing what ends up on the map. For location, people drop a pin on the map instead of typing an address, which makes the coordinates accurate and the effort much lighter.",
+        "solution": "Laravel 11 with Blade and MySQL. Three levels of role are separated by their own middleware — user, admin and super admin — so the access rules read in one place rather than scattered through controllers. Verified reports render on an interactive map, and the reporter can follow the repair status.",
+        "contribution": "[FILL: a team of four — you as Fullstack Developer, with Fikri (UI Designer), Dama (PM), Radit (Document Manager). Since you were the only one writing code, say so outright: it is a strong claim and easy to verify from the commit history.]",
+        "outcome": "[FILL: shape — Built as <which academic project> over five months, with <grade / status / assessment> as the result. If it was ever tested with real users, how many reports came in.]"
+      },
+      "id": {
+        "tagline": "Pelaporan Infrastruktur Warga dengan Verifikasi Admin",
+        "client": "Proyek Akademik",
+        "duration": "±5 Bulan",
+        "overview": "Platform pelaporan infrastruktur publik. Warga mengirim laporan kerusakan lengkap dengan lokasi dan foto, admin memverifikasinya, lalu laporan yang lolos tampil di peta interaktif beserta status pengerjaannya.",
+        "challenge": "Pelaporan harus semudah mungkin supaya warga awam mau memakainya, tapi laporan yang masuk tanpa saringan akan penuh duplikat dan kiriman iseng — dan begitu peta publik terisi sampah, kredibilitas platformnya habis. Mengetik alamat manual juga rawan salah dan melelahkan di ponsel.",
+        "approach": "Menaruh verifikasi admin sebagai gerbang antara pengiriman dan publikasi, sehingga pelaporan tetap terbuka tanpa mengorbankan isi peta. Untuk lokasi, pengguna menandai titik di peta alih-alih mengetik alamat, jadi koordinatnya akurat dan usaha pengisiannya jauh lebih ringan.",
+        "solution": "Laravel 11 dengan Blade dan MySQL. Tiga tingkat peran dipisahkan lewat middleware terpisah — pengguna, admin, dan super admin — sehingga aturan aksesnya terbaca di satu tempat, bukan tersebar di controller. Laporan yang terverifikasi dirender di peta interaktif, dan pelapor bisa memantau status pengerjaannya.",
+        "contribution": "[ISI: tim berempat — kamu Fullstack Developer, dengan Fikri (UI Designer), Dama (PM), Radit (Document Manager). Karena kamu satu-satunya yang menulis kode, tulis itu terang-terangan: klaim itu kuat dan mudah diverifikasi lewat riwayat commit.]",
+        "outcome": "[ISI: contoh bentuk — Dikerjakan sebagai <proyek akademik apa> selama lima bulan, dengan hasil <nilai / status / penilaian>. Kalau pernah diuji ke pengguna nyata, berapa laporan yang masuk.]"
+      }
+    },
+
+    "kalkulator-sdmk": {
+      "en": {
+        "tagline": "Health Workforce Calculator over a Spreadsheet Backend",
+        "client": "Healthcare Sector",
+        "duration": "±1 Month",
+        "overview": "A calculator for health workforce requirements under the Ministry of Health's workload method. A Next.js frontend fitted over an existing Google Apps Script and Spreadsheet backend that could not be replaced.",
+        "challenge": "[FILL: replace <client> with the real one.] The data and authentication already lived in Google Apps Script with a Spreadsheet as the database, and <client> could not move off it. Apps Script also does not answer CORS preflight properly, so an ordinary JSON request from a separate frontend origin fails before it reaches the script.",
+        "approach": "Taking Apps Script as it is rather than rewriting the backend. Requests are sent without a Content-Type header so the browser treats them as a simple request and skips the preflight Apps Script cannot answer. The calculation moved into the browser rather than round-tripping to the server at every step, keeping the form responsive on a slow connection.",
+        "solution": "A four-step form — WKT, primary tasks, supporting tasks, review — on the Next.js App Router. sdmk-engine.js runs every formula on the client, including a custom mode that converts a duration in months to weeks with a factor of 4.33 for irregular shift patterns. The whole interface is written without a UI library: modal, toast, loader, icons and sidebar are all built on plain React.",
+        "contribution": "[FILL: solo or a team?] The entire frontend: the App Router architecture, UI components with no third-party library, a token-based auth layer in localStorage, and porting the calculation formulas from the old system into sdmk-engine.js. The Apps Script backend was left untouched.",
+        "outcome": "[FILL: shape — Replaced <the old interface> for <how many> health facilities. Infrastructure costs stayed at zero because the Spreadsheet backend did not change. Results were validated against <what benchmark>.]"
+      },
+      "id": {
+        "tagline": "Kalkulator Tenaga Kesehatan di Atas Backend Spreadsheet",
+        "client": "Sektor Kesehatan",
+        "duration": "±1 Bulan",
+        "overview": "Kalkulator kebutuhan tenaga kesehatan menurut metode beban kerja Kemenkes. Frontend Next.js yang dipasang di atas backend Google Apps Script dan Spreadsheet yang sudah berjalan dan tidak bisa diganti.",
+        "challenge": "[ISI: ganti <klien/instansi> dengan yang sebenarnya.] Data dan otentikasi sudah tinggal di Google Apps Script dengan Spreadsheet sebagai basis data, dan <klien/instansi> tidak bisa pindah dari sana. Apps Script juga tidak melayani preflight CORS dengan benar, jadi permintaan JSON biasa dari origin frontend terpisah gagal sebelum sampai ke script.",
+        "approach": "Menerima Apps Script apa adanya alih-alih menulis ulang backend. Permintaan dikirim tanpa header Content-Type supaya browser memperlakukannya sebagai simple request dan melewati preflight yang tidak bisa dijawab Apps Script. Perhitungan dipindah ke browser, bukan bolak-balik ke server tiap langkah, supaya formulir tetap responsif di koneksi lambat.",
+        "solution": "Formulir empat langkah — WKT, tugas pokok, tugas penunjang, review — di atas Next.js App Router. sdmk-engine.js menjalankan seluruh rumus di klien, termasuk mode custom yang mengonversi durasi bulan ke minggu dengan faktor 4,33 untuk jadwal shift tak beraturan. Seluruh antarmuka ditulis tanpa pustaka UI: modal, toast, loader, ikon, dan sidebar dibangun sendiri di atas React.",
+        "contribution": "[ISI: solo atau tim?] Seluruh frontend: arsitektur App Router, komponen UI tanpa pustaka pihak ketiga, lapisan auth berbasis token di localStorage, dan port rumus perhitungan dari sistem lama ke sdmk-engine.js. Backend Apps Script tidak saya sentuh.",
+        "outcome": "[ISI: contoh bentuk — Menggantikan <antarmuka lama> untuk <berapa> fasilitas kesehatan. Biaya infrastruktur tetap nol karena backend Spreadsheet tidak berubah. Hasil perhitungan divalidasi terhadap <pembanding apa>.]"
+      }
+    },
+
+    "engineer-coffee": {
+      "en": {
+        "tagline": "One-Page Coffee Shop Site, No Build Step",
+        "client": "Independent Coffee Brand",
+        "duration": "1 Week",
+        "overview": "A one-page landing site for the Engineer Coffee shop: brand profile, menu, location and contact. Built with no framework and no build step — it opens straight from a file in the browser.",
+        "challenge": "[FILL: what was the real constraint? Possibilities: the shop had no hosting budget, or the owner needed to edit the text without a developer. Write the true one — a small honest constraint is worth more than a large invented challenge.]",
+        "approach": "Choosing static HTML with Tailwind over a CDN rather than setting up React and a build pipeline. For a single page with no dynamic data, a build step only adds something that can break and makes it harder for whoever edits the content later.",
+        "solution": "A mobile-first layout with smooth-scroll navigation, a hero with a call to action, a menu section, location details and a footer of social links. Every interaction is handled by plain JavaScript in a single file.",
+        "contribution": "[FILL: solo? was the design yours too, or supplied by the client?] Built the whole page from markup through interaction and deployed it to Vercel.",
+        "outcome": "[FILL: shape — Live at engineer-coffee.vercel.app as the shop's first online presence. If this was personal practice rather than real client work, say so — that is perfectly legitimate.]"
+      },
+      "id": {
+        "tagline": "Situs Satu Halaman Kedai Kopi, Tanpa Build Step",
+        "client": "Brand Kopi Independen",
+        "duration": "1 Minggu",
+        "overview": "Landing page satu halaman untuk kedai kopi Engineer Coffee: profil brand, menu, lokasi, dan kontak. Dibangun tanpa framework dan tanpa build step, cukup dibuka langsung di browser.",
+        "challenge": "[ISI: apa batasan nyatanya? Kemungkinan: kedai belum punya anggaran hosting, atau pemiliknya harus bisa mengubah teks sendiri tanpa developer. Tulis yang benar — batasan kecil yang jujur lebih bernilai daripada tantangan besar yang dikarang.]",
+        "approach": "Memilih HTML statis dengan Tailwind lewat CDN alih-alih menyiapkan React dan pipeline build. Untuk satu halaman tanpa data dinamis, build step hanya menambah hal yang bisa rusak dan menyulitkan siapa pun yang nanti perlu mengubah isinya.",
+        "solution": "Tata letak mobile-first dengan navigasi smooth-scroll, hero beserta ajakan bertindak, bagian menu, informasi lokasi, dan footer tautan sosial. Seluruh interaksi ditangani JavaScript biasa dalam satu berkas.",
+        "contribution": "[ISI: solo? desainnya kamu juga atau mengikuti materi dari kliennya?] Membangun seluruh halaman dari markup sampai interaksi dan men-deploy-nya ke Vercel.",
+        "outcome": "[ISI: contoh bentuk — Tayang di engineer-coffee.vercel.app sebagai kehadiran daring pertama kedai ini. Kalau ini latihan pribadi dan bukan untuk klien nyata, tulis begitu — itu tetap sah.]"
+      }
+    }
   }
 }

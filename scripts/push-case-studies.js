@@ -1,13 +1,17 @@
 /**
  * Pushes content/case-studies.json into the PocketBase `projects` collection.
  *
+ * The file is keyed by locale. English goes into the base fields, Indonesian
+ * into their `_id` counterparts, and anything under `shared` is written once
+ * because it does not get translated.
+ *
  * Two rules make this safe to run repeatedly:
  *
- *   1. Any value still containing "[ISI" is skipped. Those are the parts only
- *      Faidz can write — client names, user counts, team split — and publishing
- *      the bracket text would be worse than leaving the old copy in place.
- *   2. Every record is backed up to scripts/.pb-content-backup-<ts>.json before
- *      the first write, so a bad run can be undone.
+ *   1. Any value still containing a fill marker is skipped. Those are the parts
+ *      only Faidz can write — client names, user counts, team split — and
+ *      publishing the bracket text would be worse than leaving the old copy.
+ *   2. Every record is backed up before the first write, so a bad run can be
+ *      undone from scripts/.pb-content-backup-<ts>.json.
  *
  *   pnpm pb:content -- --dry-run    report what would change, send nothing
  *   pnpm pb:content                 apply it
@@ -22,12 +26,22 @@ const PB_URL = (process.env.VITE_PB_URL || 'https://faidz.fun/pb').replace(/\/+$
 const SOURCE = path.join(root, 'content', 'case-studies.json')
 
 const DRY_RUN = process.argv.includes('--dry-run')
-const PLACEHOLDER = '[ISI'
 
-const isIncomplete = (value) => typeof value === 'string' && value.includes(PLACEHOLDER)
+// Written in whichever language the block is, so both read naturally to the
+// person filling them in.
+const FILL_MARKERS = ['[ISI', '[FILL']
+const LOCALE_SUFFIX = { en: '', id: '_id' }
 
-/** This instance predates the _superusers collection, so try both routes. */
-async function authenticate(email, password) {
+const isIncomplete = (value) =>
+  typeof value === 'string' && FILL_MARKERS.some((marker) => value.includes(marker))
+
+async function authenticate() {
+  const identity = process.env.PB_ADMIN_EMAIL
+  const password = process.env.PB_ADMIN_PASSWORD || process.env.ADMIN_PASSWORD
+  if (!identity || !password) {
+    throw new Error('set PB_ADMIN_EMAIL and PB_ADMIN_PASSWORD (or ADMIN_PASSWORD) in .env')
+  }
+
   for (const url of [
     `${PB_URL}/api/collections/_superusers/auth-with-password`,
     `${PB_URL}/api/admins/auth-with-password`,
@@ -35,11 +49,11 @@ async function authenticate(email, password) {
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ identity: email, email, password }),
+      body: JSON.stringify({ identity, email: identity, password }),
     })
     if (response.ok) return (await response.json()).token
     if (response.status !== 404) {
-      throw new Error(`auth failed (${response.status}) — check PB_ADMIN_EMAIL and PB_ADMIN_PASSWORD`)
+      throw new Error(`auth failed (${response.status}) — check the credentials in .env`)
     }
   }
   throw new Error('no usable auth endpoint — check VITE_PB_URL')
@@ -67,22 +81,28 @@ async function patchRecord(token, id, fields) {
 
 const same = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 
-function main() {
-  const content = JSON.parse(readFileSync(SOURCE, 'utf8'))
-  const email = process.env.PB_ADMIN_EMAIL
-  const password = process.env.PB_ADMIN_PASSWORD || process.env.ADMIN_PASSWORD
+/** Flattens the locale-keyed entry into the field names PocketBase expects. */
+function flatten(entry) {
+  const out = {}
 
-  if (!DRY_RUN && (!email || !password)) {
-    console.error('Set PB_ADMIN_EMAIL and PB_ADMIN_PASSWORD in .env (never .env.production).')
-    process.exitCode = 1
-    return
+  for (const [field, value] of Object.entries(entry.shared || {})) {
+    out[field] = value
   }
 
-  return run(content, email, password)
+  for (const [locale, suffix] of Object.entries(LOCALE_SUFFIX)) {
+    for (const [field, value] of Object.entries(entry[locale] || {})) {
+      out[`${field}${suffix}`] = value
+    }
+  }
+
+  return out
 }
 
-async function run(content, email, password) {
-  const token = DRY_RUN ? null : await authenticate(email, password)
+async function main() {
+  const file = JSON.parse(readFileSync(SOURCE, 'utf8'))
+  const projects = file.projects || {}
+
+  const token = DRY_RUN ? null : await authenticate()
   const records = await fetchRecords(token)
   const bySlug = new Map(records.map((r) => [r.slug, r]))
 
@@ -95,49 +115,46 @@ async function run(content, email, password) {
   let written = 0
   let held = 0
 
-  for (const [slug, fields] of Object.entries(content)) {
-    if (slug.startsWith('_')) continue
-
+  for (const [slug, entry] of Object.entries(projects)) {
     const record = bySlug.get(slug)
     if (!record) {
       console.error(`  ✗ ${slug.padEnd(22)} no record with this slug`)
       continue
     }
 
+    const desired = flatten(entry)
     const changes = {}
     const skipped = []
-    const unchanged = []
 
-    for (const [field, value] of Object.entries(fields)) {
+    for (const [field, value] of Object.entries(desired)) {
       if (isIncomplete(value)) {
         skipped.push(field)
         continue
       }
-      // technologies comes back as an array or a JSON string depending on the field type.
+      // technologies comes back as an array or a JSON string depending on type.
       const current =
         field === 'technologies' && typeof record[field] === 'string'
           ? JSON.parse(record[field])
           : record[field]
 
-      if (same(current, value)) unchanged.push(field)
-      else changes[field] = value
+      if (!same(current, value)) changes[field] = value
     }
 
     const changed = Object.keys(changes)
     held += skipped.length
 
     if (changed.length === 0) {
-      console.log(`  = ${slug.padEnd(22)} tidak ada perubahan${skipped.length ? `  · ditahan: ${skipped.join(', ')}` : ''}`)
+      console.log(`  = ${slug.padEnd(22)} tidak ada perubahan${skipped.length ? `  · ditahan ${skipped.length}` : ''}`)
       continue
     }
 
     if (DRY_RUN) {
-      console.log(`  · ${slug.padEnd(22)} akan tulis: ${changed.join(', ')}`)
+      console.log(`  · ${slug.padEnd(22)} akan tulis ${changed.length}: ${changed.join(', ')}`)
     } else {
       try {
         await patchRecord(token, record.id, changes)
         written += changed.length
-        console.log(`  → ${slug.padEnd(22)} ditulis: ${changed.join(', ')}`)
+        console.log(`  → ${slug.padEnd(22)} ditulis ${changed.length}: ${changed.join(', ')}`)
       } catch (err) {
         console.error(`  ✗ ${slug.padEnd(22)} ${err.message}`)
         continue
@@ -145,21 +162,20 @@ async function run(content, email, password) {
     }
 
     if (skipped.length) console.log(`    ${' '.repeat(22)} ditahan: ${skipped.join(', ')}`)
-    if (unchanged.length) console.log(`    ${' '.repeat(22)} sudah sama: ${unchanged.join(', ')}`)
   }
 
   console.log()
   if (DRY_RUN) {
-    console.log(`[dry run] ${held} field ditahan karena masih memuat "${PLACEHOLDER}". Tidak ada yang dikirim.`)
+    console.log(`[dry run] ${held} field ditahan karena masih ada penanda isian. Tidak ada yang dikirim.`)
   } else {
-    console.log(`[selesai] ${written} field ditulis, ${held} ditahan karena masih memuat "${PLACEHOLDER}".`)
+    console.log(`[selesai] ${written} field ditulis, ${held} ditahan.`)
     if (written > 0) {
       console.log('Halaman di-prerender saat build — jalankan deploy supaya perubahan ini tayang.')
     }
   }
 }
 
-Promise.resolve(main()).catch((err) => {
+main().catch((err) => {
   console.error(err.message)
   process.exitCode = 1
 })

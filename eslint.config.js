@@ -49,5 +49,10 @@ export default defineConfig([
       globals: globals.node,
       parserOptions: { sourceType: 'module' },
     },
+    rules: {
+      // Destructuring a few keys out in order to drop them from the rest is the
+      // clearest way to omit fields; the named bindings are meant to be unused.
+      'no-unused-vars': ['error', { ignoreRestSiblings: true, argsIgnorePattern: '^_' }],
+    },
   },
 ])
