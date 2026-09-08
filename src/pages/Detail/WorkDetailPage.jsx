@@ -1,12 +1,13 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowLeft, ArrowUpRight, ExternalLink } from 'lucide-react'
 import { useProjects } from '@/context/projects-context'
-import { NoLiveUrlModal } from './NoLiveUrlModal'
+import { AccessNotice, ProjectPreview } from './ProjectPreview'
+import { ProductTour } from './ProductTour'
+import { SnippetConsole } from './SnippetConsole'
 import { TeamSection } from './TeamSection'
 import { SmartImage } from '@/components/UI/SmartImage'
-import { ProjectMedia } from '@/components/UI/ProjectMedia'
 import SEO from '@/components/SEO'
 import { useCopy } from '@/i18n/locale-context'
 
@@ -56,7 +57,6 @@ const Prose = ({ children }) => (
 export default function ProjectDetailPage() {
   const { slug } = useParams()
   const { projects, isLoading, error } = useProjects()
-  const [isModalOpen, setIsModalOpen] = useState(false)
   const copy = useCopy().detail
 
   if (isLoading) {
@@ -103,12 +103,15 @@ export default function ProjectDetailPage() {
   const teamStep = sections.length + 1
   const outcomeStep = teamStep + (project.team.length > 0 ? 1 : 0)
 
-  const handleMissingLink = (value) => (e) => {
-    if (!value) {
-      e.preventDefault()
-      setIsModalOpen(true)
-    }
-  }
+  const links = [
+    project.access === 'public' && project.liveUrl && { href: project.liveUrl, label: copy.viewLive },
+    project.demoUrl && { href: project.demoUrl, label: copy.viewDemo },
+    // One entry per repository, labelled when a project has more than one part.
+    ...project.repos.map((repo) => ({
+      href: repo.url,
+      label: repo.label ? `${copy.viewSource} · ${repo.label}` : copy.viewSource,
+    })),
+  ].filter(Boolean)
 
   return (
     <main
@@ -121,12 +124,6 @@ export default function ProjectDetailPage() {
         image={project.image || `/og/${project.slug}.jpg`}
         url={`/work/${project.slug}`}
         type="article"
-      />
-
-      <NoLiveUrlModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        projectName={project.name}
       />
 
       {/* --- HERO --- */}
@@ -222,17 +219,17 @@ export default function ProjectDetailPage() {
         </section>
       )}
 
-      {/* --- HERO MEDIA --- */}
+      {/* --- PREVIEW --- */}
       <section className="px-6 md:px-12 lg:px-16 max-w-7xl mx-auto py-16 md:py-24">
         <ScaleIn>
-          <div className="aspect-video w-full bg-neutral-900 border border-neutral-800 rounded-xl overflow-hidden relative">
-            <ProjectMedia project={project} priority className="w-full h-full object-cover" />
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 bg-linear-to-t from-neutral-950/50 to-transparent pointer-events-none"
-            />
-          </div>
+          <ProjectPreview project={project} />
         </ScaleIn>
+
+        <FadeUp delay={0.1}>
+          <div className="mt-6">
+            <AccessNotice project={project} />
+          </div>
+        </FadeUp>
       </section>
 
       {/* --- NARRATIVE --- */}
@@ -260,8 +257,38 @@ export default function ProjectDetailPage() {
         )
       )}
 
+      {/* --- WALKTHROUGH --- */}
+      {project.walkthrough.length > 0 && (
+        <section className="px-6 md:px-12 lg:px-16 max-w-7xl mx-auto py-16 md:py-24">
+          <FadeUp>
+            <h2 className="text-sm font-mono uppercase tracking-widest text-neutral-400 mb-4">
+              {copy.tour.eyebrow}
+            </h2>
+            <p className="text-3xl font-bold text-white mb-10">{copy.tour.heading}</p>
+          </FadeUp>
+
+          <ProductTour steps={project.walkthrough} />
+        </section>
+      )}
+
+      {/* --- API --- */}
+      {project.snippets.length > 0 && (
+        <section className="px-6 md:px-12 lg:px-16 max-w-7xl mx-auto py-16 md:py-24">
+          <FadeUp>
+            <h2 className="text-sm font-mono uppercase tracking-widest text-neutral-400 mb-4">
+              {copy.snippets.eyebrow}
+            </h2>
+            <p className="text-3xl font-bold text-white mb-10">{copy.snippets.heading}</p>
+          </FadeUp>
+
+          <FadeUp delay={0.1}>
+            <SnippetConsole snippets={project.snippets} />
+          </FadeUp>
+        </section>
+      )}
+
       {/* --- VISUAL DETAILS --- */}
-      {project.visualDetails.length > 0 && (
+      {project.walkthrough.length === 0 && project.visualDetails.length > 0 && (
         <section className="py-12">
           <div className="px-6 md:px-12 lg:px-16 max-w-7xl mx-auto mb-8">
             <FadeUp>
@@ -294,41 +321,37 @@ export default function ProjectDetailPage() {
       <TeamSection team={project.team} step={teamStep} />
 
       {/* --- OUTCOME --- */}
-      {(project.outcome || project.liveUrl || project.githubUrl) && (
+      {(project.outcome || links.length > 0 || project.sourceHidden) && (
         <section className="px-6 md:px-12 lg:px-16 max-w-7xl mx-auto py-16 md:py-24">
           <div className="p-8 md:p-12 bg-neutral-900 rounded-2xl border border-neutral-800">
             <NumberedSection step={outcomeStep} eyebrow={copy.sections.outcome[0]} heading={copy.sections.outcome[1]}>
               {project.outcome && <Prose>{project.outcome}</Prose>}
 
-              <div className="flex flex-wrap gap-8 mt-8">
-                <a
-                  href={project.liveUrl || '#'}
-                  onClick={handleMissingLink(project.liveUrl)}
-                  target={project.liveUrl ? '_blank' : undefined}
-                  rel={project.liveUrl ? 'noopener noreferrer' : undefined}
-                  className="inline-flex items-center gap-2 text-base font-medium text-white border-b border-white pb-1 hover:text-neutral-400 hover:border-neutral-400 transition-all group"
-                >
-                  {copy.viewLive}
-                  <ExternalLink
-                    aria-hidden="true"
-                    className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                  />
-                </a>
+              {/* Only the links that lead somewhere. A dead "view live" that
+                  opens a dialog explaining itself was worse than its absence. */}
+              {(links.length > 0 || project.sourceHidden) && (
+                <div className="flex flex-wrap items-center gap-8 mt-8">
+                  {links.map((link) => (
+                    <a
+                      key={link.href}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-base font-medium text-white border-b border-white pb-1 hover:text-neutral-400 hover:border-neutral-400 transition-all group"
+                    >
+                      {link.label}
+                      <ExternalLink
+                        aria-hidden="true"
+                        className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                      />
+                    </a>
+                  ))}
 
-                <a
-                  href={project.githubUrl || '#'}
-                  onClick={handleMissingLink(project.githubUrl)}
-                  target={project.githubUrl ? '_blank' : undefined}
-                  rel={project.githubUrl ? 'noopener noreferrer' : undefined}
-                  className="inline-flex items-center gap-2 text-base font-medium text-white border-b border-white pb-1 hover:text-neutral-400 hover:border-neutral-400 transition-all group"
-                >
-                  {copy.viewSource}
-                  <ExternalLink
-                    aria-hidden="true"
-                    className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                  />
-                </a>
-              </div>
+                  {project.sourceHidden && (
+                    <span className="text-base text-neutral-500">{copy.sourceOnRequest}</span>
+                  )}
+                </div>
+              )}
             </NumberedSection>
           </div>
         </section>

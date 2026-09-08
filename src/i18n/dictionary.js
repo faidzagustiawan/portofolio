@@ -103,15 +103,64 @@ export const dictionary = {
       previewAlt: (name) => `${name} — project preview`,
       noPreviewAlt: (name) => `${name} — no preview image yet`,
       viewLive: 'View live project',
+      viewDemo: 'Open the demo',
       viewSource: 'View source',
+      sourceOnRequest: 'Source available on request',
       nextProject: 'Next project',
-      modal: {
-        title: 'No public deployment',
-        body: (name) =>
-          `${name} is not hosted at a public URL right now. I can walk you through it directly, or share access on request.`,
-        cta: 'Ask me about it',
-        dismiss: 'Keep browsing',
-        close: 'Close dialog',
+
+      preview: {
+        liveLabel: 'Live site',
+        demoLabel: 'Demo — dummy data',
+        sandboxLabel: 'Interactive demo — dummy data',
+        load: 'Open the preview',
+        loadHint: 'Opens over this page. Nothing you do in there leaves your browser.',
+        mobileHint: 'The interface is built for a wider screen, so it opens in its own tab.',
+        newTab: 'Open in a new tab',
+        reset: 'Reset',
+        close: 'Close the preview',
+        blockedHint: 'Some sites refuse to be framed. If nothing appears,',
+        frameTitle: (name) => `${name}, running inside this page`,
+        sandboxLoad: 'Start the demo',
+        sandboxLoading: 'Starting…',
+        sandboxHint: 'Every control works. The data is invented and resets when you reload.',
+        sandboxError: 'The demo failed to load. Try reloading the page.',
+      },
+
+      tour: {
+        eyebrow: 'Walkthrough',
+        heading: 'How it works, screen by screen',
+        listLabel: 'Walkthrough steps',
+        stepAlt: (i) => `Walkthrough step ${i}`,
+      },
+
+      snippets: {
+        eyebrow: 'The API',
+        heading: 'What goes in, what comes back',
+        listLabel: 'Endpoints',
+        request: 'Request',
+        response: 'Response',
+        copy: 'Copy',
+        copied: 'Copied',
+      },
+
+      access: {
+        cta: 'Ask for a walkthrough',
+        public: {
+          title: 'Publicly available',
+          body: 'Open it yourself, or preview it here without leaving the page.',
+        },
+        demo: {
+          title: 'Demo environment',
+          body: 'A copy of the real build running on invented data. Nothing you change is saved.',
+        },
+        internal: {
+          title: 'Internal system — not publicly accessible',
+          body: 'It runs inside an organisation, so there is no URL to hand out. The walkthrough below covers the flows in full.',
+        },
+        archived: {
+          title: 'No longer deployed',
+          body: 'The site has been retired, so the walkthrough below is what remains of it.',
+        },
       },
     },
 
@@ -272,15 +321,64 @@ export const dictionary = {
       previewAlt: (name) => `${name} — pratinjau proyek`,
       noPreviewAlt: (name) => `${name} — belum ada gambar pratinjau`,
       viewLive: 'Lihat proyek langsung',
+      viewDemo: 'Buka demonya',
       viewSource: 'Lihat kode sumber',
+      sourceOnRequest: 'Kode sumber bisa diberikan kalau diminta',
       nextProject: 'Proyek berikutnya',
-      modal: {
-        title: 'Belum ada versi publik',
-        body: (name) =>
-          `${name} belum ditayangkan di URL publik. Saya bisa menjelaskannya langsung, atau memberi akses kalau diminta.`,
-        cta: 'Tanya saya soal ini',
-        dismiss: 'Lanjut menjelajah',
-        close: 'Tutup dialog',
+
+      preview: {
+        liveLabel: 'Situs langsung',
+        demoLabel: 'Demo — data contoh',
+        sandboxLabel: 'Demo interaktif — data contoh',
+        load: 'Buka pratinjaunya',
+        loadHint: 'Terbuka menutupi halaman ini. Apa pun yang kamu lakukan di dalamnya tidak keluar dari peramban.',
+        mobileHint: 'Antarmukanya dirancang untuk layar lebar, jadi dibuka di tab sendiri.',
+        newTab: 'Buka di tab baru',
+        reset: 'Ulang',
+        close: 'Tutup pratinjau',
+        blockedHint: 'Sebagian situs menolak dibingkai. Kalau tidak ada yang muncul,',
+        frameTitle: (name) => `${name}, berjalan di dalam halaman ini`,
+        sandboxLoad: 'Mulai demo',
+        sandboxLoading: 'Menyiapkan…',
+        sandboxHint: 'Semua kontrolnya berfungsi. Datanya karangan dan kembali seperti semula begitu dimuat ulang.',
+        sandboxError: 'Demo gagal dimuat. Coba muat ulang halamannya.',
+      },
+
+      tour: {
+        eyebrow: 'Penelusuran',
+        heading: 'Cara kerjanya, layar demi layar',
+        listLabel: 'Langkah penelusuran',
+        stepAlt: (i) => `Langkah penelusuran ${i}`,
+      },
+
+      snippets: {
+        eyebrow: 'API-nya',
+        heading: 'Apa yang masuk, apa yang kembali',
+        listLabel: 'Endpoint',
+        request: 'Permintaan',
+        response: 'Balasan',
+        copy: 'Salin',
+        copied: 'Tersalin',
+      },
+
+      access: {
+        cta: 'Minta dijelaskan',
+        public: {
+          title: 'Terbuka untuk umum',
+          body: 'Buka sendiri, atau lihat pratinjaunya di sini tanpa meninggalkan halaman.',
+        },
+        demo: {
+          title: 'Lingkungan demo',
+          body: 'Salinan build aslinya yang berjalan dengan data karangan. Apa pun yang kamu ubah tidak tersimpan.',
+        },
+        internal: {
+          title: 'Sistem internal — tidak bisa diakses umum',
+          body: 'Dipakai di dalam organisasi, jadi tidak ada URL yang bisa dibagikan. Penelusuran di bawah memuat seluruh alurnya.',
+        },
+        archived: {
+          title: 'Sudah tidak ditayangkan',
+          body: 'Situsnya sudah dipensiunkan, jadi penelusuran di bawah inilah yang tersisa.',
+        },
       },
     },
 

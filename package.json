@@ -20,7 +20,8 @@
     "deploy": "wrangler deploy",
     "pb:upload": "node scripts/upload-project-media.js",
     "pb:content": "node scripts/push-case-studies.js",
-    "pb:schema": "node scripts/add-locale-fields.js"
+    "pb:schema": "node scripts/add-locale-fields.js",
+    "pb:preview": "node scripts/add-preview-fields.js"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
