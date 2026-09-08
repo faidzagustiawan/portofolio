@@ -16,11 +16,237 @@
     "Inggrisnya adalah terjemahan dari isi yang sama. Kalau ada yang keliru,",
     "perbaiki di sini — file ini yang jadi sumber kebenarannya."
   ],
-
   "projects": {
+    "tolongin": {
+      "shared": {
+        "technologies": [
+          "NestJS",
+          "Next.js",
+          "TypeScript",
+          "PostgreSQL",
+          "Prisma",
+          "pgvector",
+          "Python",
+          "DeepFace",
+          "EasyOCR",
+          "OpenAI API",
+          "Midtrans",
+          "Cloudflare R2",
+          "Judge0",
+          "Playwright",
+          "Sentry"
+        ],
+        "access": "public",
+        "previewmode": "auto",
+        "walkthrough": [
+          {
+            "image": "detail-1.webp",
+            "title": "KTP and selfie verification",
+            "title_id": "Verifikasi KTP dan selfie",
+            "body": "The candidate uploads an ID card and a selfie. The request returns 202 immediately and the biometric work runs in the background, because EasyOCR plus DeepFace take far longer than an HTTP request should. NIK is read by regex over the OCR text and stored encrypted; the raw photos are never kept in plaintext columns.",
+            "body_id": "Kandidat mengunggah KTP dan selfie. Permintaannya langsung menjawab 202 dan kerja biometriknya berjalan di latar belakang, karena EasyOCR plus DeepFace jauh lebih lama dari yang pantas ditunggu satu permintaan HTTP. NIK dibaca lewat regex dari hasil OCR lalu disimpan terenkripsi; foto mentahnya tidak pernah tersimpan sebagai kolom biasa."
+          },
+          {
+            "image": "detail-2.webp",
+            "title": "Identity review queue",
+            "title_id": "Antrean tinjauan identitas",
+            "body": "Face distance is not a pass/fail switch but three zones. Below 0.35 is rejected as a duplicate account, 0.35–0.42 lands here for a human to decide. Wrongly rejecting a real jobseeker locks that person out of the platform, so the middle zone goes to an admin instead of the machine.",
+            "body_id": "Jarak wajah bukan sakelar lolos/tolak, melainkan tiga zona. Di bawah 0,35 ditolak sebagai akun ganda, 0,35–0,42 mendarat di sini untuk diputus manusia. Salah menolak pencari kerja yang sah berarti mengunci orang itu dari platform, jadi zona tengah diserahkan ke admin, bukan ke mesin."
+          },
+          {
+            "image": "detail-3.webp",
+            "title": "Staged case study, server-side gate",
+            "title_id": "Studi kasus bertahap, gerbang di sisi server",
+            "body": "Which stage is open, why it is locked, and how many seconds remain are all answered by the server. A timer computed in the browser can be stopped by closing the tab, and a score requirement checked in the browser can be skipped by calling the endpoint directly, so the client only renders what the gate says.",
+            "body_id": "Tahap mana yang terbuka, kenapa terkunci, dan berapa detik tersisa semuanya dijawab server. Hitungan waktu di peramban bisa dihentikan dengan menutup tab, dan syarat nilai yang diperiksa di peramban bisa dilewati dengan memanggil endpoint langsung, jadi klien hanya menampilkan apa yang dikatakan gerbang."
+          },
+          {
+            "image": "detail-4.webp",
+            "title": "Continuous proctoring during the exam",
+            "title_id": "Pengawasan berjalan selama ujian",
+            "body": "Every 30 seconds a frame is sent to the server and compared against the stored selfie. The browser never receives a biometric template. A denied camera permission is not recorded as cheating: the candidate gets a retry button first, and only a persistent failure counts as a violation.",
+            "body_id": "Tiap 30 detik satu bingkai dikirim ke server dan dibandingkan dengan selfie tersimpan. Peramban tidak pernah menerima template biometrik. Izin kamera yang ditolak tidak dicatat sebagai kecurangan: kandidat diberi tombol coba lagi dulu, dan hanya kegagalan yang menetap yang dihitung sebagai pelanggaran."
+          },
+          {
+            "image": "detail-5.webp",
+            "title": "Submission and grading queue",
+            "title_id": "Pengumpulan dan antrean penilaian",
+            "body": "Submitting writes the row with a null AI score and status PENDING_AI; scoring runs later in a cron. The candidate notification is worded for that fact, because the earlier version interpolated the score directly and told every candidate 'AI score: null.'",
+            "body_id": "Pengumpulan menulis barisnya dengan skor AI kosong dan status PENDING_AI; penilaiannya berjalan belakangan lewat cron. Pemberitahuan ke kandidat ditulis sesuai kenyataan itu, karena versi sebelumnya menyisipkan skornya apa adanya dan memberi tahu setiap kandidat 'Skor AI: null.'"
+          },
+          {
+            "image": "detail-6.webp",
+            "title": "Recruiter review board with SLA",
+            "title_id": "Papan tinjauan perekrut beserta SLA",
+            "body": "Applicant counts are computed per enrollment, not per submission row, because staged work produces several rows for one person. A daily cron nudges companies past the seven-day review SLA, once per submission, guarded by slaReminderSentAt so a daily job does not become a daily notification.",
+            "body_id": "Jumlah pelamar dihitung per pendaftaran, bukan per baris submisi, karena pengerjaan bertahap menghasilkan beberapa baris untuk satu orang. Cron harian menegur perusahaan yang melewati SLA tinjauan tujuh hari, sekali per submisi, dijaga slaReminderSentAt supaya pekerjaan harian tidak berubah jadi notifikasi harian."
+          }
+        ],
+        "snippets": [
+          {
+            "label": "Biometric KYC (KTP + selfie)",
+            "label_id": "KYC biometrik (KTP + selfie)",
+            "method": "post",
+            "path": "/api/v1/verification/face-ai",
+            "note": "Returns 202 and hands the work to a background job, because OCR and face embedding run in Python child processes that take seconds, not milliseconds.",
+            "note_id": "Menjawab 202 dan menyerahkan kerjanya ke proses latar belakang, karena OCR dan embedding wajah berjalan di proses anak Python yang makan hitungan detik, bukan milidetik.",
+            "request": {
+              "selfiePhotoUrl": "https://storage.tolongin.co/biometrics/selfie-abc.jpg",
+              "idCardPhotoUrl": "https://storage.tolongin.co/biometrics/ktp-abc.jpg"
+            },
+            "response": {
+              "status": "PROCESSING",
+              "message": "Verifikasi KTP & Wajah sedang diproses di latar belakang. Anda akan menerima notifikasi segera."
+            }
+          },
+          {
+            "label": "Anti-impersonation check mid-exam",
+            "label_id": "Pemeriksaan anti-joki saat ujian",
+            "method": "post",
+            "path": "/api/v1/verification/verify-execution",
+            "note": "Compares a camera frame against the stored selfie with the strict photo-vs-photo threshold (0.40), not the looser selfie-vs-ID threshold (0.42); an unavailable engine returns a distinct flag so the user is never blamed for a server fault.",
+            "note_id": "Membandingkan bingkai kamera dengan selfie tersimpan memakai ambang ketat foto-vs-foto (0,40), bukan ambang longgar selfie-vs-KTP (0,42); mesin yang mati menjawab dengan penanda tersendiri supaya pengguna tidak disalahkan atas kesalahan server.",
+            "request": {
+              "livePhotoUrl": "data:image/jpeg;base64,..."
+            },
+            "response": {
+              "verified": false,
+              "matchScore": 41,
+              "message": "Peringatan Anomali Anti-Joki: Wajah yang terdeteksi di kamera tidak cocok dengan KTP/KYC terdaftar (Kemiripan 41%). Akses pengumpulan diblokir!"
+            }
+          },
+          {
+            "label": "Stage state for one enrollment",
+            "label_id": "Keadaan tahap satu pendaftaran",
+            "method": "get",
+            "path": "/api/v1/stages/enrollment/:enrollmentId",
+            "note": "Read and write in one call: the gate depends on wall-clock time and on scores that just arrived, so the correct state only exists if it is evaluated now.",
+            "note_id": "Membaca dan menulis dalam satu panggilan: gerbangnya bergantung pada waktu dan pada nilai yang baru masuk, jadi keadaan yang benar hanya ada bila dievaluasi sekarang.",
+            "request": {},
+            "response": [
+              {
+                "sectionId": "sec_02",
+                "title": "Tahap 2 — Studi Kasus",
+                "order": 2,
+                "status": "LOCKED",
+                "unlocked": false,
+                "lockReason": "Tahap sebelumnya belum mencapai nilai minimum 70.",
+                "timeLimit": 90,
+                "opensAt": null,
+                "closesAt": null,
+                "startedAt": null,
+                "expiresAt": null,
+                "submittedAt": null,
+                "remainingSeconds": null,
+                "score": null
+              }
+            ]
+          },
+          {
+            "label": "Submit a stage solution",
+            "label_id": "Mengumpulkan solusi satu tahap",
+            "method": "post",
+            "path": "/api/v1/workspace/submit",
+            "note": "The deadline is checked against expiresAt in the database before anything is written; an omitted sectionId still means the old whole-challenge submission, so staged and non-staged challenges share one endpoint.",
+            "note_id": "Batas waktunya diperiksa terhadap expiresAt di basis data sebelum apa pun ditulis; sectionId yang dikosongkan tetap berarti pengumpulan menyeluruh gaya lama, jadi studi kasus bertahap dan tidak bertahap memakai satu endpoint yang sama.",
+            "request": {
+              "enrollmentId": "enr_9f21",
+              "sectionId": "sec_02",
+              "repositoryUrl": "https://github.com/contoh/solusi",
+              "notes": "Catatan pengerjaan",
+              "responses": [
+                {
+                  "componentId": "cmp_11",
+                  "textValue": "B"
+                },
+                {
+                  "componentId": "cmp_12",
+                  "fileUrl": "https://storage.tolongin.co/solutions/enr_9f21.zip"
+                }
+              ]
+            },
+            "response": {
+              "id": "sub_4181",
+              "enrollmentId": "enr_9f21",
+              "sectionId": "sec_02",
+              "status": "PENDING_AI",
+              "aiScore": null,
+              "aiPlagiarismScore": null,
+              "aiCorrectionSummary": null,
+              "createdAt": "2026-08-09T04:12:33.000Z"
+            }
+          },
+          {
+            "label": "Midtrans webhook",
+            "label_id": "Webhook Midtrans",
+            "method": "post",
+            "path": "/api/v1/payments/webhook",
+            "note": "Unauthenticated by necessity — Midtrans sends no custom header — so it recomputes the SHA-512 signature and compares it with timingSafeEqual, and it never throws after a settled payment, because Midtrans would retry a failed webhook forever.",
+            "note_id": "Tanpa autentikasi karena memang begitu — Midtrans tidak mengirim header khusus — jadi tanda tangan SHA-512 dihitung ulang dan dibandingkan dengan timingSafeEqual, dan tidak pernah melempar galat setelah pembayaran lunas, karena Midtrans akan mengulang webhook yang gagal tanpa henti.",
+            "request": {
+              "order_id": "TOPUP-9f21-1754712345",
+              "status_code": "200",
+              "gross_amount": "150000.00",
+              "transaction_status": "settlement",
+              "signature_key": "..."
+            },
+            "response": {
+              "status": "success",
+              "message": "Pembayaran diproses"
+            }
+          }
+        ],
+        "liveurl": "https://tolongin.co",
+        "team": [
+          {
+            "name": "Muhammad Faidz Agustiawan",
+            "role": "Full-Stack Developer",
+            "avatar": null
+          },
+          {
+            "name": "Fikri Irfan Hidayah",
+            "role": "Designer",
+            "avatar": null
+          },
+          {
+            "name": "Nabil Athaya",
+            "role": "Product Manager",
+            "avatar": null
+          }
+        ]
+      },
+      "en": {
+        "tagline": "Hiring platform that replaces the CV with a proctored work sample",
+        "client": "Open to the public, in two roles: talent and hiring companies",
+        "duration": "May – August 2026",
+        "overview": "Tolongin is a recruitment platform where companies publish real case studies instead of reading CVs. Candidates work through them inside the app in timed stages, get graded partly by AI and partly by a recruiter, and keep a verified portfolio of what they passed. Companies pay a subscription; candidates spend tokens if they want to publish their own public case study.",
+        "challenge": "A take-home assignment is worthless as evidence if you cannot show who actually did it and that the clock was real. Both guarantees have to survive an adversary who controls the browser: a timer computed on the client stops when the tab closes, and a score requirement checked on the client is skipped by calling the endpoint directly. Identity itself is a second problem — one person opening several accounts defeats the whole record. The two Python engines needed for that check, EasyOCR on PyTorch and DeepFace on TensorFlow, segfault when loaded into one process.",
+        "approach": "Every gating decision was moved behind one server-side service, and the client was reduced to rendering what it is told; a 30-second clock-skew tolerance was added so a candidate who submits on the last second is not punished for network latency. For identity, a hard pass/fail on face distance was rejected: falsely rejecting a real jobseeker locks a person out of the platform, while a duplicate that slips through is still catchable by other signals, so the middle band goes to a human reviewer. Thresholds were not guessed — they were measured on real pairs, and the deduplication ran in shadow mode first, recording distances without rejecting anyone, until the distribution justified enforcing. The two Python frameworks each got their own long-lived worker pool, which keeps the 'load the model once' benefit without putting two conflicting runtimes in one process. AI scoring was deliberately kept off the submit path: the row is written with a null score, and a cron grades it later.",
+        "solution": "A NestJS API with about thirty modules over PostgreSQL and Prisma, and a Next.js App Router frontend. StageGateService is the single authority on stage state; it computes unlock reasons, remaining seconds, and expiry, and assertStageSubmittable is called before any submission row is written. PythonWorkerService keeps a pool of long-running Python processes per script, restarting them with exponential backoff and routing operations to the face or OCR pool. Face embeddings are stored in a pgvector column, kept entirely inside IdentityDedupeService because Prisma Client does not know the vector type, which also guarantees biometric templates never leak into an API response. NIK and identity photos are stored encrypted; uploads go through a presigned Cloudflare R2 URL with a MIME allowlist that deliberately excludes browser-executable types.",
+        "contribution": "I was the full-stack developer, alongside Fikri Irfan Hidayah on design and Nabil Athaya as product manager. Across both repositories 139 of 151 backend commits and 113 of 144 frontend commits are mine: the stage gate, the biometric pipeline and its threshold calibration, the identity deduplication, the storage and upload policy, badges, moderation, and CI.",
+        "outcome": "[ISI: apa yang terjadi setelah Agustus 2026 — dipakai perusahaan sungguhan, berhenti, atau masih dikembangkan? Ada angka pengguna atau studi kasus yang benar-benar dikerjakan?]"
+      },
+      "id": {
+        "tagline": "Platform rekrutmen yang mengganti CV dengan ujian praktik terawasi",
+        "client": "Terbuka untuk umum, dua peran: talenta dan perusahaan",
+        "duration": "Mei – Agustus 2026",
+        "overview": "Tolongin adalah platform rekrutmen tempat perusahaan memasang studi kasus nyata, bukan membaca CV. Kandidat mengerjakannya langsung di dalam aplikasi dalam tahapan berbatas waktu, dinilai sebagian oleh AI dan sebagian oleh perekrut, lalu menyimpan portofolio terverifikasi dari yang berhasil dilewatinya. Perusahaan membayar langganan; kandidat memakai token bila ingin menerbitkan studi kasus buatannya sendiri.",
+        "challenge": "Tugas yang dikerjakan di rumah tidak membuktikan apa pun kalau tidak jelas siapa yang mengerjakannya dan apakah batas waktunya sungguh berlaku. Dua jaminan itu harus bertahan menghadapi orang yang menguasai perambannya sendiri: hitungan waktu di klien berhenti begitu tab ditutup, dan syarat nilai yang diperiksa di klien bisa dilewati dengan memanggil endpoint langsung. Identitas jadi masalah kedua — satu orang yang membuat banyak akun meruntuhkan seluruh nilai catatannya. Dua mesin Python yang dibutuhkan untuk memeriksanya, EasyOCR di atas PyTorch dan DeepFace di atas TensorFlow, mati dengan SIGSEGV bila dimuat dalam satu proses.",
+        "approach": "Seluruh keputusan gerbang dipindahkan ke satu layanan di sisi server, dan klien disempitkan jadi penampil belaka; toleransi selisih jam 30 detik ditambahkan supaya kandidat yang menekan Kumpulkan di detik terakhir tidak dihukum oleh perjalanan jaringan. Untuk identitas, keputusan lolos/tolak ditolak sejak awal: salah menolak pencari kerja yang sah mengunci orang itu dari platform, sedangkan akun ganda yang lolos masih bisa ditangkap sinyal lain, jadi pita tengahnya diserahkan ke peninjau manusia. Ambangnya tidak ditebak — diukur pada pasangan foto sungguhan, dan pemeriksaan duplikat sempat berjalan dalam mode bayangan lebih dulu, mencatat jarak tanpa menolak siapa pun, sampai sebaran datanya cukup untuk menegakkannya. Dua kerangka kerja Python masing-masing diberi kolam proses sendiri yang berumur panjang, sehingga manfaat 'model dimuat sekali' tetap didapat tanpa menyatukan dua runtime yang berbenturan. Penilaian AI sengaja dijauhkan dari jalur pengumpulan: barisnya ditulis dengan skor kosong, lalu cron yang menilainya.",
+        "solution": "API NestJS berisi sekitar tiga puluh modul di atas PostgreSQL dan Prisma, dengan frontend Next.js App Router. StageGateService satu-satunya penentu keadaan tahap; ia menghitung alasan terkunci, sisa waktu, dan kedaluwarsa, dan assertStageSubmittable dipanggil sebelum satu baris submisi pun ditulis. PythonWorkerService memelihara kolam proses Python berumur panjang per skrip, menyalakannya kembali dengan jeda menaik, dan mengarahkan tiap operasi ke kolam face atau ocr. Embedding wajah disimpan di kolom pgvector dan seluruh aksesnya dikurung di IdentityDedupeService karena Prisma Client tidak mengenali tipe vector — sekaligus menjamin template biometrik tidak pernah ikut terbawa ke respons API. NIK dan foto identitas disimpan terenkripsi; unggahan lewat presigned URL Cloudflare R2 dengan daftar MIME yang sengaja tidak memuat tipe yang bisa dieksekusi peramban.",
+        "contribution": "Saya full-stack developer-nya, bersama Fikri Irfan Hidayah di desain dan Nabil Athaya sebagai product manager. Di kedua repo, 139 dari 151 commit backend dan 113 dari 144 commit frontend adalah milik saya: gerbang tahapan, pipeline biometrik beserta kalibrasi ambangnya, deteksi identitas ganda, kebijakan penyimpanan dan unggahan, lencana, moderasi, dan CI.",
+        "outcome": "[ISI: apa yang terjadi setelah Agustus 2026 — dipakai perusahaan sungguhan, berhenti, atau masih dikembangkan? Ada angka pengguna atau studi kasus yang benar-benar dikerjakan?]"
+      }
+    },
     "exhibitly": {
       "shared": {
-        "technologies": ["React", "Supabase", "Cloudinary", "Tailwind CSS", "Framer Motion"]
+        "technologies": [
+          "React",
+          "Supabase",
+          "Cloudinary",
+          "Tailwind CSS",
+          "Framer Motion"
+        ]
       },
       "en": {
         "tagline": "Online Art Gallery with Uploads, Likes and Comments",
@@ -45,7 +271,6 @@
         "outcome": "[ISI: kalau belum dipakai orang lain, tulis apa adanya — itu tetap lebih kuat daripada klaim kosong. Contoh bentuk: Berjalan di <URL>, dengan <berapa> karya terunggah selama <periode>. Biaya penyimpanan tetap nol karena seluruh berkas dilayani dari tier gratis Cloudinary.]"
       }
     },
-
     "spk-property-backend": {
       "en": {
         "tagline": "Decision Support API: AHP Weighting with Four Ranking Methods",
@@ -70,10 +295,15 @@
         "outcome": "Selesai sebagai proyek akademik dalam waktu sekitar dua bulan. Seluruh endpoint terdokumentasi di Swagger OpenAPI dan lingkungannya dapat direproduksi lewat Docker Compose, sehingga penguji bisa menjalankannya tanpa menyiapkan basis data secara manual. [ISI: hasil AHP pernah divalidasi? Sebutkan consistency ratio, perbandingan dengan hitungan manual, atau data uji. Kalau belum, ganti kalimat ini dengan: \"Peringkat keempat metode belum divalidasi terhadap data nyata.\"]"
       }
     },
-
     "finote": {
       "shared": {
-        "technologies": ["Kotlin", "Jetpack Compose", "CameraX", "ML Kit", "Supabase"]
+        "technologies": [
+          "Kotlin",
+          "Jetpack Compose",
+          "CameraX",
+          "ML Kit",
+          "Supabase"
+        ]
       },
       "en": {
         "tagline": "Personal Finance App with Receipt Scanning",
@@ -98,10 +328,17 @@
         "outcome": "[ISI: angka paling relevan di sini adalah akurasi OCR. Contoh bentuk: Pembacaan struk berhasil pada <berapa> dari <berapa> struk uji dari <berapa> toko berbeda. Kalau belum diuji sistematis, tulis begitu — itu jujur dan tetap informatif.]"
       }
     },
-
     "travel-backend": {
       "shared": {
-        "technologies": ["Laravel", "PHP", "MySQL", "Laravel Sanctum", "Xendit", "Midtrans", "Cloudinary"]
+        "technologies": [
+          "Laravel",
+          "PHP",
+          "MySQL",
+          "Laravel Sanctum",
+          "Xendit",
+          "Midtrans",
+          "Cloudinary"
+        ]
       },
       "en": {
         "tagline": "Travel Booking API with Dual Payment Gateways",
@@ -126,7 +363,6 @@
         "outcome": "Proyek mandiri yang selesai dalam waktu sekitar satu bulan, dengan seluruh endpoint terdokumentasi lewat OpenAPI dan bisa dijelajahi di Swagger UI. Belum dipakai klien nyata. [ISI: alur pembayaran sudah diuji lewat sandbox Xendit/Midtrans, atau berhenti di tahap implementasi? Tulis yang benar.]"
       }
     },
-
     "re-enviro": {
       "en": {
         "tagline": "Volunteering and Green Funding Platform",
@@ -151,7 +387,6 @@
         "outcome": "[ISI: contoh bentuk — Dikerjakan untuk <lomba / mata kuliah / komunitas apa>, dengan hasil <peringkat, nilai, atau status>. Kalau ada yang benar-benar memakai: berapa kegiatan atau donasi yang tercatat.]"
       }
     },
-
     "pantausam": {
       "shared": {
         "githuburl": "https://github.com/faidzagustiawan/PantauSAM"
@@ -179,7 +414,6 @@
         "outcome": "[ISI: contoh bentuk — Dikerjakan sebagai <proyek akademik apa> selama lima bulan, dengan hasil <nilai / status / penilaian>. Kalau pernah diuji ke pengguna nyata, berapa laporan yang masuk.]"
       }
     },
-
     "kalkulator-sdmk": {
       "en": {
         "tagline": "Health Workforce Calculator over a Spreadsheet Backend",
@@ -204,7 +438,6 @@
         "outcome": "[ISI: contoh bentuk — Menggantikan <antarmuka lama> untuk <berapa> fasilitas kesehatan. Biaya infrastruktur tetap nol karena backend Spreadsheet tidak berubah. Hasil perhitungan divalidasi terhadap <pembanding apa>.]"
       }
     },
-
     "engineer-coffee": {
       "en": {
         "tagline": "One-Page Coffee Shop Site, No Build Step",

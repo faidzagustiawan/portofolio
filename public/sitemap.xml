@@ -25,7 +25,7 @@
     <loc>https://faidzagustiawan.id/work/pantausam</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/work/pantausam"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id/work/pantausam"/>
-    <lastmod>2026-09-02</lastmod>
+    <lastmod>2026-09-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -81,7 +81,15 @@
     <loc>https://faidzagustiawan.id/work/travel-backend</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/work/travel-backend"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id/work/travel-backend"/>
-    <lastmod>2026-09-02</lastmod>
+    <lastmod>2026-09-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://faidzagustiawan.id/work/tolongin</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/work/tolongin"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id/work/tolongin"/>
+    <lastmod>2026-09-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -110,7 +118,7 @@
     <loc>https://faidzagustiawan.id/id/work/pantausam</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/work/pantausam"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id/work/pantausam"/>
-    <lastmod>2026-09-02</lastmod>
+    <lastmod>2026-09-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -166,7 +174,15 @@
     <loc>https://faidzagustiawan.id/id/work/travel-backend</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/work/travel-backend"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id/work/travel-backend"/>
-    <lastmod>2026-09-02</lastmod>
+    <lastmod>2026-09-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://faidzagustiawan.id/id/work/tolongin</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/work/tolongin"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id/work/tolongin"/>
+    <lastmod>2026-09-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
