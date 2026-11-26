@@ -4,7 +4,7 @@ Dipakai **setelah** handoff naskah selesai, di sesi Claude yang sama, di dalam
 repo project itu. Ganti `<SLUG>` dengan slug project.
 
 Hasilnya berkas gambar di `.handoff/media/<SLUG>/` yang tinggal disalin ke
-`media/<SLUG>/` di repo portofolio.
+`public/media/projects/<SLUG>/` di repo portofolio.
 
 ---
 

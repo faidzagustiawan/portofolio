@@ -13,7 +13,7 @@ than remapping them under a `.dark` class.
 - **Text:** White for primary, `neutral-400` for secondary.
 - **Borders:** `neutral-800`.
 - **Accents:** Reserved for project-specific gradients (stored per record in
-  PocketBase) and for a single status colour — `emerald-400` for availability.
+  `content/projects.json`) and for a single status colour — `emerald-400` for availability.
   Nothing else in the chrome is coloured.
 
 Because project gradients arrive from the CMS as strings, Tailwind cannot see
@@ -77,7 +77,7 @@ Every route ships its own Open Graph card, generated at build time:
   class names against the compiled stylesheet, so a card always matches the
   colour the site actually renders.
 
-Both are 1200×630. When a project eventually has a real `image` in PocketBase,
+Both are 1200×630. When a project eventually has a real `image` in `content/projects.json`,
 that wins over the generated card.
 
 ## Two languages

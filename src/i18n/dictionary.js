@@ -1,8 +1,9 @@
 /**
  * Every string the interface renders, in both locales.
  *
- * Project copy is not here — that lives in PocketBase, with Indonesian in the
- * `_id` fields. This file covers only the shell the CMS content sits inside.
+ * Project copy is not here — that lives in content/projects.json, with
+ * Indonesian in the `_id` fields. This file covers only the shell that copy
+ * sits inside.
  *
  * Keep the two objects the same shape; a missing Indonesian key renders
  * undefined rather than falling back, and that is deliberate — a silent

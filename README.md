@@ -1,8 +1,8 @@
 # faidzagustiawan.id
 
 Personal portfolio of Faidz Agustiawan — a full-stack developer in Malang,
-Indonesia. A motion-led React app, prerendered to static HTML at build time and
-backed by a PocketBase instance that holds the project case studies.
+Indonesia. A motion-led React app, prerendered to static HTML at build time. The
+project case studies live in `content/projects.json` — no CMS, no server.
 
 **Live:** https://faidzagustiawan.id
 
@@ -16,8 +16,8 @@ backed by a PocketBase instance that holds the project case studies.
 | Motion | Framer Motion, plus hand-rolled rAF loops for the marquees |
 | Routing | React Router 7, lazy routes, locale as the router basename |
 | Languages | English at the root, Indonesian under `/id`, both prerendered |
-| Content | PocketBase REST (`/api/collections/projects/records`) |
-| Media | Cloudflare R2 |
+| Content | `content/projects.json`, read at build time |
+| Media | `public/media/projects`, or Cloudflare R2 via `VITE_MEDIA_URL` |
 | Mail | EmailJS |
 | Hosting | Cloudflare Workers (static assets), via wrangler |
 
@@ -32,7 +32,7 @@ pnpm dev
 Configuration is split by whether it is secret:
 
 - **`.env.production`** is committed and holds the public `VITE_` values — site
-  URL, PocketBase URL, EmailJS ids. All of them are inlined into the JavaScript
+  URL, EmailJS ids. All of them are inlined into the JavaScript
   bundle and served to every visitor anyway, so the repo exposes nothing extra,
   and CI cannot silently build without them. That is not hypothetical: before
   this file existed, a Cloudflare build produced a contact form that reported
@@ -58,9 +58,6 @@ it to the browser.
 | `pnpm prerender` | Re-runs the prerender step against an existing build |
 | `pnpm assets:build` | Rebuilds the hero portrait and the site OG card |
 | `pnpm og:projects` | Rebuilds the per-project OG cards (needs a built `dist/`) |
-| `pnpm pb:upload` | Bulk-uploads project media to PocketBase from `media/` |
-| `pnpm pb:content` | Pushes `content/case-studies.json` into PocketBase, both locales |
-| `pnpm pb:schema` | Adds any missing `_id` locale fields to the collection |
 | `pnpm r2:sync` | Uploads local media to the R2 bucket |
 
 ## Rendering
@@ -69,11 +66,11 @@ The site used to be a plain SPA, which meant link unfurlers — Twitter, Slack,
 WhatsApp, LinkedIn — saw one generic head for every URL, because none of them
 run JavaScript. `pnpm build` now prerenders every known route:
 
-1. `scripts/generate-sitemap.js` writes `public/sitemap.xml` from PocketBase.
+1. `scripts/generate-sitemap.js` writes `public/sitemap.xml` from `content/projects.json`.
 2. `vite build` produces the client bundle.
 3. `scripts/build-project-cards.js` renders a 1200×630 OG card per project into
    `dist/og/`, reading the gradient colours back out of the compiled CSS
-   because the class names live in the CMS.
+   because the class names live in the project data.
 4. `vite build --ssr` produces `dist-ssr/entry-server.js`.
 5. `scripts/prerender.js` renders each route with `prerenderToNodeStream` and
    writes a real HTML file per URL, with its own title, description, canonical,
@@ -85,10 +82,10 @@ Notes on the pieces that are easy to break:
   emits them at the head of the stream. Only the `#root` subtree is rendered,
   so `entry-server.jsx` lifts that leading run into `<head>`. The JSON-LD stays
   in the body on purpose — moving it would break hydration.
-- **Data.** The feed is fetched once during the build and embedded as
-  `<script type="application/json" id="__PROJECTS__">`. Prerendered pages make
-  no PocketBase request at all; `ProjectsProvider` only fetches when that
-  payload is missing or a retry is requested.
+- **Data.** `content/projects.json` is read during the build and embedded as
+  `<script type="application/json" id="__PROJECTS__">`. `ProjectsProvider` only
+  loads the JSON itself — as a separate chunk — when that payload is missing or
+  a retry is requested.
 - **The fallback.** Each page stamps `data-route` on `<html>`. `main.jsx`
   hydrates only when that matches `location.pathname`; otherwise it clears the
   container and does a full client render. This matters because Cloudflare
@@ -126,18 +123,30 @@ also works without JavaScript and gives crawlers the path between versions.
 - `src/i18n/dictionary.js` holds every interface string in both languages.
   A missing key renders undefined rather than falling back, deliberately: a
   silent fallback hides the gap until a visitor finds it.
-- Project copy lives in PocketBase, English in the base fields and Indonesian
-  in their `_id` counterparts. `src/lib/pb.js` falls back to English per field,
+- Project copy lives in `content/projects.json`, English in the base fields and
+  Indonesian in their `_id` counterparts. `src/lib/projects.js` falls back to
+  English per field,
   so a half-translated record still renders a complete page.
-- Category names are translated for display only. The raw CMS value stays the
-  filter key, or filtering would break the moment the language changed.
+- Category names are translated for display only. The raw `category` value stays
+  the filter key, or filtering would break the moment the language changed.
 
 ## Content model
 
-Projects live in the `projects` collection in PocketBase. PocketBase lowercases
-column names, so the API returns `liveurl`, `nextprojectslug`, and
-`visualdetails`; `src/lib/pb.js` is the single place that maps those onto the
+Projects live in [content/projects.json](content/projects.json), an array in
+display order. The field names are lowercase (`liveurl`, `nextprojectslug`,
+`visualdetails`) — a leftover from the PocketBase days, kept so no record had to
+change. `src/lib/projects.js` is the single place that maps them onto the
 camelCase shape the components use. Add new fields there, not in the components.
+
+To change content: edit the JSON, run `pnpm build`, then deploy. To add a
+project, copy an existing object, give it a new `slug`, and point the previous
+project's `nextprojectslug` at it. `updated` feeds the sitemap's `<lastmod>`.
+
+Media files go in `public/media/projects/<slug>/` and are referenced by file
+name: `image` (cover), `video`, and `visualdetails` (a list). A walkthrough
+step's `image` only shows once that file name is also in `visualdetails`.
+Absolute URLs work anywhere a file name does. Set `VITE_MEDIA_URL` to serve the
+same layout from R2 instead.
 
 Fields the UI reads:
 
@@ -151,8 +160,7 @@ rather than a broken one — the case-study section numbers are derived from
 whichever fields are filled in, and a project with no `image` or `video` gets a
 generated placeholder built from its `color` and initials.
 
-Content changes need a rebuild to reach the prerendered HTML. Until then the
-fallback serves them client-rendered, with the site-level head.
+Content changes need a rebuild and a deploy to reach the site.
 
 ## Hero image
 
@@ -165,7 +173,7 @@ the SVG itself; it was the single largest asset on the site.
 ## Conventions
 
 - Design rules and the motion/cursor contracts live in [DESIGN.md](DESIGN.md).
-- Tailwind classes that only exist in CMS data must be listed in the
+- Tailwind classes that only exist in project data must be listed in the
   `@source inline(...)` line in `src/index.css`, or they will not be generated —
   and `build-project-cards.js` reads its colours from that same output.
 - Context files are split in two: `*-context.js` holds the context and its hook,
@@ -197,8 +205,8 @@ Three things are easy to get wrong here:
   the prerendered home page**, not with `spa.html`. `src/main.jsx` compares the
   `data-route` stamped on `<html>` against `location.pathname` and, when they
   differ, clears the container and does a full client render instead of
-  hydrating — and refetches the feed, because a path the build did not know
-  about is exactly the case where the embedded copy may be missing it.
+  hydrating — and loads the project data itself rather than trusting the
+  embedded copy, which belongs to a different page.
 
 Headers live in [public/\_headers](public/_headers) for Cloudflare. `vercel.json`
 carries the same rules for a Vercel deploy; if you change one, change the other.

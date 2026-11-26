@@ -1,13 +1,18 @@
 import { DEFAULT_LOCALE, localeField } from '@/i18n/locale'
 
-const RAW_BASE = import.meta.env.VITE_PB_URL || 'https://faidz.fun/pb'
+/**
+ * Project files (cover image, video, walkthrough screenshots) are served from
+ * `${MEDIA_URL}/<slug>/<filename>`. The default is `public/media/projects`, so a
+ * file dropped there ships with the site; point VITE_MEDIA_URL at an R2 bucket
+ * once the media outgrows the repository.
+ */
+const MEDIA_URL = (import.meta.env.VITE_MEDIA_URL || '/media/projects').replace(/\/+$/, '')
 
-export const PB_URL = RAW_BASE.replace(/\/+$/, '')
-
-/** Absolute URL for a file stored on a PocketBase record. */
-export function pbFileUrl(record, filename) {
+/** URL for a file that belongs to a project. Absolute URLs pass through. */
+export function mediaUrl(record, filename) {
   if (!filename) return null
-  return `${PB_URL}/api/files/${record.collectionId}/${record.id}/${filename}`
+  if (/^https?:\/\//.test(filename)) return filename
+  return `${MEDIA_URL}/${record.slug}/${filename}`
 }
 
 /** Fields that exist once per locale, English in the base column. */
@@ -36,25 +41,26 @@ function translated(item, field, locale) {
 }
 
 /**
- * PocketBase returns lowercase column names. Anything the UI reads as a string
- * gets a '' default and anything it maps over gets [], so a half-filled record
- * renders as a gap instead of throwing.
+ * Records in content/projects.json use lowercase field names, with Indonesian
+ * copy in `<field>_id`. Anything the UI reads as a string gets a '' default and
+ * anything it maps over gets [], so a half-filled record renders as a gap
+ * instead of throwing.
  */
 export function mapProjectRecord(item, locale = DEFAULT_LOCALE) {
   const visualDetails = Array.isArray(item.visualdetails) ? item.visualdetails : []
   const copy = Object.fromEntries(TRANSLATED.map((f) => [f, translated(item, f, locale)]))
 
   return {
-    id: item.id,
+    id: item.id || item.slug,
     slug: item.slug || '',
     name: item.name || 'Untitled project',
     featured: Boolean(item.featured),
     year: item.year ? String(item.year) : '',
     category: item.category || 'Uncategorised',
 
-    image: pbFileUrl(item, item.image),
-    video: pbFileUrl(item, item.video),
-    visualDetails: visualDetails.map((file) => pbFileUrl(item, file)).filter(Boolean),
+    image: mediaUrl(item, item.image),
+    video: mediaUrl(item, item.video),
+    visualDetails: visualDetails.map((file) => mediaUrl(item, file)).filter(Boolean),
 
     technologies: parseList(item.technologies),
     team: parseList(item.team),
@@ -67,8 +73,8 @@ export function mapProjectRecord(item, locale = DEFAULT_LOCALE) {
     liveUrl: item.liveurl || null,
     demoUrl: item.demourl || null,
     demoNote: translated(item, 'demonote', locale),
-    // A repository link can be withheld without deleting the URL the CMS holds,
-    // so the record stays a complete note to self.
+    // A repository link can be withheld without deleting the URL from the
+    // record, so the record stays a complete note to self.
     repos: parseRepos(item, locale),
     sourceHidden: Boolean(item.sourcehidden && (item.githuburl || parseList(item.repos).length > 0)),
 
@@ -149,22 +155,19 @@ function parseWalkthrough(item, locale) {
 /**
  * Finds the file a walkthrough step means.
  *
- * PocketBase appends a random suffix to every upload, so `detail-2.webp` is
- * stored as `detail-2_a9Kd21.webp` and a step written before the upload would
- * point at a file that does not exist. The name is therefore matched by its
- * stem, and a step with no usable name falls back to the attachment in the same
- * position — which is what `detail-N` ordering means anyway.
+ * A step only gets an image once its file is listed in `visualdetails`, so a
+ * walkthrough written before the screenshots exist renders as text instead of
+ * a broken image. A step with no usable name falls back to the attachment in
+ * the same position, which is what `detail-N` ordering means anyway.
  */
 function resolveStepImage(item, attached, name, index) {
   if (/^https?:\/\//.test(name || '')) return name
 
-  if (typeof name === 'string' && name.trim() !== '') {
-    const stem = name.replace(/\.[^.]+$/, '')
-    const match = attached.find((file) => file === name || file.startsWith(`${stem}_`))
-    if (match) return pbFileUrl(item, match)
+  if (typeof name === 'string' && name.trim() !== '' && attached.includes(name)) {
+    return mediaUrl(item, name)
   }
 
-  return pbFileUrl(item, attached[index]) || null
+  return mediaUrl(item, attached[index]) || null
 }
 
 /** Request/response pairs, for projects whose whole surface is an API. */

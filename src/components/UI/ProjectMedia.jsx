@@ -4,7 +4,7 @@ import { useCopy } from '@/i18n/locale-context'
 
 /**
  * Renders whatever media a project actually has: a looping video, a still, or —
- * when PocketBase has neither yet — a composed placeholder built from the
+ * when the record has neither yet — a composed placeholder built from the
  * project's own accent gradient and initials.
  *
  * The fallback exists so an unfinished record reads as deliberate rather than

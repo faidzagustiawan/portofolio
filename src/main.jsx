@@ -30,14 +30,14 @@ function readEmbeddedProjects() {
   try {
     return JSON.parse(node.textContent)
   } catch {
-    // Malformed payload: fall through and let the provider fetch normally.
+    // Malformed payload: fall through and let the provider load the data itself.
     return null
   }
 }
 
-// On a fallback the embedded feed is whatever the last build knew about, which
+// On a fallback the embedded data is whatever the last build knew about, which
 // is exactly the case where it might be missing the project being asked for.
-// Passing null makes the provider fetch fresh.
+// Passing null makes the provider load the data itself.
 const initialProjects = isExactPrerender ? readEmbeddedProjects() : null
 
 const tree = (

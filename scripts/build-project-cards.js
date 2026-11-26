@@ -6,19 +6,19 @@
  * recognisable before anyone clicks it.
  *
  * Runs after `vite build` because it reads the gradient colours back out of the
- * compiled CSS: the class names live in PocketBase, so this file has no other
- * way to know what `from-blue-600` resolves to.
+ * compiled CSS: the class names live in content/projects.json, so this file
+ * has no other way to know what `from-blue-600` resolves to.
  */
 import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
 import './load-env.js'
+import { loadProjects } from './load-projects.js'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const DIST = path.join(root, 'dist')
 const OUT_DIR = path.join(DIST, 'og')
-const PB_URL = (process.env.VITE_PB_URL || 'https://faidz.fun/pb').replace(/\/+$/, '')
 
 // Printed in the card's corner. Derived rather than written out again, so the
 // cards cannot end up advertising a domain the site no longer uses.
@@ -177,23 +177,10 @@ function cardSvg(project, palette) {
 </svg>`
 }
 
-async function fetchProjects() {
-  const url = `${PB_URL}/api/collections/projects/records?perPage=200`
-  const response = await fetch(url, { signal: AbortSignal.timeout(20_000) })
-  if (!response.ok) throw new Error(`PocketBase responded ${response.status}`)
-  return (await response.json()).items || []
-}
-
 async function main() {
   const palette = readGradientPalette()
 
-  let projects = []
-  try {
-    projects = await fetchProjects()
-  } catch (err) {
-    console.warn(`[og] could not reach PocketBase (${err.message}) — no project cards written`)
-    return
-  }
+  const projects = loadProjects()
 
   mkdirSync(OUT_DIR, { recursive: true })
 

@@ -1,0 +1,743 @@
+[
+  {
+    "slug": "tolongin",
+    "name": "Tolongin",
+    "category": "Web Application",
+    "year": 2026,
+    "featured": true,
+    "color": "from-violet-700 to-blue-500",
+    "role": "Full-Stack Developer",
+    "access": "public",
+    "liveurl": "https://tolongin.co",
+    "demourl": "",
+    "demonote": "",
+    "demonote_id": "",
+    "githuburl": "",
+    "repos": null,
+    "sourcehidden": false,
+    "sandboxid": "",
+    "previewmode": "auto",
+    "nextprojectslug": "re-enviro",
+    "technologies": [
+      "NestJS",
+      "Next.js",
+      "TypeScript",
+      "PostgreSQL",
+      "Prisma",
+      "pgvector",
+      "Python",
+      "DeepFace",
+      "EasyOCR",
+      "OpenAI API",
+      "Midtrans",
+      "Cloudflare R2",
+      "Judge0",
+      "Playwright",
+      "Sentry"
+    ],
+    "team": [
+      {
+        "name": "Muhammad Faidz Agustiawan",
+        "role": "Full-Stack Developer",
+        "avatar": null
+      },
+      {
+        "name": "Fikri Irfan Hidayah",
+        "role": "Designer",
+        "avatar": null
+      },
+      {
+        "name": "Nabil Athaya",
+        "role": "Product Manager",
+        "avatar": null
+      }
+    ],
+    "tagline": "Hiring platform that replaces the CV with a proctored work sample",
+    "tagline_id": "Platform rekrutmen yang mengganti CV dengan ujian praktik terawasi",
+    "client": "Open to the public, in two roles: talent and hiring companies",
+    "client_id": "Terbuka untuk umum, dua peran: talenta dan perusahaan",
+    "duration": "May – August 2026",
+    "duration_id": "Mei – Agustus 2026",
+    "overview": "Tolongin is a recruitment platform where companies publish real case studies instead of reading CVs. Candidates work through them inside the app in timed stages, get graded partly by AI and partly by a recruiter, and keep a verified portfolio of what they passed. Companies pay a subscription; candidates spend tokens if they want to publish their own public case study.",
+    "overview_id": "Tolongin adalah platform rekrutmen tempat perusahaan memasang studi kasus nyata, bukan membaca CV. Kandidat mengerjakannya langsung di dalam aplikasi dalam tahapan berbatas waktu, dinilai sebagian oleh AI dan sebagian oleh perekrut, lalu menyimpan portofolio terverifikasi dari yang berhasil dilewatinya. Perusahaan membayar langganan; kandidat memakai token bila ingin menerbitkan studi kasus buatannya sendiri.",
+    "challenge": "A take-home assignment is worthless as evidence if you cannot show who actually did it and that the clock was real. Both guarantees have to survive an adversary who controls the browser: a timer computed on the client stops when the tab closes, and a score requirement checked on the client is skipped by calling the endpoint directly. Identity itself is a second problem — one person opening several accounts defeats the whole record. The two Python engines needed for that check, EasyOCR on PyTorch and DeepFace on TensorFlow, segfault when loaded into one process.",
+    "challenge_id": "Tugas yang dikerjakan di rumah tidak membuktikan apa pun kalau tidak jelas siapa yang mengerjakannya dan apakah batas waktunya sungguh berlaku. Dua jaminan itu harus bertahan menghadapi orang yang menguasai perambannya sendiri: hitungan waktu di klien berhenti begitu tab ditutup, dan syarat nilai yang diperiksa di klien bisa dilewati dengan memanggil endpoint langsung. Identitas jadi masalah kedua — satu orang yang membuat banyak akun meruntuhkan seluruh nilai catatannya. Dua mesin Python yang dibutuhkan untuk memeriksanya, EasyOCR di atas PyTorch dan DeepFace di atas TensorFlow, mati dengan SIGSEGV bila dimuat dalam satu proses.",
+    "approach": "Every gating decision was moved behind one server-side service, and the client was reduced to rendering what it is told; a 30-second clock-skew tolerance was added so a candidate who submits on the last second is not punished for network latency. For identity, a hard pass/fail on face distance was rejected: falsely rejecting a real jobseeker locks a person out of the platform, while a duplicate that slips through is still catchable by other signals, so the middle band goes to a human reviewer. Thresholds were not guessed — they were measured on real pairs, and the deduplication ran in shadow mode first, recording distances without rejecting anyone, until the distribution justified enforcing. The two Python frameworks each got their own long-lived worker pool, which keeps the 'load the model once' benefit without putting two conflicting runtimes in one process. AI scoring was deliberately kept off the submit path: the row is written with a null score, and a cron grades it later.",
+    "approach_id": "Seluruh keputusan gerbang dipindahkan ke satu layanan di sisi server, dan klien disempitkan jadi penampil belaka; toleransi selisih jam 30 detik ditambahkan supaya kandidat yang menekan Kumpulkan di detik terakhir tidak dihukum oleh perjalanan jaringan. Untuk identitas, keputusan lolos/tolak ditolak sejak awal: salah menolak pencari kerja yang sah mengunci orang itu dari platform, sedangkan akun ganda yang lolos masih bisa ditangkap sinyal lain, jadi pita tengahnya diserahkan ke peninjau manusia. Ambangnya tidak ditebak — diukur pada pasangan foto sungguhan, dan pemeriksaan duplikat sempat berjalan dalam mode bayangan lebih dulu, mencatat jarak tanpa menolak siapa pun, sampai sebaran datanya cukup untuk menegakkannya. Dua kerangka kerja Python masing-masing diberi kolam proses sendiri yang berumur panjang, sehingga manfaat 'model dimuat sekali' tetap didapat tanpa menyatukan dua runtime yang berbenturan. Penilaian AI sengaja dijauhkan dari jalur pengumpulan: barisnya ditulis dengan skor kosong, lalu cron yang menilainya.",
+    "solution": "A NestJS API with about thirty modules over PostgreSQL and Prisma, and a Next.js App Router frontend. StageGateService is the single authority on stage state; it computes unlock reasons, remaining seconds, and expiry, and assertStageSubmittable is called before any submission row is written. PythonWorkerService keeps a pool of long-running Python processes per script, restarting them with exponential backoff and routing operations to the face or OCR pool. Face embeddings are stored in a pgvector column, kept entirely inside IdentityDedupeService because Prisma Client does not know the vector type, which also guarantees biometric templates never leak into an API response. NIK and identity photos are stored encrypted; uploads go through a presigned Cloudflare R2 URL with a MIME allowlist that deliberately excludes browser-executable types.",
+    "solution_id": "API NestJS berisi sekitar tiga puluh modul di atas PostgreSQL dan Prisma, dengan frontend Next.js App Router. StageGateService satu-satunya penentu keadaan tahap; ia menghitung alasan terkunci, sisa waktu, dan kedaluwarsa, dan assertStageSubmittable dipanggil sebelum satu baris submisi pun ditulis. PythonWorkerService memelihara kolam proses Python berumur panjang per skrip, menyalakannya kembali dengan jeda menaik, dan mengarahkan tiap operasi ke kolam face atau ocr. Embedding wajah disimpan di kolom pgvector dan seluruh aksesnya dikurung di IdentityDedupeService karena Prisma Client tidak mengenali tipe vector — sekaligus menjamin template biometrik tidak pernah ikut terbawa ke respons API. NIK dan foto identitas disimpan terenkripsi; unggahan lewat presigned URL Cloudflare R2 dengan daftar MIME yang sengaja tidak memuat tipe yang bisa dieksekusi peramban.",
+    "contribution": "I was the full-stack developer, alongside Fikri Irfan Hidayah on design and Nabil Athaya as product manager. Across both repositories 139 of 151 backend commits and 113 of 144 frontend commits are mine: the stage gate, the biometric pipeline and its threshold calibration, the identity deduplication, the storage and upload policy, badges, moderation, and CI.",
+    "contribution_id": "Saya full-stack developer-nya, bersama Fikri Irfan Hidayah di desain dan Nabil Athaya sebagai product manager. Di kedua repo, 139 dari 151 commit backend dan 113 dari 144 commit frontend adalah milik saya: gerbang tahapan, pipeline biometrik beserta kalibrasi ambangnya, deteksi identitas ganda, kebijakan penyimpanan dan unggahan, lencana, moderasi, dan CI.",
+    "outcome": "Tolongin won 1st place in the Business Plan Competition at Piala Himasekti, Universitas Riau, in September 2026. FILKOM Universitas Brawijaya is funding its continued development.",
+    "outcome_id": "Tolongin meraih juara 1 Business Plan Competition di Piala Himasekti, Universitas Riau, pada September 2026. Pengembangan lanjutannya didanai oleh FILKOM Universitas Brawijaya.",
+    "image": "",
+    "video": "",
+    "visualdetails": [],
+    "walkthrough": [
+      {
+        "image": "detail-1.webp",
+        "title": "KTP and selfie verification",
+        "title_id": "Verifikasi KTP dan selfie",
+        "body": "The candidate uploads an ID card and a selfie. The request returns 202 immediately and the biometric work runs in the background, because EasyOCR plus DeepFace take far longer than an HTTP request should. NIK is read by regex over the OCR text and stored encrypted; the raw photos are never kept in plaintext columns.",
+        "body_id": "Kandidat mengunggah KTP dan selfie. Permintaannya langsung menjawab 202 dan kerja biometriknya berjalan di latar belakang, karena EasyOCR plus DeepFace jauh lebih lama dari yang pantas ditunggu satu permintaan HTTP. NIK dibaca lewat regex dari hasil OCR lalu disimpan terenkripsi; foto mentahnya tidak pernah tersimpan sebagai kolom biasa."
+      },
+      {
+        "image": "detail-2.webp",
+        "title": "Identity review queue",
+        "title_id": "Antrean tinjauan identitas",
+        "body": "Face distance is not a pass/fail switch but three zones. Below 0.35 is rejected as a duplicate account, 0.35–0.42 lands here for a human to decide. Wrongly rejecting a real jobseeker locks that person out of the platform, so the middle zone goes to an admin instead of the machine.",
+        "body_id": "Jarak wajah bukan sakelar lolos/tolak, melainkan tiga zona. Di bawah 0,35 ditolak sebagai akun ganda, 0,35–0,42 mendarat di sini untuk diputus manusia. Salah menolak pencari kerja yang sah berarti mengunci orang itu dari platform, jadi zona tengah diserahkan ke admin, bukan ke mesin."
+      },
+      {
+        "image": "detail-3.webp",
+        "title": "Staged case study, server-side gate",
+        "title_id": "Studi kasus bertahap, gerbang di sisi server",
+        "body": "Which stage is open, why it is locked, and how many seconds remain are all answered by the server. A timer computed in the browser can be stopped by closing the tab, and a score requirement checked in the browser can be skipped by calling the endpoint directly, so the client only renders what the gate says.",
+        "body_id": "Tahap mana yang terbuka, kenapa terkunci, dan berapa detik tersisa semuanya dijawab server. Hitungan waktu di peramban bisa dihentikan dengan menutup tab, dan syarat nilai yang diperiksa di peramban bisa dilewati dengan memanggil endpoint langsung, jadi klien hanya menampilkan apa yang dikatakan gerbang."
+      },
+      {
+        "image": "detail-4.webp",
+        "title": "Continuous proctoring during the exam",
+        "title_id": "Pengawasan berjalan selama ujian",
+        "body": "Every 30 seconds a frame is sent to the server and compared against the stored selfie. The browser never receives a biometric template. A denied camera permission is not recorded as cheating: the candidate gets a retry button first, and only a persistent failure counts as a violation.",
+        "body_id": "Tiap 30 detik satu bingkai dikirim ke server dan dibandingkan dengan selfie tersimpan. Peramban tidak pernah menerima template biometrik. Izin kamera yang ditolak tidak dicatat sebagai kecurangan: kandidat diberi tombol coba lagi dulu, dan hanya kegagalan yang menetap yang dihitung sebagai pelanggaran."
+      },
+      {
+        "image": "detail-5.webp",
+        "title": "Submission and grading queue",
+        "title_id": "Pengumpulan dan antrean penilaian",
+        "body": "Submitting writes the row with a null AI score and status PENDING_AI; scoring runs later in a cron. The candidate notification is worded for that fact, because the earlier version interpolated the score directly and told every candidate 'AI score: null.'",
+        "body_id": "Pengumpulan menulis barisnya dengan skor AI kosong dan status PENDING_AI; penilaiannya berjalan belakangan lewat cron. Pemberitahuan ke kandidat ditulis sesuai kenyataan itu, karena versi sebelumnya menyisipkan skornya apa adanya dan memberi tahu setiap kandidat 'Skor AI: null.'"
+      },
+      {
+        "image": "detail-6.webp",
+        "title": "Recruiter review board with SLA",
+        "title_id": "Papan tinjauan perekrut beserta SLA",
+        "body": "Applicant counts are computed per enrollment, not per submission row, because staged work produces several rows for one person. A daily cron nudges companies past the seven-day review SLA, once per submission, guarded by slaReminderSentAt so a daily job does not become a daily notification.",
+        "body_id": "Jumlah pelamar dihitung per pendaftaran, bukan per baris submisi, karena pengerjaan bertahap menghasilkan beberapa baris untuk satu orang. Cron harian menegur perusahaan yang melewati SLA tinjauan tujuh hari, sekali per submisi, dijaga slaReminderSentAt supaya pekerjaan harian tidak berubah jadi notifikasi harian."
+      }
+    ],
+    "snippets": [
+      {
+        "label": "Biometric KYC (KTP + selfie)",
+        "label_id": "KYC biometrik (KTP + selfie)",
+        "method": "post",
+        "path": "/api/v1/verification/face-ai",
+        "note": "Returns 202 and hands the work to a background job, because OCR and face embedding run in Python child processes that take seconds, not milliseconds.",
+        "note_id": "Menjawab 202 dan menyerahkan kerjanya ke proses latar belakang, karena OCR dan embedding wajah berjalan di proses anak Python yang makan hitungan detik, bukan milidetik.",
+        "request": {
+          "selfiePhotoUrl": "https://storage.tolongin.co/biometrics/selfie-abc.jpg",
+          "idCardPhotoUrl": "https://storage.tolongin.co/biometrics/ktp-abc.jpg"
+        },
+        "response": {
+          "status": "PROCESSING",
+          "message": "Verifikasi KTP & Wajah sedang diproses di latar belakang. Anda akan menerima notifikasi segera."
+        }
+      },
+      {
+        "label": "Anti-impersonation check mid-exam",
+        "label_id": "Pemeriksaan anti-joki saat ujian",
+        "method": "post",
+        "path": "/api/v1/verification/verify-execution",
+        "note": "Compares a camera frame against the stored selfie with the strict photo-vs-photo threshold (0.40), not the looser selfie-vs-ID threshold (0.42); an unavailable engine returns a distinct flag so the user is never blamed for a server fault.",
+        "note_id": "Membandingkan bingkai kamera dengan selfie tersimpan memakai ambang ketat foto-vs-foto (0,40), bukan ambang longgar selfie-vs-KTP (0,42); mesin yang mati menjawab dengan penanda tersendiri supaya pengguna tidak disalahkan atas kesalahan server.",
+        "request": {
+          "livePhotoUrl": "data:image/jpeg;base64,..."
+        },
+        "response": {
+          "verified": false,
+          "matchScore": 41,
+          "message": "Peringatan Anomali Anti-Joki: Wajah yang terdeteksi di kamera tidak cocok dengan KTP/KYC terdaftar (Kemiripan 41%). Akses pengumpulan diblokir!"
+        }
+      },
+      {
+        "label": "Stage state for one enrollment",
+        "label_id": "Keadaan tahap satu pendaftaran",
+        "method": "get",
+        "path": "/api/v1/stages/enrollment/:enrollmentId",
+        "note": "Read and write in one call: the gate depends on wall-clock time and on scores that just arrived, so the correct state only exists if it is evaluated now.",
+        "note_id": "Membaca dan menulis dalam satu panggilan: gerbangnya bergantung pada waktu dan pada nilai yang baru masuk, jadi keadaan yang benar hanya ada bila dievaluasi sekarang.",
+        "request": {},
+        "response": [
+          {
+            "sectionId": "sec_02",
+            "title": "Tahap 2 — Studi Kasus",
+            "order": 2,
+            "status": "LOCKED",
+            "unlocked": false,
+            "lockReason": "Tahap sebelumnya belum mencapai nilai minimum 70.",
+            "timeLimit": 90,
+            "opensAt": null,
+            "closesAt": null,
+            "startedAt": null,
+            "expiresAt": null,
+            "submittedAt": null,
+            "remainingSeconds": null,
+            "score": null
+          }
+        ]
+      },
+      {
+        "label": "Submit a stage solution",
+        "label_id": "Mengumpulkan solusi satu tahap",
+        "method": "post",
+        "path": "/api/v1/workspace/submit",
+        "note": "The deadline is checked against expiresAt in the database before anything is written; an omitted sectionId still means the old whole-challenge submission, so staged and non-staged challenges share one endpoint.",
+        "note_id": "Batas waktunya diperiksa terhadap expiresAt di basis data sebelum apa pun ditulis; sectionId yang dikosongkan tetap berarti pengumpulan menyeluruh gaya lama, jadi studi kasus bertahap dan tidak bertahap memakai satu endpoint yang sama.",
+        "request": {
+          "enrollmentId": "enr_9f21",
+          "sectionId": "sec_02",
+          "repositoryUrl": "https://github.com/contoh/solusi",
+          "notes": "Catatan pengerjaan",
+          "responses": [
+            {
+              "componentId": "cmp_11",
+              "textValue": "B"
+            },
+            {
+              "componentId": "cmp_12",
+              "fileUrl": "https://storage.tolongin.co/solutions/enr_9f21.zip"
+            }
+          ]
+        },
+        "response": {
+          "id": "sub_4181",
+          "enrollmentId": "enr_9f21",
+          "sectionId": "sec_02",
+          "status": "PENDING_AI",
+          "aiScore": null,
+          "aiPlagiarismScore": null,
+          "aiCorrectionSummary": null,
+          "createdAt": "2026-08-09T04:12:33.000Z"
+        }
+      },
+      {
+        "label": "Midtrans webhook",
+        "label_id": "Webhook Midtrans",
+        "method": "post",
+        "path": "/api/v1/payments/webhook",
+        "note": "Unauthenticated by necessity — Midtrans sends no custom header — so it recomputes the SHA-512 signature and compares it with timingSafeEqual, and it never throws after a settled payment, because Midtrans would retry a failed webhook forever.",
+        "note_id": "Tanpa autentikasi karena memang begitu — Midtrans tidak mengirim header khusus — jadi tanda tangan SHA-512 dihitung ulang dan dibandingkan dengan timingSafeEqual, dan tidak pernah melempar galat setelah pembayaran lunas, karena Midtrans akan mengulang webhook yang gagal tanpa henti.",
+        "request": {
+          "order_id": "TOPUP-9f21-1754712345",
+          "status_code": "200",
+          "gross_amount": "150000.00",
+          "transaction_status": "settlement",
+          "signature_key": "..."
+        },
+        "response": {
+          "status": "success",
+          "message": "Pembayaran diproses"
+        }
+      }
+    ],
+    "updated": "2026-09-08 12:23:49.247Z"
+  },
+  {
+    "slug": "re-enviro",
+    "name": "Re-Enviro",
+    "category": "Web Application",
+    "year": 2025,
+    "featured": true,
+    "color": "from-emerald-600 to-teal-500",
+    "role": "Frontend Developer",
+    "access": "",
+    "liveurl": "",
+    "demourl": "",
+    "demonote": "",
+    "demonote_id": "",
+    "githuburl": "https://github.com/faidzagustiawan/Renviro-13",
+    "repos": null,
+    "sourcehidden": false,
+    "sandboxid": "",
+    "previewmode": "",
+    "nextprojectslug": "finote",
+    "technologies": [
+      "React",
+      "JavaScript",
+      "Tailwind CSS",
+      "Framer Motion",
+      "Supabase"
+    ],
+    "team": [
+      {
+        "avatar": null,
+        "name": "Muhammad Faidz Agustiawan",
+        "role": "Frontend Developer"
+      },
+      {
+        "avatar": null,
+        "name": "Gerard",
+        "role": "Product Manager"
+      },
+      {
+        "avatar": null,
+        "name": "Katherine",
+        "role": "Backend Developer"
+      },
+      {
+        "avatar": null,
+        "name": "Tia",
+        "role": "UI/UX Designer"
+      }
+    ],
+    "tagline": "Volunteering and Green Funding Platform",
+    "tagline_id": "Platform Relawan dan Pendanaan Hijau",
+    "client": "ASCEND Team Project",
+    "client_id": "Proyek Tim ASCEND",
+    "duration": "1 Month",
+    "duration_id": "1 Bulan",
+    "overview": "An environmental action platform with two programmes: EcoAct for signing up to volunteer activities such as tree planting and beach clean-ups, and Dana Hijau for funding environmental projects through open donations.",
+    "overview_id": "Platform aksi lingkungan dengan dua program: EcoAct untuk mendaftar kegiatan relawan seperti penanaman pohon dan bersih pantai, dan Dana Hijau untuk mendanai proyek lingkungan lewat donasi terbuka.",
+    "challenge": "Two programmes with different flows — joining an activity and giving money — had to live in one application without leaving people unsure where they were. Both also needed the same contribution history, even though what gets recorded differs in kind: attendance versus an amount.",
+    "challenge_id": "Dua program dengan alur yang berbeda — mendaftar kegiatan dan menyumbang dana — harus tinggal di satu aplikasi tanpa membuat penggunanya bingung berada di mana. Keduanya juga perlu riwayat kontribusi yang sama, padahal yang dicatat berbeda bentuk: kehadiran versus nominal.",
+    "approach": "Bringing both into a single history page rather than splitting them across two dashboards, so a person's contribution reads as one story. The admin role is separated by its own layout and route guard rather than by conditional checks scattered through every page.",
+    "approach_id": "Menyatukan keduanya di satu halaman riwayat alih-alih memisahkan dua dasbor, sehingga kontribusi pengguna terbaca sebagai satu cerita. Peran admin dipisahkan lewat layout dan guard rute tersendiri, bukan lewat pengecekan kondisi yang tersebar di tiap halaman.",
+    "solution": "React Router with ProtectedRoute and a separate AdminLayout. Supabase handles authentication as well as the database for activities, donations and history. A statistics dashboard summarises contributions per user, and the whole interface supports light and dark through ThemeContext.",
+    "solution_id": "React Router dengan ProtectedRoute dan AdminLayout terpisah. Supabase menangani autentikasi sekaligus basis data untuk kegiatan, donasi, dan riwayat. Dasbor statistik merangkum kontribusi per pengguna, dan seluruh antarmuka mendukung mode terang dan gelap lewat ThemeContext.",
+    "contribution": "I initiated the Frontend architecture, designed the React component hierarchy, and specifically programmed all micro-interactions and transition animations to run smoothly without frame drops.",
+    "contribution_id": "",
+    "outcome": "Improved my React architecture skills and deepened my understanding of state-driven animation, resulting in a visually impressive and highly responsive platform.",
+    "outcome_id": "",
+    "image": "",
+    "video": "",
+    "visualdetails": [],
+    "walkthrough": null,
+    "snippets": null,
+    "updated": "2026-09-02 14:52:01.642Z"
+  },
+  {
+    "slug": "finote",
+    "name": "Finote",
+    "category": "Mobile",
+    "year": 2025,
+    "featured": false,
+    "color": "from-indigo-600 to-purple-500",
+    "role": "Android Developer",
+    "access": "",
+    "liveurl": "",
+    "demourl": "",
+    "demonote": "",
+    "demonote_id": "",
+    "githuburl": "https://github.com/faidzagustiawan/Finote",
+    "repos": null,
+    "sourcehidden": false,
+    "sandboxid": "",
+    "previewmode": "",
+    "nextprojectslug": "engineer-coffee",
+    "technologies": [
+      "Kotlin",
+      "Jetpack Compose",
+      "CameraX",
+      "ML Kit",
+      "Supabase"
+    ],
+    "team": [
+      {
+        "avatar": null,
+        "name": "Muhammad Faidz Agustiawan",
+        "role": "Android Developer"
+      },
+      {
+        "avatar": null,
+        "name": "Yehezkiel",
+        "role": "Android Developer"
+      },
+      {
+        "avatar": null,
+        "name": "Erza",
+        "role": "Android Developer"
+      }
+    ],
+    "tagline": "Personal Finance App with Receipt Scanning",
+    "tagline_id": "Aplikasi Keuangan Pribadi dengan Pemindaian Struk",
+    "client": "Personal Project",
+    "client_id": "Proyek Pribadi",
+    "duration": "±3 Months",
+    "duration_id": "±3 Bulan",
+    "overview": "An Android personal finance app with a savings goal tracker. Beyond manual entry, users can photograph a shopping receipt and have the amount read automatically by OCR.",
+    "overview_id": "Aplikasi Android pencatat keuangan pribadi dengan pelacak target tabungan. Selain input manual, pengguna bisa memotret struk belanja dan nominalnya dibaca otomatis lewat OCR.",
+    "challenge": "The main reason people stop tracking their finances is retyping every transaction. But receipts have no standard layout — the total sits in a different place at every shop, so there is no fixed coordinate to read from.",
+    "challenge_id": "Alasan utama orang berhenti mencatat keuangan adalah mengetik ulang tiap transaksi. Tapi struk belanja tidak punya tata letak baku — posisi nominal total berbeda di tiap toko, jadi tidak ada koordinat tetap yang bisa dijadikan patokan pembacaan.",
+    "approach": "Making the camera the primary way in rather than an extra feature. OCR results are deliberately not saved straight away: the amount that was read is shown first in a form that can be corrected, because one wrong reading saved silently damages trust far more than typing it by hand.",
+    "approach_id": "Menjadikan kamera sebagai jalur masuk utama, bukan fitur tambahan. Hasil OCR sengaja tidak langsung disimpan: nominal yang terbaca ditampilkan lebih dulu di form yang bisa dikoreksi, karena satu pembacaan salah yang diam-diam tersimpan merusak kepercayaan lebih parah daripada mengetik manual.",
+    "solution": "A Jetpack Compose interface with Navigation and a bottom bar. CameraX captures the receipt and ML Kit reads the text on-device, without sending the photo to a server. Transactions and savings goals live in Supabase so they sync across devices, with sign-in through Supabase Auth and Google Credential Manager.",
+    "solution_id": "Antarmuka Jetpack Compose dengan Navigation dan bottom bar. CameraX mengambil gambar struk dan ML Kit membaca teksnya di perangkat, tanpa mengirim foto ke server. Data transaksi dan target tabungan disimpan di Supabase sehingga tersinkron antar perangkat, dengan login lewat Supabase Auth dan Google Credential Manager.",
+    "contribution": "I focused on UI/UX implementation using Jetpack Compose, specifically building the data visualization components (custom charts) and cross-screen navigation.",
+    "contribution_id": "",
+    "outcome": "Solidified my foundation in modern Android development (Declarative UI) and enhanced my ability to transform raw data into interactive visualizations.",
+    "outcome_id": "",
+    "image": "",
+    "video": "",
+    "visualdetails": [],
+    "walkthrough": null,
+    "snippets": null,
+    "updated": "2026-09-02 14:52:01.236Z"
+  },
+  {
+    "slug": "engineer-coffee",
+    "name": "Engineer Coffee",
+    "category": "Landing Page",
+    "year": 2025,
+    "featured": true,
+    "color": "from-amber-600 to-orange-500",
+    "role": "Frontend Developer",
+    "access": "",
+    "liveurl": "https://engineer-coffee.vercel.app/",
+    "demourl": "",
+    "demonote": "",
+    "demonote_id": "",
+    "githuburl": "https://github.com/faidzagustiawan/Engineer-Coffee",
+    "repos": null,
+    "sourcehidden": false,
+    "sandboxid": "",
+    "previewmode": "",
+    "nextprojectslug": "exhibitly",
+    "technologies": [
+      "HTML5",
+      "Tailwind CSS",
+      "JavaScript"
+    ],
+    "team": [
+      {
+        "avatar": null,
+        "name": "Muhammad Faidz Agustiawan",
+        "role": "Frontend Developer"
+      }
+    ],
+    "tagline": "One-Page Coffee Shop Site, No Build Step",
+    "tagline_id": "Situs Satu Halaman Kedai Kopi, Tanpa Build Step",
+    "client": "Independent Coffee Brand",
+    "client_id": "Brand Kopi Independen",
+    "duration": "1 Week",
+    "duration_id": "1 Minggu",
+    "overview": "A one-page landing site for the Engineer Coffee shop: brand profile, menu, location and contact. Built with no framework and no build step — it opens straight from a file in the browser.",
+    "overview_id": "Landing page satu halaman untuk kedai kopi Engineer Coffee: profil brand, menu, lokasi, dan kontak. Dibangun tanpa framework dan tanpa build step, cukup dibuka langsung di browser.",
+    "challenge": "Many coffee shop websites look incredibly generic. The challenge was to create an interface that is elegant and interactive, yet lightweight and fast without relying on bloated libraries.",
+    "challenge_id": "",
+    "approach": "Choosing static HTML with Tailwind over a CDN rather than setting up React and a build pipeline. For a single page with no dynamic data, a build step only adds something that can break and makes it harder for whoever edits the content later.",
+    "approach_id": "Memilih HTML statis dengan Tailwind lewat CDN alih-alih menyiapkan React dan pipeline build. Untuk satu halaman tanpa data dinamis, build step hanya menambah hal yang bisa rusak dan menyulitkan siapa pun yang nanti perlu mengubah isinya.",
+    "solution": "A mobile-first layout with smooth-scroll navigation, a hero with a call to action, a menu section, location details and a footer of social links. Every interaction is handled by plain JavaScript in a single file.",
+    "solution_id": "Tata letak mobile-first dengan navigasi smooth-scroll, hero beserta ajakan bertindak, bagian menu, informasi lokasi, dan footer tautan sosial. Seluruh interaksi ditangani JavaScript biasa dalam satu berkas.",
+    "contribution": "This project is a solo endeavor. I handled everything from converting the UI design into code, optimizing image assets, to final deployment.",
+    "contribution_id": "",
+    "outcome": "This project proves my fundamental frontend craftsmanship, ensuring the website is not only beautiful but also accessible instantly (blazing fast).",
+    "outcome_id": "",
+    "image": "",
+    "video": "",
+    "visualdetails": [],
+    "walkthrough": null,
+    "snippets": null,
+    "updated": "2026-09-02 14:52:02.315Z"
+  },
+  {
+    "slug": "exhibitly",
+    "name": "Exhibitly",
+    "category": "Web Application",
+    "year": 2025,
+    "featured": false,
+    "color": "from-purple-600 to-pink-500",
+    "role": "Creative Frontend Developer",
+    "access": "",
+    "liveurl": "https://exhibitly-nu.vercel.app/",
+    "demourl": "",
+    "demonote": "",
+    "demonote_id": "",
+    "githuburl": "https://github.com/faidzagustiawan/Exhibitly",
+    "repos": null,
+    "sourcehidden": false,
+    "sandboxid": "",
+    "previewmode": "",
+    "nextprojectslug": "spk-property-backend",
+    "technologies": [
+      "React",
+      "Supabase",
+      "Cloudinary",
+      "Tailwind CSS",
+      "Framer Motion"
+    ],
+    "team": [
+      {
+        "avatar": null,
+        "name": "Muhammad Faidz Agustiawan",
+        "role": "Creative Frontend Developer"
+      }
+    ],
+    "tagline": "Online Art Gallery with Uploads, Likes and Comments",
+    "tagline_id": "Galeri Seni Daring dengan Unggahan, Like, dan Komentar",
+    "client": "Personal Experimental Project",
+    "client_id": "Proyek Eksperimen Pribadi",
+    "duration": "2 Weeks",
+    "duration_id": "2 Minggu",
+    "overview": "A digital art gallery where artists upload work and visitors respond with likes and comments. Built with no server of its own: Supabase holds the data and authentication, Cloudinary holds the image files.",
+    "overview_id": "Galeri seni digital tempat seniman mengunggah karya dan pengunjung memberi apresiasi lewat like dan komentar. Dibangun tanpa server sendiri: Supabase memegang data dan autentikasi, Cloudinary memegang berkas gambarnya.",
+    "challenge": "Artwork is uploaded at high resolution, and storing it as blobs in Supabase would exhaust the storage quota long before the gallery filled up. The app also has no backend of its own, so there was nowhere to process or compress an image between the browser and the database.",
+    "challenge_id": "Karya seni diunggah dalam resolusi tinggi, dan menyimpannya sebagai blob di Supabase akan menghabiskan kuota storage jauh sebelum galerinya terisi. Aplikasi ini juga tidak punya backend sendiri, jadi tidak ada tempat untuk memproses atau mengompresi gambar di antara browser dan database.",
+    "approach": "Separating the files from the metadata rather than keeping both in one place. Cloudinary accepts uploads straight from the browser and returns a URL; Supabase stores only that URL alongside the artwork, likes and comments. The consequence is that no intermediary backend has to be written, deployed or paid for.",
+    "approach_id": "Memisahkan berkas dari metadata alih-alih menyimpan keduanya di satu tempat. Cloudinary menerima unggahan langsung dari browser dan mengembalikan URL; Supabase hanya menyimpan URL itu beserta data karya, like, dan komentar. Konsekuensinya tidak ada backend perantara yang perlu ditulis, di-deploy, atau dibayar.",
+    "solution": "React Router with a ProtectedRoute component separating public pages from those that need a session, applied in both directions — a signed-in visitor is also kept out of the login page. AuthContext centralises the Supabase session so no authentication state is scattered across pages. A complete password reset flow, from request through to the update page.",
+    "solution_id": "React Router dengan komponen ProtectedRoute yang memisahkan halaman publik dari halaman yang butuh sesi, dipakai dua arah — pengguna yang sudah login juga dicegah membuka halaman login. AuthContext memusatkan sesi Supabase supaya tidak ada state autentikasi yang tercecer di tiap halaman. Alur reset kata sandi lengkap, dari permintaan sampai halaman pembaruan.",
+    "contribution": "As a solo developer, I orchestrated the 3D scene, programmed raycasting logic for object interaction, and optimized 3D assets to pass web performance standards.",
+    "contribution_id": "",
+    "outcome": "Exhibitly showcases my advanced frontend capabilities in managing WebGL, 3D interactions, and complex animations to create experimental web designs.",
+    "outcome_id": "",
+    "image": "",
+    "video": "",
+    "visualdetails": [],
+    "walkthrough": null,
+    "snippets": null,
+    "updated": "2026-09-02 14:52:00.520Z"
+  },
+  {
+    "slug": "pantausam",
+    "name": "PantauSAM",
+    "category": "Web Application",
+    "year": 2024,
+    "featured": true,
+    "color": "from-blue-600 to-cyan-500",
+    "role": "Fullstack Web Developer",
+    "access": "",
+    "liveurl": "",
+    "demourl": "",
+    "demonote": "",
+    "demonote_id": "",
+    "githuburl": "https://github.com/faidzagustiawan/PantauSAM",
+    "repos": null,
+    "sourcehidden": false,
+    "sandboxid": "",
+    "previewmode": "",
+    "nextprojectslug": "tolongin",
+    "technologies": [
+      "Laravel 11",
+      "Blade",
+      "JavaScript",
+      "MySQL",
+      "Leaflet.js",
+      "OpenStreetMap API",
+      "Tailwind CSS",
+      "Laravel Breeze"
+    ],
+    "team": [
+      {
+        "avatar": null,
+        "name": "Muhammad Faidz Agustiawan",
+        "role": "Fullstack Developer"
+      },
+      {
+        "avatar": null,
+        "name": "Fikri Irfan Hidayah",
+        "role": "UI Designer"
+      },
+      {
+        "avatar": null,
+        "name": "Dama Saputra Ganatha",
+        "role": "Project Manager"
+      },
+      {
+        "avatar": null,
+        "name": "Radit",
+        "role": "Document Manager"
+      }
+    ],
+    "tagline": "Community Infrastructure Reporting with Admin Verification",
+    "tagline_id": "Pelaporan Infrastruktur Warga dengan Verifikasi Admin",
+    "client": "Academic Project",
+    "client_id": "Proyek Akademik",
+    "duration": "±5 Months",
+    "duration_id": "±5 Bulan",
+    "overview": "A public infrastructure reporting platform. Residents submit damage reports with a location and photo, an admin verifies them, and the ones that pass appear on an interactive map along with their repair status.",
+    "overview_id": "Platform pelaporan infrastruktur publik. Warga mengirim laporan kerusakan lengkap dengan lokasi dan foto, admin memverifikasinya, lalu laporan yang lolos tampil di peta interaktif beserta status pengerjaannya.",
+    "challenge": "Reporting has to be as easy as possible for ordinary residents to bother using, but reports arriving unfiltered fill up with duplicates and pranks — and once a public map fills with noise, the platform's credibility is gone. Typing an address by hand is also error-prone and tedious on a phone.",
+    "challenge_id": "Pelaporan harus semudah mungkin supaya warga awam mau memakainya, tapi laporan yang masuk tanpa saringan akan penuh duplikat dan kiriman iseng — dan begitu peta publik terisi sampah, kredibilitas platformnya habis. Mengetik alamat manual juga rawan salah dan melelahkan di ponsel.",
+    "approach": "Placing admin verification as a gate between submission and publication, so reporting stays open without sacrificing what ends up on the map. For location, people drop a pin on the map instead of typing an address, which makes the coordinates accurate and the effort much lighter.",
+    "approach_id": "Menaruh verifikasi admin sebagai gerbang antara pengiriman dan publikasi, sehingga pelaporan tetap terbuka tanpa mengorbankan isi peta. Untuk lokasi, pengguna menandai titik di peta alih-alih mengetik alamat, jadi koordinatnya akurat dan usaha pengisiannya jauh lebih ringan.",
+    "solution": "Laravel 11 with Blade and MySQL. Three levels of role are separated by their own middleware — user, admin and super admin — so the access rules read in one place rather than scattered through controllers. Verified reports render on an interactive map, and the reporter can follow the repair status.",
+    "solution_id": "Laravel 11 dengan Blade dan MySQL. Tiga tingkat peran dipisahkan lewat middleware terpisah — pengguna, admin, dan super admin — sehingga aturan aksesnya terbaca di satu tempat, bukan tersebar di controller. Laporan yang terverifikasi dirender di peta interaktif, dan pelapor bisa memantau status pengerjaannya.",
+    "contribution": "As a Fullstack Developer, I was fully responsible for designing the database schema, building RESTful endpoints in Laravel, and integrating Leaflet.js with OpenStreetMap for coordinate-based reporting features.",
+    "contribution_id": "",
+    "outcome": "This project successfully demonstrates my capability to build functional, secure fullstack applications that solve real-world bureaucratic reporting issues at the community level.",
+    "outcome_id": "",
+    "image": "",
+    "video": "",
+    "visualdetails": [],
+    "walkthrough": null,
+    "snippets": null,
+    "updated": "2026-09-08 12:23:19.710Z"
+  },
+  {
+    "slug": "spk-property-backend",
+    "name": "SPK Property Backend",
+    "category": "AI/ML",
+    "year": 2024,
+    "featured": true,
+    "color": "from-slate-700 to-zinc-500",
+    "role": "Backend Developer",
+    "access": "",
+    "liveurl": "",
+    "demourl": "",
+    "demonote": "",
+    "demonote_id": "",
+    "githuburl": "https://github.com/faidzagustiawan/spk-property-backend",
+    "repos": null,
+    "sourcehidden": false,
+    "sandboxid": "",
+    "previewmode": "",
+    "nextprojectslug": "kalkulator-sdmk",
+    "technologies": [
+      "Node.js",
+      "Express",
+      "PostgreSQL",
+      "Docker",
+      "Swagger UI",
+      "JWT"
+    ],
+    "team": [
+      {
+        "avatar": null,
+        "name": "Muhammad Faidz Agustiawan",
+        "role": "Backend Developer"
+      }
+    ],
+    "tagline": "Decision Support API: AHP Weighting with Four Ranking Methods",
+    "tagline_id": "API Pendukung Keputusan: Pembobotan AHP dengan Empat Metode Perankingan",
+    "client": "Academic / Independent",
+    "client_id": "Akademik / Mandiri",
+    "duration": "±2 Months",
+    "duration_id": "±2 Bulan",
+    "overview": "A REST API for a property selection decision support system. Users define criteria, set weights through AHP pairwise comparison, then rank alternatives with four methods at once so the results can be compared.",
+    "overview_id": "REST API untuk sistem pendukung keputusan pemilihan properti. Pengguna menyusun kriteria, menetapkan bobot lewat perbandingan berpasangan AHP, lalu memeringkat alternatif dengan empat metode sekaligus untuk membandingkan hasilnya.",
+    "challenge": "SAW, SMART, WP and TOPSIS each normalise data differently, yet all four have to draw on one set of AHP weights and one shared data structure. Bolting all four onto a single controller would mean that adding a fifth method later takes apart code that already works.",
+    "challenge_id": "SAW, SMART, WP, dan TOPSIS menormalisasi data dengan cara yang berbeda-beda, tapi keempatnya harus memakai satu sumber bobot dari AHP dan satu struktur data yang sama. Menempelkan keempatnya ke satu controller berarti setiap penambahan metode kelima membongkar kode yang sudah berjalan.",
+    "approach": "Splitting responsibility by layer rather than by feature: controllers only translate HTTP, services hold the mathematics, repositories hold the queries. Each ranking method stands as its own service, so AHP computes the weights once and all four consume them through the same interface.",
+    "approach_id": "Memisahkan tanggung jawab per lapisan alih-alih per fitur: controller hanya menerjemahkan HTTP, service memegang matematikanya, repository memegang query. Tiap metode perankingan berdiri sebagai service sendiri, jadi AHP menghitung bobot satu kali dan keempat metode mengonsumsinya lewat antarmuka yang sama.",
+    "solution": "Express over PostgreSQL, run through Docker Compose. AHP derives weights from a pairwise comparison matrix; SAW, SMART, WP and TOPSIS rank the alternatives using them. A Dataset Generator endpoint pivots the relational data into tabular form so a scikit-learn model in a separate FastAPI service can consume it directly. JWT authentication with bcrypt, and every endpoint documented in Swagger OpenAPI 3.0.",
+    "solution_id": "Express di atas PostgreSQL, dijalankan lewat Docker Compose. AHP menurunkan bobot dari matriks perbandingan berpasangan; SAW, SMART, WP, dan TOPSIS memeringkat alternatif memakai bobot tersebut. Endpoint Dataset Generator mem-pivot data relasional menjadi tabular agar bisa langsung dikonsumsi model scikit-learn di layanan FastAPI terpisah. Otentikasi JWT dengan bcrypt, seluruh endpoint terdokumentasi di Swagger OpenAPI 3.0.",
+    "contribution": "Sole developer. Designed the database schema, implemented JWT authentication, wrote the ranking algorithms, and documented the API using OpenAPI/Swagger.",
+    "contribution_id": "",
+    "outcome": "Successfully delivered a highly complex algorithmic backend that seamlessly bridges decision-support mathematics with modern web API standards and machine learning readiness.",
+    "outcome_id": "",
+    "image": "",
+    "video": "",
+    "visualdetails": [],
+    "walkthrough": null,
+    "snippets": null,
+    "updated": "2026-09-02 14:52:00.932Z"
+  },
+  {
+    "slug": "kalkulator-sdmk",
+    "name": "Kalkulator SDMK",
+    "category": "Web Application",
+    "year": 2024,
+    "featured": false,
+    "color": "from-emerald-600 to-cyan-600",
+    "role": "Frontend Developer",
+    "access": "",
+    "liveurl": "",
+    "demourl": "",
+    "demonote": "",
+    "demonote_id": "",
+    "githuburl": "https://github.com/faidzagustiawan/SDMK",
+    "repos": null,
+    "sourcehidden": false,
+    "sandboxid": "",
+    "previewmode": "",
+    "nextprojectslug": "travel-backend",
+    "technologies": [
+      "Next.js",
+      "React",
+      "Tailwind CSS",
+      "Google Apps Script"
+    ],
+    "team": [
+      {
+        "avatar": null,
+        "name": "Muhammad Faidz Agustiawan",
+        "role": "Frontend Developer"
+      }
+    ],
+    "tagline": "Health Workforce Calculator over a Spreadsheet Backend",
+    "tagline_id": "Kalkulator Tenaga Kesehatan di Atas Backend Spreadsheet",
+    "client": "Healthcare Sector",
+    "client_id": "Sektor Kesehatan",
+    "duration": "±1 Month",
+    "duration_id": "±1 Bulan",
+    "overview": "A calculator for health workforce requirements under the Ministry of Health's workload method. A Next.js frontend fitted over an existing Google Apps Script and Spreadsheet backend that could not be replaced.",
+    "overview_id": "Kalkulator kebutuhan tenaga kesehatan menurut metode beban kerja Kemenkes. Frontend Next.js yang dipasang di atas backend Google Apps Script dan Spreadsheet yang sudah berjalan dan tidak bisa diganti.",
+    "challenge": "The client needed a modern, responsive web application but relied on an existing Google Apps Script (Google Sheets) backend for data storage and logic.",
+    "challenge_id": "",
+    "approach": "Taking Apps Script as it is rather than rewriting the backend. Requests are sent without a Content-Type header so the browser treats them as a simple request and skips the preflight Apps Script cannot answer. The calculation moved into the browser rather than round-tripping to the server at every step, keeping the form responsive on a slow connection.",
+    "approach_id": "Menerima Apps Script apa adanya alih-alih menulis ulang backend. Permintaan dikirim tanpa header Content-Type supaya browser memperlakukannya sebagai simple request dan melewati preflight yang tidak bisa dijawab Apps Script. Perhitungan dipindah ke browser, bukan bolak-balik ke server tiap langkah, supaya formulir tetap responsif di koneksi lambat.",
+    "solution": "A four-step form — WKT, primary tasks, supporting tasks, review — on the Next.js App Router. sdmk-engine.js runs every formula on the client, including a custom mode that converts a duration in months to weeks with a factor of 4.33 for irregular shift patterns. The whole interface is written without a UI library: modal, toast, loader, icons and sidebar are all built on plain React.",
+    "solution_id": "Formulir empat langkah — WKT, tugas pokok, tugas penunjang, review — di atas Next.js App Router. sdmk-engine.js menjalankan seluruh rumus di klien, termasuk mode custom yang mengonversi durasi bulan ke minggu dengan faktor 4,33 untuk jadwal shift tak beraturan. Seluruh antarmuka ditulis tanpa pustaka UI: modal, toast, loader, ikon, dan sidebar dibangun sendiri di atas React.",
+    "contribution": "Developed the entire frontend architecture, translating legacy HTML/CSS into reusable React components while preserving 100% of the original calculation engine logic.",
+    "contribution_id": "",
+    "outcome": "Modernized a critical healthcare calculation tool, drastically improving the UX and maintainability while keeping infrastructure costs effectively at zero.",
+    "outcome_id": "",
+    "image": "",
+    "video": "",
+    "visualdetails": [],
+    "walkthrough": null,
+    "snippets": null,
+    "updated": "2026-09-02 14:52:02.106Z"
+  },
+  {
+    "slug": "travel-backend",
+    "name": "Travel Backend API",
+    "category": "Web Application",
+    "year": 2024,
+    "featured": false,
+    "color": "from-rose-600 to-orange-500",
+    "role": "Backend Developer",
+    "access": "",
+    "liveurl": "",
+    "demourl": "",
+    "demonote": "",
+    "demonote_id": "",
+    "githuburl": "https://github.com/faidzagustiawan/travel_backend_laravel",
+    "repos": null,
+    "sourcehidden": false,
+    "sandboxid": "",
+    "previewmode": "",
+    "nextprojectslug": "pantausam",
+    "technologies": [
+      "Laravel",
+      "PHP",
+      "MySQL",
+      "Laravel Sanctum",
+      "Xendit",
+      "Midtrans",
+      "Cloudinary"
+    ],
+    "team": [
+      {
+        "avatar": null,
+        "name": "Muhammad Faidz Agustiawan",
+        "role": "Backend Developer"
+      }
+    ],
+    "tagline": "Travel Booking API with Dual Payment Gateways",
+    "tagline_id": "API Pemesanan Wisata dengan Dua Gerbang Pembayaran",
+    "client": "Independent Project",
+    "client_id": "Proyek Mandiri",
+    "duration": "±1 Month",
+    "duration_id": "±1 Bulan",
+    "overview": "A REST API for a travel booking platform: destinations, trip packages, bookings and payments. Built as a backend for web and mobile clients to consume.",
+    "overview_id": "REST API untuk platform pemesanan wisata: destinasi, paket perjalanan, pemesanan, dan pembayaran. Dibangun sebagai backend yang dikonsumsi klien web maupun mobile.",
+    "challenge": "Payment determines a booking's status, but confirmation arrives later and from outside — through the provider's webhook, not the user's request. A booking needs a clear state while it waits, and must not change twice if the same webhook is delivered again.",
+    "challenge_id": "Pembayaran menentukan status pemesanan, tapi konfirmasinya datang belakangan dan dari luar — lewat webhook penyedia, bukan dari permintaan pengguna. Pemesanan harus punya keadaan yang jelas selama menunggu, dan tidak boleh berubah dua kali kalau webhook yang sama terkirim ulang.",
+    "approach": "Utilized Laravel Eloquent ORM to establish strict relationships between users, destinations, and booking records, exposing them via clean RESTful endpoints.",
+    "approach_id": "",
+    "solution": "Laravel with Sanctum for token authentication, so the API serves web and mobile clients without sessions. The destination-package-booking relationships are laid out through Eloquent and migrations. XenditService wraps communication with the payment provider, and media files are served from Cloudinary rather than the application server.",
+    "solution_id": "Laravel dengan Sanctum sebagai otentikasi berbasis token, sehingga API bisa dipakai klien web maupun mobile tanpa sesi. Relasi destinasi–paket–pemesanan ditata lewat Eloquent dan migrasi. XenditService membungkus komunikasi ke penyedia pembayaran, dan berkas media dilayani dari Cloudinary alih-alih disimpan di server aplikasi.",
+    "contribution": "The whole backend was built solo: the database schema and migrations, the API layer from routes through controllers, token authentication with Sanctum, and the wiring to both payment providers.",
+    "contribution_id": "Seluruh backend dikerjakan sendiri: skema basis data dan migrasi, lapisan API dari rute sampai controller, otentikasi token dengan Sanctum, serta penyambungan ke kedua penyedia pembayaran.",
+    "outcome": "Solidified my expertise in PHP and Laravel ecosystem, delivering a robust API ready for integration with modern mobile or web frontends.",
+    "outcome_id": "",
+    "image": "",
+    "video": "",
+    "visualdetails": [],
+    "walkthrough": null,
+    "snippets": null,
+    "updated": "2026-09-08 11:55:03.816Z"
+  }
+]

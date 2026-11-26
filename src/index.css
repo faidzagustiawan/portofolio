@@ -8,7 +8,7 @@
 
 /* ---------------------------------------------------------
    DYNAMIC CLASS SOURCE
-   Project accent gradients arrive from PocketBase as strings
+   Project accent gradients arrive from content/projects.json
    ("from-blue-600 to-cyan-500"), so Tailwind's scanner cannot
    see them. Generate the palette they draw from.
 --------------------------------------------------------- */

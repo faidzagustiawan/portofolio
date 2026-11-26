@@ -1,7 +1,7 @@
 import { StaticRouter } from 'react-router-dom'
 import { prerenderToNodeStream } from 'react-dom/static'
 import AppRoot from '@/AppRoot'
-import { mapProjectRecord } from '@/lib/pb'
+import { mapProjectRecord } from '@/lib/projects'
 import { DEFAULT_LOCALE, PREFIX, localeFromPath } from '@/i18n/locale'
 
 const collect = (stream) =>

@@ -1,19 +1,19 @@
 /**
- * Writes public/sitemap.xml from the live PocketBase project list.
+ * Writes public/sitemap.xml from content/projects.json.
  *
  * The previous sitemap hard-coded five slugs and had already drifted from the
- * eight records in the CMS, so this runs as part of the build instead.
+ * project list, so this runs as part of the build instead.
  */
 import { writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import './load-env.js'
+import { loadProjects } from './load-projects.js'
 import { HTML_LANG, LOCALES, PREFIX } from '../src/i18n/locale.js'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
 const SITE_URL = (process.env.VITE_SITE_URL || 'https://faidzagustiawan.id').replace(/\/+$/, '')
-const PB_URL = (process.env.VITE_PB_URL || 'https://faidz.fun/pb').replace(/\/+$/, '')
 
 const STATIC_ROUTES = [
   { path: '/', changefreq: 'weekly', priority: '1.0' },
@@ -23,14 +23,6 @@ const STATIC_ROUTES = [
 
 const escapeXml = (value) =>
   value.replace(/[<>&'"]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&apos;', '"': '&quot;' })[c])
-
-async function fetchProjects() {
-  const url = `${PB_URL}/api/collections/projects/records?perPage=200&fields=slug,updated`
-  const response = await fetch(url, { signal: AbortSignal.timeout(15_000) })
-  if (!response.ok) throw new Error(`PocketBase responded ${response.status}`)
-  const data = await response.json()
-  return (data.items || []).filter((item) => item.slug)
-}
 
 /** One entry per locale, each listing the others as alternates. */
 function renderUrl({ path: routePath, changefreq, priority, lastmod }, locale) {
@@ -58,13 +50,7 @@ function renderUrl({ path: routePath, changefreq, priority, lastmod }, locale) {
 }
 
 async function main() {
-  let projects = []
-  try {
-    projects = await fetchProjects()
-  } catch (err) {
-    // A build must not fail because the CMS blinked; the static routes still ship.
-    console.warn(`[sitemap] could not reach PocketBase (${err.message}) — writing static routes only`)
-  }
+  const projects = loadProjects()
 
   const entries = [
     ...STATIC_ROUTES,

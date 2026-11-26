@@ -14,7 +14,7 @@ PostgreSQL, MySQL, Kotlin (Jetpack Compose).
 - [Contact](/contact) — enquiry form, email, and resume download
 
 ## Notes
-- Project records are served from a PocketBase instance and rendered client-side.
+- Every page, including each case study, is prerendered to static HTML.
 - Individual case studies live at `/work/<slug>`; see `/sitemap.xml` for the
   current list.
 - Contact: faidzagustiawan@gmail.com

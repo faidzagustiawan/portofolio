@@ -5,7 +5,7 @@
  * Each demo is a folder under `src/demos/` with an `index.jsx` whose default
  * export is a self-contained React component: real interaction, dummy data,
  * nothing persisted past a reload. A project opts in by putting the folder name
- * in its `sandboxid` field in PocketBase.
+ * in its `sandboxid` field in content/projects.json.
  *
  * The imports are lazy, so a visitor who never opens a demo never downloads
  * one. `import.meta.glob` — rather than a hand-written map — means adding a
