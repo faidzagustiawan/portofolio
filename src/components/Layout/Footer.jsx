@@ -9,7 +9,7 @@ const LINKS = [
     href: 'https://www.linkedin.com/in/muhammad-faidz-agustiawan-8692821bb',
     Icon: SiLinkedin,
   },
-  { label: 'Email', href: 'mailto:faidzagustiawan@gmail.com', Icon: SiGmail },
+  { label: 'Email', href: 'mailto:muhammadfaidzagustiawan@gmail.com', Icon: SiGmail },
 ]
 
 const Footer = () => {

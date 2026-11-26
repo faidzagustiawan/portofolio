@@ -175,7 +175,7 @@ export default function ContactPage() {
                     </span>
                     <div className="flex flex-wrap gap-4">
                       <a
-                        href="mailto:faidzagustiawan@gmail.com"
+                        href="mailto:muhammadfaidzagustiawan@gmail.com"
                         className="flex items-center gap-2 px-4 py-2 bg-neutral-900 border border-neutral-800 rounded-xl text-sm font-medium hover:bg-white hover:text-black hover:border-white transition-all group"
                       >
                         <Mail className="w-4 h-4 transition-transform group-hover:scale-110" aria-hidden="true" />
