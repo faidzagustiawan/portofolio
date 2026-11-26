@@ -30,6 +30,14 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://faidzagustiawan.id/work/podorukuntrack</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/work/podorukuntrack"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id/work/podorukuntrack"/>
+    <lastmod>2026-11-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://faidzagustiawan.id/work/re-enviro</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/work/re-enviro"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id/work/re-enviro"/>
@@ -119,6 +127,14 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/work/tolongin"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id/work/tolongin"/>
     <lastmod>2026-09-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://faidzagustiawan.id/id/work/podorukuntrack</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://faidzagustiawan.id/work/podorukuntrack"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://faidzagustiawan.id/id/work/podorukuntrack"/>
+    <lastmod>2026-11-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
