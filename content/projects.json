@@ -261,7 +261,6 @@
       "Drizzle ORM",
       "PostgreSQL",
       "Redis",
-      "BullMQ",
       "AWS S3 / Cloudflare R2",
       "WhatsApp API",
       "Firebase Cloud Messaging",
@@ -274,8 +273,18 @@
         "avatar": null
       },
       {
+        "name": "Dama Saputra Ganatha",
+        "role": "Product Manager",
+        "avatar": null
+      },
+      {
         "name": "Fikri Irfan Hidayah",
-        "role": "Developer",
+        "role": "UI/UX Designer",
+        "avatar": null
+      },
+      {
+        "name": "Nabil Athaya",
+        "role": "Mobile Developer",
         "avatar": null
       }
     ],
@@ -289,12 +298,12 @@
     "overview_id": "PodoRukunTrack mengelola operasional harian pengembang properti: perusahaan, cluster perumahan, proyek, dan unit, beserta penjualan, pembayaran, progres pembangunan, serah terima, retensi, dan tiket layanan pelanggan di setiap unit. Staf bekerja lewat dashboard web; pembeli memantau pembangunan unitnya sendiri dan menerima kabar lewat WhatsApp dan push notification.",
     "challenge": "One system serves four kinds of user who must never see each other's data the wrong way: a super admin across companies, company admins, customer-service staff, and buyers who should only ever see their own unit. On top of that, construction progress is mostly photos and videos, and buyers expect to hear about changes without logging in.",
     "challenge_id": "Satu sistem melayani empat jenis pengguna yang datanya tidak boleh bocor ke pihak yang salah: super admin lintas perusahaan, admin perusahaan, staf customer service, dan pembeli yang hanya boleh melihat unitnya sendiri. Selain itu, progres pembangunan kebanyakan berupa foto dan video, dan pembeli ingin tahu perkembangan tanpa harus login.",
-    "approach": "Access is decided on the server for every route: a JWT carries the role and company, and each route declares which of the four roles may call it, so the dashboard only hides what the API already refuses. Media goes straight to object storage instead of the database, and anything slow — notifications, WhatsApp messages — is pushed to a queue so a request never waits on a third-party service.",
-    "approach_id": "Hak akses diputuskan di server untuk setiap route: JWT membawa role dan perusahaan, dan setiap route menyatakan role mana yang boleh memanggilnya, sehingga dashboard hanya menyembunyikan apa yang memang sudah ditolak API. Media disimpan langsung ke object storage, bukan ke database, dan pekerjaan yang lambat — notifikasi, pesan WhatsApp — dimasukkan ke antrean agar request tidak menunggu layanan pihak ketiga.",
-    "solution": "A Fastify 5 API over PostgreSQL with Drizzle ORM, split into modules for auth, users, companies, clusters, projects, units, assignments, payments, progress, timelines, documentation, handovers, retentions, tickets, analytics and WhatsApp, validated with Zod and documented in Swagger UI. A 4-tier RBAC (super admin / admin / customer service / customer) governs every module. Construction-progress media is stored on AWS S3 / Cloudflare R2; Redis caches hot reads and BullMQ runs notification jobs; buyers receive WhatsApp messages and Firebase push notifications. The client dashboard is React 19 with Vite, Tailwind CSS and TanStack Query.",
-    "solution_id": "API Fastify 5 di atas PostgreSQL dengan Drizzle ORM, dibagi menjadi modul auth, users, companies, clusters, projects, units, assignments, payments, progress, timelines, documentation, handovers, retentions, tickets, analytics, dan WhatsApp, divalidasi dengan Zod dan didokumentasikan di Swagger UI. RBAC 4 tingkat (super admin / admin / customer service / customer) mengatur semua modul. Media progres pembangunan disimpan di AWS S3 / Cloudflare R2; Redis menyimpan cache data yang sering dibaca dan BullMQ menjalankan job notifikasi; pembeli menerima pesan WhatsApp dan push notification Firebase. Dashboard klien dibangun dengan React 19, Vite, Tailwind CSS, dan TanStack Query.",
-    "contribution": "I worked as a full-stack developer with Fikri Irfan Hidayah: the client dashboard, the Fastify API and its Drizzle schema, the RBAC design, the S3/R2 media integration, the notification queue, and the WhatsApp integration.",
-    "contribution_id": "Saya bekerja sebagai full-stack developer bersama Fikri Irfan Hidayah: dashboard klien, API Fastify beserta skema Drizzle-nya, desain RBAC, integrasi media S3/R2, antrean notifikasi, dan integrasi WhatsApp.",
+    "approach": "Access is decided on the server for every route: a JWT carries the role and company, and each route declares which of the four roles may call it, so the dashboard only hides what the API already refuses. Media goes straight to object storage instead of the database, and buyers are reached where they already are — WhatsApp and push notifications on their phone — instead of having to log in to check.",
+    "approach_id": "Hak akses diputuskan di server untuk setiap route: JWT membawa role dan perusahaan, dan setiap route menyatakan role mana yang boleh memanggilnya, sehingga dashboard hanya menyembunyikan apa yang memang sudah ditolak API. Media disimpan langsung ke object storage, bukan ke database, dan pembeli dihubungi lewat saluran yang sudah mereka pakai — WhatsApp dan push notification di ponsel — tanpa harus login untuk mengecek.",
+    "solution": "A Fastify 5 API over PostgreSQL with Drizzle ORM, split into modules for auth, users, companies, clusters, projects, units, assignments, payments, progress, timelines, documentation, handovers, retentions, tickets, analytics and WhatsApp, validated with Zod and documented in Swagger UI. A 4-tier RBAC (super admin / admin / customer service / customer) governs every module. Construction-progress media is stored on AWS S3 / Cloudflare R2; Redis caches frequently read data; buyers receive WhatsApp messages and Firebase push notifications. The client dashboard is React 19 with Vite, Tailwind CSS and TanStack Query.",
+    "solution_id": "API Fastify 5 di atas PostgreSQL dengan Drizzle ORM, dibagi menjadi modul auth, users, companies, clusters, projects, units, assignments, payments, progress, timelines, documentation, handovers, retentions, tickets, analytics, dan WhatsApp, divalidasi dengan Zod dan didokumentasikan di Swagger UI. RBAC 4 tingkat (super admin / admin / customer service / customer) mengatur semua modul. Media progres pembangunan disimpan di AWS S3 / Cloudflare R2; Redis menyimpan cache data yang sering dibaca; pembeli menerima pesan WhatsApp dan push notification Firebase. Dashboard klien dibangun dengan React 19, Vite, Tailwind CSS, dan TanStack Query.",
+    "contribution": "I was the full-stack developer, alongside Dama Saputra Ganatha as product manager, Fikri Irfan Hidayah on UI/UX design, and Nabil Athaya on the mobile app. My part was the client dashboard, the Fastify API and its Drizzle schema, the RBAC design, the S3/R2 media integration, and the WhatsApp and push-notification integration.",
+    "contribution_id": "Saya berperan sebagai full-stack developer, bersama Dama Saputra Ganatha sebagai product manager, Fikri Irfan Hidayah di desain UI/UX, dan Nabil Athaya di aplikasi mobile. Bagian saya: dashboard klien, API Fastify beserta skema Drizzle-nya, desain RBAC, integrasi media S3/R2, serta integrasi WhatsApp dan push notification.",
     "outcome": "The system is in production for a real property-development client, deployed internally without a public domain, so there is no live link or public repository.",
     "outcome_id": "Sistem ini dipakai di produksi oleh klien pengembang properti, dengan deployment internal tanpa domain publik, sehingga tidak ada link live maupun repository publik.",
     "image": "",
@@ -302,7 +311,7 @@
     "visualdetails": [],
     "walkthrough": [],
     "snippets": [],
-    "updated": "2026-11-26T08:02:00.722Z"
+    "updated": "2026-11-26T08:13:00.293Z"
   },
   {
     "slug": "re-enviro",
