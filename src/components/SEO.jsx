@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useLocale } from '@/i18n/locale-context'
-import { DEFAULT_LOCALE, HTML_LANG, LOCALES, OG_LOCALE, PREFIX } from '@/i18n/locale'
+import { DEFAULT_LOCALE, HTML_LANG, LOCALES, OG_LOCALE, pathForLocale } from '@/i18n/locale'
 
 const SITE_URL = (import.meta.env.VITE_SITE_URL || 'https://faidzagustiawan.id').replace(/\/+$/, '')
 const SITE_NAME = 'Faidz Agustiawan'
@@ -28,8 +28,11 @@ const PROFILES = [
   'https://www.instagram.com/faidzagustiawan',
 ]
 
-/** Absolute URL for a route, in a given locale. */
-const absoluteFor = (route, locale) => `${SITE_URL}${PREFIX[locale] || ''}${route === '/' ? '' : route}` || SITE_URL
+/** Absolute URL for a route, in a given locale. Delegating to pathForLocale is
+ *  what keeps the canonical tag byte-identical to the sitemap: both put the
+ *  default locale's root at "/" and the prefixed one's at "/id", which are the
+ *  two forms the host answers without a redirect. */
+const absoluteFor = (route, locale) => `${SITE_URL}${pathForLocale(route, locale)}`
 
 export default function SEO({
   title,
@@ -52,7 +55,7 @@ export default function SEO({
   const fallback = DEFAULTS[locale] || DEFAULTS[DEFAULT_LOCALE]
   const seoTitle = title ? `${title} | ${SITE_NAME}` : fallback.title
   const seoDescription = description || fallback.description
-  const seoUrl = absoluteFor(url, locale) || SITE_URL
+  const seoUrl = absoluteFor(url, locale)
   const seoImage = image ? (image.startsWith('http') ? image : `${SITE_URL}${image}`) : DEFAULT_IMAGE
 
   const person = {
@@ -60,7 +63,7 @@ export default function SEO({
     '@id': `${SITE_URL}/#person`,
     name: SITE_NAME,
     jobTitle: ROLE,
-    url: SITE_URL,
+    url: `${SITE_URL}/`,
     image: `${SITE_URL}/hero/portrait-1200.webp`,
     address: { '@type': 'PostalAddress', addressLocality: 'Malang', addressCountry: 'ID' },
     sameAs: PROFILES,
@@ -71,7 +74,7 @@ export default function SEO({
       '@type': 'WebSite',
       '@id': `${SITE_URL}/#website`,
       name: fallback.title,
-      url: SITE_URL,
+      url: `${SITE_URL}/`,
       inLanguage: HTML_LANG[locale],
       publisher: { '@id': `${SITE_URL}/#person` },
     },
@@ -108,9 +111,9 @@ export default function SEO({
       {/* Each page declares every language it exists in, plus the default one
           search engines should fall back to for an unmatched locale. */}
       {LOCALES.map((alt) => (
-        <link key={alt} rel="alternate" hreflang={HTML_LANG[alt]} href={absoluteFor(url, alt) || SITE_URL} />
+        <link key={alt} rel="alternate" hreflang={HTML_LANG[alt]} href={absoluteFor(url, alt)} />
       ))}
-      <link rel="alternate" hreflang="x-default" href={absoluteFor(url, DEFAULT_LOCALE) || SITE_URL} />
+      <link rel="alternate" hreflang="x-default" href={absoluteFor(url, DEFAULT_LOCALE)} />
 
       <meta property="og:type" content={type} />
       <meta property="og:url" content={seoUrl} />

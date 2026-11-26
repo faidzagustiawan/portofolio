@@ -31,7 +31,7 @@ export const dictionary = {
     },
 
     home: {
-      seoTitle: 'Home',
+      seoTitle: 'Full-Stack Developer in Malang, Indonesia',
       h1: 'Faidz Agustiawan — full-stack developer in Malang, Indonesia',
       role: ['Full-Stack', 'Developer'],
       portraitAlt: 'Faidz Agustiawan, arms folded, wearing a navy blazer',
@@ -249,7 +249,7 @@ export const dictionary = {
     },
 
     home: {
-      seoTitle: 'Beranda',
+      seoTitle: 'Full-Stack Developer di Malang, Indonesia',
       h1: 'Faidz Agustiawan — full-stack developer di Malang, Indonesia',
       role: ['Full-Stack', 'Developer'],
       portraitAlt: 'Faidz Agustiawan, bersedekap, mengenakan jas biru dongker',

@@ -13,8 +13,14 @@
 /og-cover.jpg
   Cache-Control: public, max-age=604800, stale-while-revalidate=86400
 
+# Strict-Transport-Security was in vercel.json but never here, so the Cloudflare
+# deploy answered http:// and https:// with the same page and neither was the
+# canonical host. Note this only upgrades a browser that has already visited
+# once -- the zone's "Always Use HTTPS" redirect is what covers a first visit
+# and a crawler.
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: SAMEORIGIN
   Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
