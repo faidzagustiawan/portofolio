@@ -377,14 +377,14 @@
     "solution_id": "React Router dengan ProtectedRoute dan AdminLayout terpisah. Supabase menangani autentikasi sekaligus basis data untuk kegiatan, donasi, dan riwayat. Dasbor statistik merangkum kontribusi per pengguna, dan seluruh antarmuka mendukung mode terang dan gelap lewat ThemeContext.",
     "contribution": "I initiated the Frontend architecture, designed the React component hierarchy, and specifically programmed all micro-interactions and transition animations to run smoothly without frame drops.",
     "contribution_id": "",
-    "outcome": "Improved my React architecture skills and deepened my understanding of state-driven animation, resulting in a visually impressive and highly responsive platform.",
-    "outcome_id": "",
+    "outcome": "Delivered as the ASCEND team project: volunteers can sign up for activities and donate, admins manage both from a separate panel, and each user sees a summary of their own contributions. It was my first React app split into public, protected and admin layouts.",
+    "outcome_id": "Selesai sebagai proyek tim ASCEND: relawan bisa mendaftar kegiatan dan berdonasi, admin mengelola keduanya dari panel terpisah, dan setiap pengguna melihat ringkasan kontribusinya sendiri. Ini aplikasi React pertama saya yang dipisah menjadi layout publik, terproteksi, dan admin.",
     "image": "",
     "video": "",
     "visualdetails": [],
     "walkthrough": null,
     "snippets": null,
-    "updated": "2026-09-02 14:52:01.642Z"
+    "updated": "2026-11-26T08:16:06.195Z"
   },
   {
     "slug": "finote",
@@ -445,14 +445,14 @@
     "solution_id": "Antarmuka Jetpack Compose dengan Navigation dan bottom bar. CameraX mengambil gambar struk dan ML Kit membaca teksnya di perangkat, tanpa mengirim foto ke server. Data transaksi dan target tabungan disimpan di Supabase sehingga tersinkron antar perangkat, dengan login lewat Supabase Auth dan Google Credential Manager.",
     "contribution": "I focused on UI/UX implementation using Jetpack Compose, specifically building the data visualization components (custom charts) and cross-screen navigation.",
     "contribution_id": "",
-    "outcome": "Solidified my foundation in modern Android development (Declarative UI) and enhanced my ability to transform raw data into interactive visualizations.",
-    "outcome_id": "",
+    "outcome": "A working Android app: scan a receipt, review the text ML Kit reads from it, and save it as a transaction that syncs through Supabase, alongside savings goals. Reading the receipt on the device means the photo never has to leave the phone.",
+    "outcome_id": "Aplikasi Android yang berjalan: pindai struk, periksa teks yang dibaca ML Kit, lalu simpan sebagai transaksi yang tersinkron lewat Supabase, bersama target tabungan. Karena struk dibaca di perangkat, fotonya tidak perlu keluar dari ponsel.",
     "image": "",
     "video": "",
     "visualdetails": [],
     "walkthrough": null,
     "snippets": null,
-    "updated": "2026-09-02 14:52:01.236Z"
+    "updated": "2026-11-26T08:16:06.197Z"
   },
   {
     "slug": "engineer-coffee",
@@ -501,14 +501,14 @@
     "solution_id": "Tata letak mobile-first dengan navigasi smooth-scroll, hero beserta ajakan bertindak, bagian menu, informasi lokasi, dan footer tautan sosial. Seluruh interaksi ditangani JavaScript biasa dalam satu berkas.",
     "contribution": "This project is a solo endeavor. I handled everything from converting the UI design into code, optimizing image assets, to final deployment.",
     "contribution_id": "",
-    "outcome": "This project proves my fundamental frontend craftsmanship, ensuring the website is not only beautiful but also accessible instantly (blazing fast).",
-    "outcome_id": "",
+    "outcome": "Live on Vercel as a single page with no framework and no build step: HTML, Tailwind and one JavaScript file. It shows that a small business site does not need more than that.",
+    "outcome_id": "Tayang di Vercel sebagai satu halaman tanpa framework dan tanpa build step: HTML, Tailwind, dan satu file JavaScript. Proyek ini menunjukkan bahwa situs usaha kecil tidak butuh lebih dari itu.",
     "image": "",
     "video": "",
     "visualdetails": [],
     "walkthrough": null,
     "snippets": null,
-    "updated": "2026-09-02 14:52:02.315Z"
+    "updated": "2026-11-26T08:16:06.197Z"
   },
   {
     "slug": "exhibitly",
@@ -559,14 +559,14 @@
     "solution_id": "React Router dengan komponen ProtectedRoute yang memisahkan halaman publik dari halaman yang butuh sesi, dipakai dua arah — pengguna yang sudah login juga dicegah membuka halaman login. AuthContext memusatkan sesi Supabase supaya tidak ada state autentikasi yang tercecer di tiap halaman. Alur reset kata sandi lengkap, dari permintaan sampai halaman pembaruan.",
     "contribution": "As a solo developer, I orchestrated the 3D scene, programmed raycasting logic for object interaction, and optimized 3D assets to pass web performance standards.",
     "contribution_id": "",
-    "outcome": "Exhibitly showcases my advanced frontend capabilities in managing WebGL, 3D interactions, and complex animations to create experimental web designs.",
-    "outcome_id": "",
+    "outcome": "Live on Vercel: visitors browse the gallery, and signed-in users upload artwork to Cloudinary, like and comment, with the full sign-up, sign-in and password-reset flow on Supabase Auth.",
+    "outcome_id": "Tayang di Vercel: pengunjung bisa menjelajah galeri, dan pengguna yang login bisa mengunggah karya ke Cloudinary, memberi like, dan berkomentar, dengan alur daftar, login, dan reset password lengkap di Supabase Auth.",
     "image": "",
     "video": "",
     "visualdetails": [],
     "walkthrough": null,
     "snippets": null,
-    "updated": "2026-09-02 14:52:00.520Z"
+    "updated": "2026-11-26T08:16:06.197Z"
   },
   {
     "slug": "pantausam",
@@ -635,14 +635,14 @@
     "solution_id": "Laravel 11 dengan Blade dan MySQL. Tiga tingkat peran dipisahkan lewat middleware terpisah — pengguna, admin, dan super admin — sehingga aturan aksesnya terbaca di satu tempat, bukan tersebar di controller. Laporan yang terverifikasi dirender di peta interaktif, dan pelapor bisa memantau status pengerjaannya.",
     "contribution": "As a Fullstack Developer, I was fully responsible for designing the database schema, building RESTful endpoints in Laravel, and integrating Leaflet.js with OpenStreetMap for coordinate-based reporting features.",
     "contribution_id": "",
-    "outcome": "This project successfully demonstrates my capability to build functional, secure fullstack applications that solve real-world bureaucratic reporting issues at the community level.",
-    "outcome_id": "",
+    "outcome": "Completed as an academic project: residents report damaged infrastructure, admins verify each report before it appears on the public map, and the reporter can follow its repair status. Access for the three roles is enforced in middleware rather than in individual controllers.",
+    "outcome_id": "Selesai sebagai proyek akademik: warga melaporkan infrastruktur yang rusak, admin memverifikasi setiap laporan sebelum tampil di peta publik, dan pelapor bisa memantau status perbaikannya. Hak akses ketiga role diatur di middleware, bukan di masing-masing controller.",
     "image": "",
     "video": "",
     "visualdetails": [],
     "walkthrough": null,
     "snippets": null,
-    "updated": "2026-09-08 12:23:19.710Z"
+    "updated": "2026-11-26T08:16:06.197Z"
   },
   {
     "slug": "spk-property-backend",
@@ -694,14 +694,14 @@
     "solution_id": "Express di atas PostgreSQL, dijalankan lewat Docker Compose. AHP menurunkan bobot dari matriks perbandingan berpasangan; SAW, SMART, WP, dan TOPSIS memeringkat alternatif memakai bobot tersebut. Endpoint Dataset Generator mem-pivot data relasional menjadi tabular agar bisa langsung dikonsumsi model scikit-learn di layanan FastAPI terpisah. Otentikasi JWT dengan bcrypt, seluruh endpoint terdokumentasi di Swagger OpenAPI 3.0.",
     "contribution": "Sole developer. Designed the database schema, implemented JWT authentication, wrote the ranking algorithms, and documented the API using OpenAPI/Swagger.",
     "contribution_id": "",
-    "outcome": "Successfully delivered a highly complex algorithmic backend that seamlessly bridges decision-support mathematics with modern web API standards and machine learning readiness.",
-    "outcome_id": "",
+    "outcome": "A documented API that computes AHP weights and ranks properties with four methods — SAW, SMART, WP and TOPSIS — so their results can be compared side by side. The same data can also be exported in tabular form for a separate machine-learning service.",
+    "outcome_id": "API terdokumentasi yang menghitung bobot AHP dan meranking properti dengan empat metode — SAW, SMART, WP, dan TOPSIS — sehingga hasilnya bisa dibandingkan berdampingan. Data yang sama juga bisa diekspor dalam bentuk tabel untuk layanan machine learning terpisah.",
     "image": "",
     "video": "",
     "visualdetails": [],
     "walkthrough": null,
     "snippets": null,
-    "updated": "2026-09-02 14:52:00.932Z"
+    "updated": "2026-11-26T08:16:06.197Z"
   },
   {
     "slug": "kalkulator-sdmk",
@@ -751,14 +751,14 @@
     "solution_id": "Formulir empat langkah — WKT, tugas pokok, tugas penunjang, review — di atas Next.js App Router. sdmk-engine.js menjalankan seluruh rumus di klien, termasuk mode custom yang mengonversi durasi bulan ke minggu dengan faktor 4,33 untuk jadwal shift tak beraturan. Seluruh antarmuka ditulis tanpa pustaka UI: modal, toast, loader, ikon, dan sidebar dibangun sendiri di atas React.",
     "contribution": "Developed the entire frontend architecture, translating legacy HTML/CSS into reusable React components while preserving 100% of the original calculation engine logic.",
     "contribution_id": "",
-    "outcome": "Modernized a critical healthcare calculation tool, drastically improving the UX and maintainability while keeping infrastructure costs effectively at zero.",
-    "outcome_id": "",
+    "outcome": "The SDMK calculation moved from a spreadsheet to a guided four-step web form. The formulas run in the browser and Google Apps Script handles storage, so there is no server to pay for or maintain.",
+    "outcome_id": "Perhitungan SDMK pindah dari spreadsheet ke form web empat langkah yang memandu pengguna. Rumusnya berjalan di browser dan penyimpanan ditangani Google Apps Script, sehingga tidak ada server yang perlu dibayar atau dirawat.",
     "image": "",
     "video": "",
     "visualdetails": [],
     "walkthrough": null,
     "snippets": null,
-    "updated": "2026-09-02 14:52:02.106Z"
+    "updated": "2026-11-26T08:16:06.197Z"
   },
   {
     "slug": "travel-backend",
@@ -811,13 +811,13 @@
     "solution_id": "Laravel dengan Sanctum sebagai otentikasi berbasis token, sehingga API bisa dipakai klien web maupun mobile tanpa sesi. Relasi destinasi–paket–pemesanan ditata lewat Eloquent dan migrasi. XenditService membungkus komunikasi ke penyedia pembayaran, dan berkas media dilayani dari Cloudinary alih-alih disimpan di server aplikasi.",
     "contribution": "The whole backend was built solo: the database schema and migrations, the API layer from routes through controllers, token authentication with Sanctum, and the wiring to both payment providers.",
     "contribution_id": "Seluruh backend dikerjakan sendiri: skema basis data dan migrasi, lapisan API dari rute sampai controller, otentikasi token dengan Sanctum, serta penyambungan ke kedua penyedia pembayaran.",
-    "outcome": "Solidified my expertise in PHP and Laravel ecosystem, delivering a robust API ready for integration with modern mobile or web frontends.",
-    "outcome_id": "",
+    "outcome": "A REST API for destinations, packages and bookings, with token authentication through Sanctum and payments through Xendit and Midtrans. It has no frontend of its own; it is built to be consumed by a web or mobile client.",
+    "outcome_id": "REST API untuk destinasi, paket, dan pemesanan, dengan autentikasi token lewat Sanctum dan pembayaran lewat Xendit dan Midtrans. API ini tidak punya frontend sendiri; dibuat untuk dipakai oleh klien web atau mobile.",
     "image": "",
     "video": "",
     "visualdetails": [],
     "walkthrough": null,
     "snippets": null,
-    "updated": "2026-09-08 11:55:03.816Z"
+    "updated": "2026-11-26T08:16:06.197Z"
   }
 ]
